@@ -1,0 +1,84 @@
+<template>
+	<van-space :size="10" wrap>
+		<div class="checkbox-tag" v-for="tag in props.options" :class="{ active: isActive(tag.value) }" @click="onClick(tag.value)">
+			{{ tag.label }}
+		</div>
+	</van-space>
+</template>
+<script setup lang="ts">
+import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
+interface Props {
+	value: string | Array<string | number>; // 值
+	options: { label: string; value: string | number }[]; // 数据
+	bgColor?: string; // 背景颜色
+	color?: string; // 文字颜色
+	multiple?: boolean; // 是否多选
+	activeColor?: string; // 选中颜色
+}
+const props = withDefaults(defineProps<Props>(), {
+	value: '',
+	options: () => [],
+	bgColor: '#f7f8fa',
+	color: '#969799',
+	multiple: false,
+	activeColor: '#07c160',
+});
+
+const emits = defineEmits(['update:value']);
+
+const tagValue = ref<string | number | Array<string | number>>('');
+
+function isActive(val: string | number) {
+	if (props.multiple) {
+		// 多选
+		if (!Array.isArray(props.value)) {
+			return console.warn('value Must be an Array');
+		}
+		return props.value.includes(val);
+	} else {
+		// 单选
+		return val === tagValue.value;
+	}
+}
+
+function onClick(val: string | number) {
+	if (props.multiple) {
+		if (Array.isArray(props.value)) {
+			if (props.value.includes(val)) {
+				const index = props.value.findIndex((item) => item === val);
+				props.value.splice(index, 1);
+			} else {
+				props.value.push(val);
+			}
+			emits('update:value', props.value);
+		} else {
+			emits('update:value', [val]);
+		}
+	} else {
+		emits('update:value', val);
+	}
+}
+
+watch(
+	() => props.value,
+	(val: string | Array<string | number>) => {
+		tagValue.value = val;
+	},
+	{
+		immediate: true,
+	}
+);
+</script>
+<style lang="scss" scoped>
+.checkbox-tag {
+	text-wrap: nowrap;
+	padding: 4px 16px;
+	border-radius: 4px;
+	background-color: v-bind('props.bgColor');
+	color: v-bind('props.color');
+}
+.active {
+	background-color: v-bind('props.activeColor');
+	color: #fff !important;
+}
+</style>
