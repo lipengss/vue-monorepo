@@ -1,0 +1,71 @@
+@use './theme/color.scss';
+@use './theme//element.scss';
+body{
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+ul,ol{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+h1,h2,h3,h4,h5,h6{
+  margin: 0;
+}
+.my-scroll{
+  scrollbar-color: red;
+  scrollbar-width: thin;
+  -ms-overflow-style:none;
+  position: relative;
+  &::-webkit-scrollbar{
+    width: 3px;
+    height: 1px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #434b55;
+  }
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px rgba(0,0,0,0);
+    border-radius: 3px;
+    background: #1c222b;
+  }
+}
+
+/* 外边距、内边距全局样式
+------------------------------- */
+@for $i from 1 through 60 {
+	.mt#{$i} {
+		margin-top: #{$i}px !important;
+	}
+	.mr#{$i} {
+		margin-right: #{$i}px !important;
+	}
+	.mb#{$i} {
+		margin-bottom: #{$i}px !important;
+	}
+	.ml#{$i} {
+		margin-left: #{$i}px !important;
+	}
+	.pt#{$i} {
+		padding-top: #{$i}px !important;
+	}
+	.pr#{$i} {
+		padding-right: #{$i}px !important;
+	}
+	.pb#{$i} {
+		padding-bottom: #{$i}px !important;
+	}
+	.pl#{$i} {
+		padding-left: #{$i}px !important;
+	}
+}
+
+.w100{
+  width: 100%;
+}
