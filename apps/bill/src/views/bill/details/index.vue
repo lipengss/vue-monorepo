@@ -47,13 +47,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onActivated } from 'vue';
+import { ref, onActivated } from 'vue';
 import { EXPENSES, _PURPOSE } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { useRouter, useRoute } from 'vue-router';
-import { formatNum } from '@/utils/tools';
 import formData from '../formData.vue';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, formatNum } from '@common/utils';
+
 const billStore = useBillStore();
 const router = useRouter();
 

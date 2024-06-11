@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
 import type { DatePickerColumnType } from 'vant';
-import dayjs from 'dayjs';
+import { dayjs } from '@common/utils';
 
 interface Props {
 	value: string; // 值

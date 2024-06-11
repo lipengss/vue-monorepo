@@ -56,8 +56,7 @@ import { ref, computed, watch, onActivated } from 'vue';
 import { EXPENSES, formatMap, _PURPOSE } from '@/assets/data';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
-import { convertToPercentages } from '@/utils/tools';
-import { sortBy, dayjs, formatNum } from '@common/utils'
+import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils'
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
@@ -205,7 +204,6 @@ function setPieData() {
 function setBarData() {
 	const data: { [key: string]: number } = {};
 	// 将不同类型的账单分别累加
-	console.log(allOrderList.value);
 	allOrderList.value.forEach((n) => {
 		const day = dayjs(n.date).format('YYYY-MM-DD');
 		if (data[day]) {

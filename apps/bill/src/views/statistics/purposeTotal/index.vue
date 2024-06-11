@@ -29,9 +29,7 @@ import { computed, ref, onActivated } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { useRoute, useRouter, type LocationQuery } from 'vue-router';
-import { formatNum } from '@/utils/tools';
-import { flatten } from 'lodash-es';
-import dayjs from 'dayjs';
+import { flatten, dayjs, formatNum } from '@common/utils';
 import { _PURPOSE, EXPENSES } from '@/assets/data';
 
 const route = useRoute();

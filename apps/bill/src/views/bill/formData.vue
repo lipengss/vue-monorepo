@@ -86,7 +86,6 @@ function onEditOrder(data: IOrder) {
 }
 
 function onFailed(errorInfo: { values: object; errors: object[] }) {
-	console.log(errorInfo);
 	const msg = errorInfo.errors[0].message;
 	showToast(msg);
 }

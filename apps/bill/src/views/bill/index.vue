@@ -1,12 +1,12 @@
 <template>
 	<van-nav-bar
-		title="账单"
+		title="明细"
 		fixed
 		placeholder
 		left-text="导入"
-		@click-left="actionSheetRef.open('import')"
-		right-text="导出"
-		@click-right="actionSheetRef.open('export')"
+		@click-left="showDialog = true;"
+		right-text="备份"
+		@click-right="onCopy"
 	/>
 	<van-list v-model:loading="state.loading" :finished="state.finished" finished-text="没有更多了" v-if="billStore.billList.length">
 		<div v-for="item in billStore.formatBillList" :key="item.date" class="card">
@@ -56,25 +56,65 @@
 	</van-empty>
 	<formData ref="formRef" />
 	<van-floating-bubble axis="xy" icon="records-o" magnetic="x" @click="formRef.onAddOrder()" />
-	<actionSheet ref="actionSheetRef" />
+  <van-dialog v-model:show="showDialog" title="粘贴明细" show-cancel-button @confirm="onConfirm">
+    <van-field v-model="billData" rows="2" :autosize="{ maxHeight: 200, minHeight: 200 }" type="textarea" placeholder="录入账单数据" />
+  </van-dialog>
 </template>
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import { dayjs, formatNum } from '@common/utils/src'
+import {dayjs, formatNum, isEqual} from '@common/utils/src'
 import { _PURPOSE, EXPENSES } from '@/assets/data';
 import formData from './formData.vue';
 import { useBillStore } from '@/stores/bill';
-import actionSheet from './actionSheet.vue';
+import { useClipboard } from "@common/hooks";
+import {showToast} from "vant";
+
+const { copy } = useClipboard()
 
 const billStore = useBillStore();
 
 const formRef = ref();
-const actionSheetRef = ref();
+const billData = ref();
+const showDialog = ref(false);
 
 const state = reactive({
 	loading: false,
 	finished: true,
 });
+
+// 拷贝
+function onCopy() {
+  const content = JSON.stringify(billStore.billList, undefined, 4);
+  copy(content)
+  showToast('已将内容拷贝到粘贴板！');
+}
+
+// 保存粘贴内容
+function onConfirm() {
+  try {
+    const json = JSON.parse(billData.value);
+    // 判断是否是数组
+    if (Array.isArray(json)) {
+      for (const item of json) {
+        const index = billStore.billList.value.findIndex((n) => n.id === item.id);
+        if (index !== -1) {
+          billStore.billList.value.splice(index, 1, item);
+        } else {
+          addBill(item);
+        }
+      }
+    }
+    // 判断是否是对象
+    if (Object.prototype.toString.call(json) === '[object Object]') {
+      if (isEqual(Object.keys(json), Object.keys(defaultBillItemData.value))) {
+        addBill(json);
+      }
+    }
+  } catch (err) {
+    showToast('导入的数据格式有误');
+  }
+}
+
 billStore.init();
 </script>
 <style scoped lang="scss">
