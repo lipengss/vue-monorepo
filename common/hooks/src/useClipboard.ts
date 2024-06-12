@@ -6,8 +6,8 @@ export function useClipboard() {
     async function copy(content: string) {
         try {
             await toClipboard(content);
-        } catch(err) {
-            throw Error(err)
+        } catch(err:any) {
+            throw Error(err.message)
         }
     }
 

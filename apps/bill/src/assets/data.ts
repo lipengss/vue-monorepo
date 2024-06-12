@@ -1,4 +1,6 @@
-const EXPENSES = new Map([
+import type { TagType } from 'vant';
+
+const EXPENSES:Map<EXPENSE_TYPE, { label: string, type: TagType, color: string }> = new Map([
 	['income', { label: '收入', type: 'primary', color: '#1989fa' }],
 	['pay', { label: '支出', type: 'warning', color: '#ff976a' }],
 ]);

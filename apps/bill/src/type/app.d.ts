@@ -1,12 +1,20 @@
+
+type EXPENSE_TYPE = 'income' | 'pay';
+
 interface IOrder {
 	date: string;
-	expenses: string;
+	expenses: EXPENSE_TYPE;
 	price: string;
 	payMethod: string;
 	purpose: string;
 	staff: string;
 	remarks: string;
 	id: string;
+}
+
+interface ISeriesData {
+	value: string | number
+	name: string
 }
 
 interface IState {

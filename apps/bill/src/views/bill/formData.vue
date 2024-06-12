@@ -46,7 +46,7 @@
 			</van-cell>
 			<van-field v-model="state.data.remarks" border rows="2" autosize type="textarea" maxlength="50" placeholder="备注信息" show-word-limit />
 			<van-cell>
-				<van-button round block native-type="submit" :type="EXPENSES.get(state.data.expenses)?.type || ''" sizi="large">保存</van-button>
+				<van-button round block native-type="submit" :type="EXPENSES.get(state.data.expenses)?.type" sizi="large">保存</van-button>
 			</van-cell>
 		</van-form>
 	</van-popup>
@@ -85,7 +85,7 @@ function onEditOrder(data: IOrder) {
 	state.showPopup = true;
 }
 
-function onFailed(errorInfo: { values: object; errors: object[] }) {
+function onFailed(errorInfo: any) {
 	const msg = errorInfo.errors[0].message;
 	showToast(msg);
 }

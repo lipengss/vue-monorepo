@@ -56,7 +56,7 @@ import { ref, computed, watch, onActivated } from 'vue';
 import { EXPENSES, formatMap, _PURPOSE } from '@/assets/data';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
-import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils'
+import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src'
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
@@ -64,10 +64,10 @@ import DateTag from '@/components/DateTag/index.vue';
 
 const { billList } = storeToRefs(useBillStore());
 
-const expenses = ref('income');
+const expenses = ref<'income' | 'pay'>('income');
 const day = ref(dayjs().format('YYYY-MM'));
 
-const option = ref({
+const option = ref<any>({
 	grid: {
 		top: 10,
 	},
@@ -101,7 +101,7 @@ const option = ref({
 		},
 	},
 });
-const dayRatioOption = ref({
+const dayRatioOption = ref<any>({
 	tooltip: {},
 	grid: {
 		containLabel: true,

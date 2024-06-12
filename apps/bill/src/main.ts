@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 import router from '@/router/index';
+import { createPinia } from 'pinia'
 
 import { Toast, Dialog } from 'vant'
 import 'vant/es/toast/style'
@@ -14,9 +15,9 @@ const app =createApp(App);
 app.use(router);
 app.use(Toast)
 app.use(Dialog)
+app.use(createPinia())
 
 import plugins from '@common/component/src/utils/plugin'
 plugins.elSvg(app)
-plugins.pinia(app)
 
 app.mount('#app')

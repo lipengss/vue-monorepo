@@ -39,8 +39,7 @@
 					</template>
 					<template #title>
 						<div class="cell-title">
-							{{ _PURPOSE.get(bill.purpose)?.label }}
-							<van-tag round :type="EXPENSES.get(bill.expenses)?.type || 'success'">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
+							<van-tag round :type="EXPENSES.get(bill.expenses)?.type">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
 						</div>
 					</template>
 				</van-cell>
@@ -96,18 +95,18 @@ function onConfirm() {
     // 判断是否是数组
     if (Array.isArray(json)) {
       for (const item of json) {
-        const index = billStore.billList.value.findIndex((n) => n.id === item.id);
+        const index = billStore.billList.findIndex((n:IOrder) => n.id === item.id);
         if (index !== -1) {
-          billStore.billList.value.splice(index, 1, item);
+          billStore.billList.splice(index, 1, item);
         } else {
-          addBill(item);
+          billStore.addBill(item);
         }
       }
     }
     // 判断是否是对象
     if (Object.prototype.toString.call(json) === '[object Object]') {
-      if (isEqual(Object.keys(json), Object.keys(defaultBillItemData.value))) {
-        addBill(json);
+      if (isEqual(Object.keys(json), Object.keys(billStore.defaultBillItemData))) {
+        billStore.addBill(json);
       }
     }
   } catch (err) {

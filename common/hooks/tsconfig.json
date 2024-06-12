@@ -3,5 +3,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     // ... rest
-  }
+  },
+  "references":[
+    {
+      "path": "../../tsconfig.node.json"
+    }
+  ]
 }

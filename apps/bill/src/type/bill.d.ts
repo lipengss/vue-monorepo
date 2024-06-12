@@ -5,14 +5,6 @@ interface IBillState {
 	data: IOrder;
 }
 
-interface IBillItem {
-	id: string;
-	date: string;
-	totalIncome: number;
-	totalPay: number;
-	billList: IOrder[];
-}
-
 interface StoreState {
 	billList: IOrder[];
 	defaultBillItemData: IOrder;

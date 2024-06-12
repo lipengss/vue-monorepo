@@ -35,7 +35,7 @@
 					{{ currentBill.remarks || '无' }}
 				</div>
 			</div>
-			<div class="line btns">
+			<div class="line bins">
 				<van-button type="danger" icon="delete-o" block plain round class="btn1" @click="billStore.deleteBillOrder(currentBill.id, true)">
 					删除
 				</van-button>
@@ -50,16 +50,25 @@
 import { ref, onActivated } from 'vue';
 import { EXPENSES, _PURPOSE } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, type LocationQuery } from 'vue-router';
 import formData from '../formData.vue';
-import { cloneDeep, formatNum } from '@common/utils';
+import { cloneDeep, formatNum, dayjs } from '@common/utils/src';
 
 const billStore = useBillStore();
 const router = useRouter();
 
 const route = useRoute();
 const formRef = ref();
-const currentBill = ref({});
+const currentBill = ref<IOrder>({
+  expenses: 'income',
+  price: '',
+  payMethod: 'cash',
+  purpose: 'other',
+  staff: '娇娇',
+  remarks: '',
+  date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  id: '',
+});
 
 function setData() {
 	const { id }: LocationQuery = route.query;
@@ -108,7 +117,7 @@ onActivated(() => {
 				margin-right: 20px;
 			}
 		}
-		.btns {
+		.bins {
 			margin-top: 20px;
 			padding-bottom: 20px;
 		}

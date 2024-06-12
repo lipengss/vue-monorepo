@@ -1,13 +1,13 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import Layout from '@/layout/index.vue';
 
-const routes = [
+const routes:RouteRecordRaw[] = [
 	{
 		path: '/',
 		name: 'layout',
 		component: Layout,
-		redirect: '/settings',
+		redirect: '/bill',
 		children: [
 			{
 				path: '/bill',
@@ -26,14 +26,14 @@ const routes = [
 				},
 				component: () => import('@/views/statistics/index.vue'),
 			},
-			{
-				path: '/settings',
-				name: 'settings',
-				meta: {
-					title: '设置',
-				},
-				component: () => import('@/views/settings/index.vue'),
-			},
+			// {
+			// 	path: '/settings',
+			// 	name: 'settings',
+			// 	meta: {
+			// 		title: '设置',
+			// 	},
+			// 	component: () => import('@/views/settings/index.vue'),
+			// },
 		],
 	},
 	{

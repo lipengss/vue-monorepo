@@ -3,21 +3,9 @@ import 'virtual:svg-icons-register';
 // @ts-ignore
 import SvgIcon from "../component/SvgIcon/SvgIcon.vue";
 
-
-import { createPinia } from 'pinia';
-
-function elSvg(app) {
-    app.component('SvgIcon', SvgIcon);
-}
-
-
-
 const plugins = {
-    elSvg:(app) => {
-        elSvg(app)
-    },
-    pinia: (app) => {
-        app.use(createPinia());
+    elSvg:(app:any) => {
+        app.component('SvgIcon', SvgIcon);
     }
 }
 
