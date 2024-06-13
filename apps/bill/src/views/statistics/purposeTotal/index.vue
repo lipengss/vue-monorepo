@@ -34,7 +34,6 @@ import { _PURPOSE, EXPENSES } from '@/assets/data';
 
 const route = useRoute();
 const router = useRouter();
-
 const { billList } = storeToRefs(useBillStore());
 
 const total = ref(0);

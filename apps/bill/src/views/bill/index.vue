@@ -1,13 +1,12 @@
 <template>
-	<van-nav-bar
-		title="明细"
-		fixed
-		placeholder
-		left-text="导入"
-		@click-left="showDialog = true;"
-		right-text="备份"
-		@click-right="onCopy"
-	/>
+	<van-sticky>
+		<van-nav-bar title="明细" placeholder right-text="拷贝" @click-right="actionSheetRef.open()">
+			<template #right>
+				<van-icon name="list-switch" size="24" />
+			</template>
+		</van-nav-bar>
+		<filterData />
+	</van-sticky>
 	<van-list v-model:loading="state.loading" :finished="state.finished" finished-text="没有更多了" v-if="billStore.billList.length">
 		<div v-for="item in billStore.formatBillList" :key="item.date" class="card">
 			<div class="line">
@@ -54,65 +53,34 @@
 		<van-button round block type="primary" class="bottom-button" @click="formRef.onAddOrder()"> 点 亮 财 富 之 旅 </van-button>
 	</van-empty>
 	<formData ref="formRef" />
-	<van-floating-bubble axis="xy" icon="records-o" magnetic="x" @click="formRef.onAddOrder()" />
-  <van-dialog v-model:show="showDialog" title="粘贴明细" show-cancel-button @confirm="onConfirm">
-    <van-field v-model="billData" rows="2" :autosize="{ maxHeight: 200, minHeight: 200 }" type="textarea" placeholder="录入账单数据" />
-  </van-dialog>
+	<actionSheet ref="actionSheetRef" />
+	<van-floating-bubble axis="xy" icon="records-o" magnetic="x" v-model:offset="offset" @click="formRef.onAddOrder()" />
 </template>
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import {dayjs, formatNum, isEqual} from '@common/utils/src'
+import { reactive, ref, computed } from 'vue';
+import { dayjs, formatNum } from '@common/utils/src';
 import { _PURPOSE, EXPENSES } from '@/assets/data';
 import formData from './formData.vue';
+import filterData from './filterData.vue';
+import actionSheet from './actionSheet.vue';
 import { useBillStore } from '@/stores/bill';
-import { useClipboard } from "@common/hooks";
-import {showToast} from "vant";
-
-const { copy } = useClipboard()
 
 const billStore = useBillStore();
 
 const formRef = ref();
-const billData = ref();
-const showDialog = ref(false);
+const actionSheetRef = ref();
 
 const state = reactive({
 	loading: false,
 	finished: true,
 });
-
-// 拷贝
-function onCopy() {
-  const content = JSON.stringify(billStore.billList, undefined, 4);
-  copy(content)
-  showToast('已将内容拷贝到粘贴板！');
-}
-
-// 保存粘贴内容
-function onConfirm() {
-  try {
-    const json = JSON.parse(billData.value);
-    // 判断是否是数组
-    if (Array.isArray(json)) {
-      for (const item of json) {
-        const index = billStore.billList.findIndex((n:IOrder) => n.id === item.id);
-        if (index !== -1) {
-          billStore.billList.splice(index, 1, item);
-        } else {
-          billStore.addBill(item);
-        }
-      }
-    }
-    // 判断是否是对象
-    if (Object.prototype.toString.call(json) === '[object Object]') {
-      if (isEqual(Object.keys(json), Object.keys(billStore.defaultBillItemData))) {
-        billStore.addBill(json);
-      }
-    }
-  } catch (err) {
-    showToast('导入的数据格式有误');
-  }
-}
+window.innerWidth;
+const offset = computed(() => {
+	return {
+		x: window.innerWidth - (50 + 10),
+		y: window.innerHeight - (50 + 60),
+	};
+});
 
 billStore.init();
 </script>

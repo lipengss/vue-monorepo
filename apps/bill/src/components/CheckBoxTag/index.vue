@@ -1,15 +1,18 @@
 <template>
 	<van-space :size="10" wrap>
 		<div class="checkbox-tag" v-for="tag in props.options" :class="{ active: isActive(tag.value) }" @click="onClick(tag.value)">
-			{{ tag.label }}
+			{{ tag.text }}
 		</div>
 	</van-space>
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
+import type { DropdownItemOption } from "vant";
+import type { DropdownItemOptionValue, } from 'vant/lib/dropdown-item/types';
+
 interface Props {
-	value: string | Array<string | number>; // 值
-	options: { label: string; value: string | number }[]; // 数据
+	value: string | Array<DropdownItemOptionValue>; // 值
+	options: DropdownItemOption[]; // 数据
 	bgColor?: string; // 背景颜色
 	color?: string; // 文字颜色
 	multiple?: boolean; // 是否多选
@@ -26,9 +29,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits(['update:value']);
 
-const tagValue = ref<string | number | Array<string | number>>('');
+const tagValue = ref<string | number | Array<DropdownItemOptionValue>>('');
 
-function isActive(val: string | number) {
+function isActive(val: DropdownItemOptionValue) {
 	if (props.multiple) {
 		// 多选
 		if (!Array.isArray(props.value)) {
@@ -41,7 +44,7 @@ function isActive(val: string | number) {
 	}
 }
 
-function onClick(val: string | number) {
+function onClick(val: DropdownItemOptionValue) {
 	if (props.multiple) {
 		if (Array.isArray(props.value)) {
 			if (props.value.includes(val)) {
@@ -61,7 +64,7 @@ function onClick(val: string | number) {
 
 watch(
 	() => props.value,
-	(val: string | Array<string | number>) => {
+	(val: string | Array<DropdownItemOptionValue>) => {
 		tagValue.value = val;
 	},
 	{

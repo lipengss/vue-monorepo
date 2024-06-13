@@ -4,16 +4,18 @@
 			<div class="icon" :class="{ active: isActive(item.value) }">
 				<svg-icon :name="item.value" />
 			</div>
-			<div class="span">{{ item.label }}</div>
+			<div class="span">{{ item.text }}</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import type { DropdownItemOption } from 'vant/es';
+import type { DropdownItemOptionValue, } from 'vant/lib/dropdown-item/types';
 import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
 interface Props {
-	value: string | Array<string | number>; // 值
-	options: { label: string; value: string | number }[]; // 数据
+	value: string | Array<DropdownItemOptionValue>; // 值
+	options: DropdownItemOption[]; // 数据
 	bgColor?: string; // 背景颜色
 	color?: string; // 文字颜色
 	multiple?: boolean; // 是否多选
@@ -30,9 +32,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits(['update:value']);
 
-const tagValue = ref<string | number | Array<string | number>>('');
+const tagValue = ref<string | number | Array<DropdownItemOptionValue>>('');
 
-function isActive(val: string | number) {
+function isActive(val: DropdownItemOptionValue) {
 	if (props.multiple) {
 		// 多选
 		if (!Array.isArray(props.value)) {
@@ -45,7 +47,7 @@ function isActive(val: string | number) {
 	}
 }
 
-function onClick(val: string | number) {
+function onClick(val: DropdownItemOptionValue) {
 	if (props.multiple) {
 		if (Array.isArray(props.value)) {
 			if (props.value.includes(val)) {
@@ -65,7 +67,7 @@ function onClick(val: string | number) {
 
 watch(
 	() => props.value,
-	(val: string | Array<string | number>) => {
+	(val: string | Array<DropdownItemOptionValue>) => {
 		tagValue.value = val;
 	},
 	{

@@ -1,46 +1,33 @@
 <template>
 	<div class="expenses" @click="showPicker = true">{{ dayjs(props.value).format(props.showFormat) }} <van-icon name="arrow-down" /></div>
-	<van-popup v-model:show="showPicker" position="bottom" :style="{ height: '40%' }" @open="setDate()">
-		<van-date-picker
-			v-model="dateValue"
-			title="选择日期"
-			:min-date="new Date(2020, 0, 1)"
-			:max-date="new Date()"
-			:columnsType="props.columnsType"
-			@confirm="onComfirm"
-			@cancel="showPicker = false"
-		/>
-	</van-popup>
+  <van-calendar v-model:show="showPicker" type="single" :show-confirm="false" :default-date="dayjs(props.value).toDate()" :min-date="new Date(2022,1,1)" @confirm="onConfirm" />
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
-import type { DatePickerColumnType } from 'vant';
-import { dayjs } from '@common/utils';
+import { dayjs } from '@common/utils/src';
 
 interface Props {
 	value: string; // 值
 	bgColor?: string; // 背景颜色
 	color?: string; // 文字颜色
 	showFormat?: string;
-	valueFormat?: string;
-	columnsType?: DatePickerColumnType[];
 }
 const props = withDefaults(defineProps<Props>(), {
 	value: '',
 	bgColor: '#f7f8fa',
 	color: '#969799',
 	showFormat: 'MM月DD日',
-	valueFormat: 'YYYY-MM-DD',
-	columnsType: () => ['year', 'month', 'day'],
 });
-
 const showPicker = ref(false);
 
 const emits = defineEmits(['update:value']);
 
-function onComfirm(date: any) {
-	emits('update:value', date.selectedValues.join('-'));
-	showPicker.value = false;
+function onConfirm(value: Date) {
+  showPicker.value = false;
+  console.log('x', dayjs(props.value).format())
+  const date = dayjs(value).hour(dayjs().hour()).minute(dayjs().minute()).second(dayjs().second()).format('YYYY-MM-DD HH:mm:ss');
+  emits('update:value', date);
+  // date.value = formatDate(value);
 }
 
 const dateValue = ref<string[]>([]);

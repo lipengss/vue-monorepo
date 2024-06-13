@@ -1,7 +1,7 @@
 <template>
 	<div class="info">
 		<div class="flex-bl-bt">
-			<DateTag v-model:value="day" show-format="YYYY年MM月" :columnsType="['year', 'month']" />
+			<DateTag v-model:value="day" show-format="YYYY年MM月" />
 			<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="expenses" />
 		</div>
 		<div class="text">

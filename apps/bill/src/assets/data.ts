@@ -1,4 +1,4 @@
-import type { TagType } from 'vant';
+import type {DropdownItemOption, TagType} from 'vant';
 
 const EXPENSES:Map<EXPENSE_TYPE, { label: string, type: TagType, color: string }> = new Map([
 	['income', { label: '收入', type: 'primary', color: '#1989fa' }],
@@ -22,14 +22,15 @@ const _PURPOSE = new Map([
 	['manicure', { label: '美甲', icon: 'manicure' }],
 	['eyelash', { label: '睫毛', icon: 'eyelash' }],
 	['beauty', { label: '美容', icon: 'beauty' }],
+	['liveExpenses', { label: '生活缴费', icon: 'liveExpenses' }],
 ]);
 
 const STAFF = ['娇娇', '大乐', '莎莎', '海燕', '奎奎', '小姨'];
 
-function formatMap(map: Map<string, any>): { label: string; value: string }[] {
-	return Array.from(map).map((item) => {
+function formatMap(map: Map<string, any>): DropdownItemOption[] {
+	return Array.from(map).map((item): DropdownItemOption => {
 		return {
-			label: typeof item[1] === 'object' ? item[1].label : item[1],
+			text: typeof item[1] === 'object' ? item[1].label : item[1],
 			value: item[0],
 		};
 	});

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+		"jsx": "preserve",
+		"isolatedModules": true ,
+		"strict": true,
+		"moduleResolution": "node",
+		"baseUrl": "./",
+		"paths": {
+			"/@/*": ["src/*"],
+      "@components/template":["web-common/components"],
+      "@services/request":["web-common/services"],
+      "@ui/element-plus":["web-common/ui"],
+      "@utils/tools":["web-common/utils"]
+		},
+		"types": ["vite/client"],
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.tsx", "src/**/*.d.ts", "*.ts"], 
+	"exclude": ["node_modules"],
+}

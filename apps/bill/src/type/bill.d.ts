@@ -8,4 +8,8 @@ interface IBillState {
 interface StoreState {
 	billList: IOrder[];
 	defaultBillItemData: IOrder;
+	filter: {
+		expenses: string;
+		purpose: string;
+	}
 }

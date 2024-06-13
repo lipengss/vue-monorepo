@@ -39,7 +39,7 @@
 				<template #title>
 					<div class="expenses-wrap">
 						<van-space :size="10" wrap>
-							<CheckBoxTag :options="STAFF.map((i) => ({ label: i, value: i }))" v-model:value="state.data.staff" :active-color="themeColor" />
+							<CheckBoxTag :options="STAFF.map((i) => ({ text: i, value: i }))" v-model:value="state.data.staff" :active-color="themeColor" />
 						</van-space>
 					</div>
 				</template>
@@ -76,7 +76,8 @@ const themeColor = computed(() => {
 const emits = defineEmits(['pull']);
 
 function onAddOrder() {
-	state.data = cloneDeep(billStore.defaultBillItemData);
+	state.data.price = '';
+  state.data.remarks = '';
 	state.showPopup = true;
 }
 
