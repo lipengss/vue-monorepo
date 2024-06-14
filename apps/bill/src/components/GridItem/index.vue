@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import type { DropdownItemOption } from 'vant/es';
-import type { DropdownItemOptionValue, } from 'vant/lib/dropdown-item/types';
+import type { DropdownItemOptionValue } from 'vant/lib/dropdown-item/types';
 import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
 interface Props {
 	value: string | Array<DropdownItemOptionValue>; // 值
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
 	activeColor: '#07c160',
 });
 
-const emits = defineEmits(['update:value']);
+const emits = defineEmits(['update:value', 'change']);
 
 const tagValue = ref<string | number | Array<DropdownItemOptionValue>>('');
 
@@ -63,6 +63,7 @@ function onClick(val: DropdownItemOptionValue) {
 	} else {
 		emits('update:value', val);
 	}
+	emits('change', val);
 }
 
 watch(
@@ -85,10 +86,12 @@ watch(
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		margin-bottom: 4px;
 		.icon {
 			width: 40px;
 			height: 40px;
 			border-radius: 50%;
+			margin-bottom: 4px;
 			font-size: 20px;
 			display: flex;
 			align-items: center;
