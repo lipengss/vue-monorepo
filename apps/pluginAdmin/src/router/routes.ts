@@ -137,6 +137,15 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('@/views/video/video.vue'),
 			},
+			{
+				path: '/avue',
+				name: 'avue',
+				meta: {
+					title: 'avue',
+					icon: 'animation',
+				},
+				component: () => import('@/views/avue/avue.vue'),
+			},
 			// {
 			// 	path: '/chatRoom',
 			// 	name: 'chatRoom',
