@@ -37,7 +37,6 @@
 </template>
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
-import { ElDialog, ElButton, ElIcon } from '@ui/element-plus';
 type Props = {
 	title: string;
 	width?: string | number;

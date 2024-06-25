@@ -11,10 +11,6 @@ const pathResolve = (dir: string): any => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	test: {
-		// 模拟dom环境
-		environment: 'happy-dom',
-	},
 	define: {
 		__VUE_OPTIONS_API__: true,
 		__VUE_PROD_DEVTOOLS__: false,

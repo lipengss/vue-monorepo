@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "echarts": "^5.5.0",
+    "element-plus": "^2.2.21",
     "pinia": "^2.1.7",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-echarts": "^6.7.2",
