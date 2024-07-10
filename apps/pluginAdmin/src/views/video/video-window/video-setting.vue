@@ -11,8 +11,6 @@
 </template>
 <script setup lang="ts">
 import { inject, computed } from 'vue'
-import { IOptions } from '@/types/IVideo'
-
 const optionForm: IOptions | undefined = inject('optionForm')
 
 const blurs = computed(() => optionForm && optionForm.cover.blur + 'px')

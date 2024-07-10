@@ -9,6 +9,7 @@
   "dependencies": {
     "dayjs": "^1.11.11",
     "lodash-es": "^4.17.21",
+    "mitt": "^3.0.1",
     "nanoid": "^5.0.7",
     "numeral": "^2.0.6",
     "qs": "^6.12.1"

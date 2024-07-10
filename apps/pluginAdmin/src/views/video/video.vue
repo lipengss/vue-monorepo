@@ -56,7 +56,6 @@
 </template>
 <script setup lang="ts">
 import { reactive, provide } from 'vue'
-import { IOptions, IShowType, IStyle } from '@/types/IVideo'
 import {
 	ElForm,
 	ElFormItem,

@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<Dialog v-model:visible="dialog.visible" title="字段创建" width="500" draggable>
+		<Dialog v-model:visible="dialog.visible" title="字段创建" width="500" draggable lock-scroll>
 			<el-form :model="dialog.data" hide-required-asterisk label-position="top">
 				<FormItem label="字段名" prop="name" :rules="{ required: true, message: '输入字段名' }">
 					<el-input v-model="dialog.data.label" placeholder="请输入字段名" clearable />
@@ -10,7 +10,7 @@
 				</FormItem>
 				<FormItem label="读写类型" prop="dataType.unit">
 					<el-radio-group v-model="dialog.data.readWrite">
-						<el-radio v-for="[key, obj] in readWriteList" :key="key" :label="key">{{ obj.label }}</el-radio>
+						<el-radio v-for="[key, obj] in readWriteList" :key="key" :value="key">{{ obj.label }}</el-radio>
 					</el-radio-group>
 				</FormItem>
 				<FormItem label="数据类型" prop="dataType.type" :rules="{ required: true, message: '选择数据类型' }">
@@ -49,7 +49,7 @@
 					<el-radio-group v-model="dialog.data.dataType.default_value">
 						<template v-for="item in dialog.data.dataType.elements">
 							<el-space class="mb10">
-								<el-radio :label="item.value" style="min-width: 60px">
+								<el-radio :value="item.value" style="min-width: 60px">
 									{{ item.label }}
 								</el-radio>
 								<el-input v-model="item.label" />
@@ -68,24 +68,26 @@
 			</el-form>
 		</Dialog>
 		<el-button @click="dialog.visible = true">添加字段</el-button>
-		<treeTable />
+		<el-button type="primary" @click="onHandleMitt">mitt事件</el-button>
 	</div>
+	<FieldTable />
 </template>
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, watch, onMounted, onUnmounted } from 'vue'
 import FormItem from '@common/component/src/component/FormItem/index.vue'
 import Dialog from '@common/component/src/component/Dialog/index.vue'
 import EnumTable from './component/EnumTable.vue'
 import { Minus } from '@element-plus/icons-vue'
-import treeTable from './treeTable.vue'
+import FieldTable from './fieldTable.vue'
 import { typeList, unitList, readWriteList } from './data'
+import { mittBus } from '@common/utils'
+
 const dialog: DialogState = reactive({
 	visible: false,
 	data: {
 		label: '',
 		prop: '',
 		readWrite: true,
-
 		dataType: {
 			type: 'string',
 			length: 100,
@@ -96,6 +98,20 @@ const dialog: DialogState = reactive({
 })
 
 const dataType = computed(() => dialog.data.dataType.type)
+
+function onHandleMitt() {
+	mittBus.emit('events')
+}
+
+onMounted(() => {
+	mittBus.on('events', () => {
+		console.log(mittBus)
+	})
+})
+
+onUnmounted(() => {
+	mittBus.off('events')
+})
 
 watch(
 	() => dataType.value,

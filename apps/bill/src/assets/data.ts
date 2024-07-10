@@ -12,8 +12,6 @@ const PAY_METHOD = new Map([
 	['cash', { label: '现金', icon: 'cash' }],
 ]);
 
-const PURPOSE = ['其它', '续卡', '柴米油盐', '工资', '美甲产品', '睫毛产品', '美容产品'];
-
 const _PURPOSE = new Map([
 	['other', { label: '其他', icon: 'other' }],
 	['deposit', { label: '续卡', icon: 'deposit' }],
@@ -22,6 +20,7 @@ const _PURPOSE = new Map([
 	['manicure', { label: '美甲', icon: 'manicure' }],
 	['eyelash', { label: '睫毛', icon: 'eyelash' }],
 	['beauty', { label: '美容', icon: 'beauty' }],
+	['groupBuying', { label: '团购', icon: 'groupBuying' }],
 	['liveExpenses', { label: '生活缴费', icon: 'liveExpenses' }],
 ]);
 

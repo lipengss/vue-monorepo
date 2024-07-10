@@ -4,6 +4,7 @@ import { formatNum, convertToPercentages } from './count'
 import dayjs from 'dayjs'
 import { Local, Session } from './storage'
 import qs from 'qs'
+import mittBus from './mitt'
 
 export {
     qs,
@@ -16,5 +17,6 @@ export {
     isEqual,
     cloneDeep,
     formatNum,
-    convertToPercentages
+    convertToPercentages,
+    mittBus
 }

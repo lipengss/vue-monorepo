@@ -10,10 +10,9 @@
 		"baseUrl": "./",
 		"paths": {
 			"/@/*": ["src/*"],
-      "@components/template":["web-common/components"],
-      "@services/request":["web-common/services"],
-      "@ui/element-plus":["web-common/ui"],
-      "@utils/tools":["web-common/utils"]
+      "@common/component":["common/component"],
+      "@common/hooks":["common/hooks"],
+      "@common/utils":["common/utils"],
 		},
 		"types": ["vite/client"],
 		"allowSyntheticDefaultImports": true,
