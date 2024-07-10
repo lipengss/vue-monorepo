@@ -36,7 +36,7 @@
 				</div>
 			</template>
 			<template #title>
-				{{ item.name }}
+				<div class="name">{{ item.name }}</div>
 				<van-progress :percentage="item.per" :show-pivot="false" :color="themeColor" />
 			</template>
 		</van-cell>
@@ -56,7 +56,7 @@ import { ref, computed, watch, onActivated } from 'vue';
 import { EXPENSES, formatMap, _PURPOSE } from '@/assets/data';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
-import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src'
+import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
@@ -187,7 +187,7 @@ function setPieData() {
 		}
 	});
 	// 将累加后的金额 以最大的为基数 转化成百分比
-	const perList = convertToPercentages(allOrderList.value.map((n) => parseFloat(n.price)));
+	const perList = convertToPercentages(Object.values(data));
 	const dataList = Object.keys(data).map((n, index) => {
 		return {
 			value: data[n],
@@ -240,17 +240,18 @@ onActivated(() => {
 		}
 	}
 }
-:deep .van-cell__title {
-	flex: 4;
-	display: flex;
-	align-items: center;
-	.van-progress {
-		flex: 1;
-		margin-left: 10px;
+:deep .van-cell {
+	display: grid;
+	grid-template-columns: 46px 2fr 1fr 20px;
+	.van-cell__title {
+		display: grid;
+		align-items: center;
+		grid-template-columns: 60px 1fr;
+		grid-column-gap: 10px;
+		.name {
+			text-align: justify;
+		}
 	}
-}
-:deep .van-cell__value {
-	flex-basis: auto;
 }
 .van-nav-bar {
 	background-color: v-bind(themeColor);

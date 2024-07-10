@@ -1,6 +1,6 @@
-import type {DropdownItemOption, TagType} from 'vant';
+import type { DropdownItemOption, TagType } from 'vant';
 
-const EXPENSES:Map<EXPENSE_TYPE, { label: string, type: TagType, color: string }> = new Map([
+const EXPENSES: Map<EXPENSE_TYPE, { label: string; type: TagType; color: string }> = new Map([
 	['income', { label: '收入', type: 'primary', color: '#1989fa' }],
 	['pay', { label: '支出', type: 'warning', color: '#ff976a' }],
 ]);
@@ -11,7 +11,7 @@ const PAY_METHOD = new Map([
 	['Alipay', { label: '支付宝', icon: 'alipay' }],
 	['cash', { label: '现金', icon: 'cash' }],
 ]);
-
+const PLATFORM = new Map([]);
 const _PURPOSE = new Map([
 	['other', { label: '其他', icon: 'other' }],
 	['deposit', { label: '续卡', icon: 'deposit' }],
@@ -20,7 +20,9 @@ const _PURPOSE = new Map([
 	['manicure', { label: '美甲', icon: 'manicure' }],
 	['eyelash', { label: '睫毛', icon: 'eyelash' }],
 	['beauty', { label: '美容', icon: 'beauty' }],
-	['groupBuying', { label: '团购', icon: 'groupBuying' }],
+	['meituan', { label: '美团', icon: 'meituan', charge: '' }],
+	['douyin', { label: '抖音', icon: 'douyin', charge: '' }],
+	['zhifubao', { label: '支付宝', icon: 'zhifubao', charge: '' }],
 	['liveExpenses', { label: '生活缴费', icon: 'liveExpenses' }],
 ]);
 
@@ -35,4 +37,4 @@ function formatMap(map: Map<string, any>): DropdownItemOption[] {
 	});
 }
 
-export { EXPENSES, PAY_METHOD, STAFF, PURPOSE, _PURPOSE, formatMap };
+export { EXPENSES, PAY_METHOD, STAFF, PLATFORM, _PURPOSE, formatMap };

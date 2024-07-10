@@ -35,6 +35,9 @@
 					<GridItem :options="formatMap(_PURPOSE)" v-model:value="state.data.purpose" :active-color="themeColor" />
 				</template>
 			</van-cell>
+			<van-field v-if="['meituan', 'douyin', 'zhifubao'].includes(state.data.purpose)" label="手续费" readonly>
+				<template #right-icon>费率 0.10%</template>
+			</van-field>
 			<van-cell>
 				<template #title>
 					<div class="expenses-wrap">
@@ -56,7 +59,7 @@ import { reactive, computed, defineExpose, defineEmits } from 'vue';
 import { EXPENSES, _PURPOSE, STAFF, formatMap } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { showToast } from 'vant';
-import { cloneDeep, nanoid, dayjs } from '@common/utils/src'
+import { cloneDeep, nanoid, dayjs } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import GridItem from '@/components/GridItem/index.vue';
 import DateTag from '@/components/DateTag/index.vue';
@@ -77,7 +80,7 @@ const emits = defineEmits(['pull']);
 
 function onAddOrder() {
 	state.data.price = '';
-  state.data.remarks = '';
+	state.data.remarks = '';
 	state.showPopup = true;
 }
 
