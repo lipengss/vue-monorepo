@@ -12,4 +12,18 @@ function convertToPercentages(arr: number[]): number[] {
 	return arr.map((num) => Math.floor(numeral(num).divide(max).multiply(100).value() || 0));
 }
 
-export { formatNum, convertToPercentages };
+function multiply(num: number | string, rate: number): string | number {
+	if (!num) return 0;
+	const b = numeral(rate).divide(100).value();
+	return numeral(num).multiply(b).format('0.00');
+}
+
+function add(num1: number | string, num2: number | string): string {
+	return numeral(num1).add(num2).format('0.00');
+}
+
+function subtract(num1: number | string, num2: number | string): string {
+	return numeral(num1).subtract(num2).format('0.00');
+}
+
+export { formatNum, multiply, add, subtract, convertToPercentages };

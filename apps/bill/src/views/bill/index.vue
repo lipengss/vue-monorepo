@@ -1,16 +1,9 @@
 <template>
-	<van-sticky>
-		<van-nav-bar title="明细" placeholder right-text="拷贝" @click-right="actionSheetRef.open()">
-			<template #right>
-				<van-icon name="list-switch" size="24" />
-			</template>
-		</van-nav-bar>
-		<filterData />
-	</van-sticky>
+	<filterData />
 	<van-list v-model:loading="state.loading" :finished="state.finished" finished-text="没有更多了" v-if="billStore.billList.length">
 		<div v-for="item in billStore.formatBillList" :key="item.date" class="card">
 			<div class="line">
-				<div class="date">{{ dayjs(item.date).format('MM月DD日') }}</div>
+				<div class="date">{{ dayjs(item.date).format('MM月DD日') }} {{ getDayOfWeek(item.date) }}</div>
 				<div class="price">
 					<div class="text">出</div>
 					<div class="num num1">{{ formatNum(item.totalPay) }}</div>
@@ -32,14 +25,12 @@
 					size="large"
 				>
 					<template #icon>
-						<div class="icon-purpose" style="--color: #1989fa">
+						<div class="icon-purpose" :style="`--color: ${EXPENSES.get(bill.expenses)?.color}`">
 							<svg-icon :name="_PURPOSE.get(bill.purpose)?.icon || ''" />
 						</div>
 					</template>
 					<template #title>
-						<div class="cell-title">
-							<van-tag round :type="EXPENSES.get(bill.expenses)?.type">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
-						</div>
+						<van-tag round :type="EXPENSES.get(bill.expenses)?.type">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
 					</template>
 				</van-cell>
 				<template #right>
@@ -53,22 +44,19 @@
 		<van-button round block type="primary" class="bottom-button" @click="formRef.onAddOrder()"> 点 亮 财 富 之 旅 </van-button>
 	</van-empty>
 	<formData ref="formRef" />
-	<actionSheet ref="actionSheetRef" />
 	<van-floating-bubble axis="xy" icon="records-o" magnetic="x" v-model:offset="offset" @click="formRef.onAddOrder()" />
 </template>
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
-import { dayjs, formatNum } from '@common/utils/src';
+import { dayjs, formatNum, getDayOfWeek } from '@common/utils/src';
 import { _PURPOSE, EXPENSES } from '@/assets/data';
 import formData from './formData.vue';
 import filterData from './filterData.vue';
-import actionSheet from './actionSheet.vue';
 import { useBillStore } from '@/stores/bill';
 
 const billStore = useBillStore();
 
 const formRef = ref();
-const actionSheetRef = ref();
 
 const state = reactive({
 	loading: false,
@@ -119,12 +107,11 @@ billStore.init();
 	}
 	.van-cell {
 		padding: 10px 0;
-	}
-	.cell-title {
-		display: flex;
-		align-items: center;
-		.van-tag {
-			margin-left: 6px;
+		:deep .van-cell__label {
+			font-size: 12px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 }

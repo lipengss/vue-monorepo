@@ -1,10 +1,10 @@
-
 type EXPENSE_TYPE = 'income' | 'pay';
 
 interface IOrder {
 	date: string;
 	expenses: EXPENSE_TYPE;
 	price: string;
+	serviceFee: number;
 	payMethod: string;
 	purpose: string;
 	staff: string;
@@ -13,8 +13,8 @@ interface IOrder {
 }
 
 interface ISeriesData {
-	value: string | number
-	name: string
+	value: string | number;
+	name: string;
 }
 
 interface IState {

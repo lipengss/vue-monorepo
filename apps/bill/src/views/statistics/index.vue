@@ -1,8 +1,8 @@
 <template>
 	<div class="info">
 		<div class="flex-bl-bt">
-			<DateTag v-model:value="day" show-format="YYYY年MM月" />
-			<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="expenses" />
+			<DateTag v-model:value="day" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+			<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="expenses" bg-color="transparent" color="#fff" active-color="rgba(255,255,255,.2)" />
 		</div>
 		<div class="text">
 			<div class="title">{{ expenses === 'income' ? '共收入' : '共支出' }}</div>
@@ -52,20 +52,20 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref, computed, watch, onActivated } from 'vue';
+import { ref, computed, watch, onActivated, watchEffect } from 'vue';
 import { EXPENSES, formatMap, _PURPOSE } from '@/assets/data';
-import { storeToRefs } from 'pinia';
-import { useBillStore } from '@/stores/bill';
+import { useBill } from '@/hooks/useBill';
 import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
 import DateTag from '@/components/DateTag/index.vue';
 
-const { billList } = storeToRefs(useBillStore());
+const { incomeTotal, payTotal, filterMonthData } = useBill();
 
 const expenses = ref<'income' | 'pay'>('income');
 const day = ref(dayjs().format('YYYY-MM'));
+const total = ref('0.00');
 
 const option = ref<any>({
 	grid: {
@@ -163,18 +163,14 @@ const dayRatioOption = ref<any>({
 	},
 });
 
+watchEffect(() => {
+	total.value = expenses.value === 'income' ? incomeTotal(day.value) : payTotal(day.value);
+});
+
 // 过滤日期相同的数据 并返回所有账单记录
-const allOrderList = computed(() =>
-	billList.value.filter((n) => dayjs(day.value).isSame(n.date, 'month')).filter((n) => n.expenses === expenses.value)
-);
+const allOrderList = computed(() => filterMonthData(day.value, expenses.value));
 
 const themeColor = computed(() => EXPENSES.get(expenses.value)?.color);
-
-const total = computed(() =>
-	allOrderList.value.reduce((pre, cur) => {
-		return pre + parseFloat(cur.price);
-	}, 0)
-);
 
 function setPieData() {
 	const data: { [key: string]: number } = {};
@@ -227,7 +223,7 @@ onActivated(() => {
 </script>
 <style lang="scss" scoped>
 .info {
-	padding: 10px;
+	padding: 20px;
 	background-color: v-bind(themeColor);
 	.text {
 		color: var(--van-white);

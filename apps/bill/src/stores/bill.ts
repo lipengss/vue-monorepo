@@ -14,20 +14,24 @@ export const useBillStore = defineStore('bill', {
 				purpose: 'other',
 				staff: '娇娇',
 				remarks: '',
+				serviceFee: 0,
 				date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
 				id: '',
 			},
 			filter: {
 				expenses: 'all',
-				purpose: 'all'
-			}
+				purpose: 'all',
+			},
 		};
 	},
 	getters: {
 		formatBillList(state) {
 			const data: { [key: string]: { list: IOrder[]; totalIncome: number; totalPay: number; date: string } } = {};
 			const filterList = state.billList.filter((n) => {
-				return (n.expenses === state.filter.expenses || state.filter.expenses === 'all') && (n.purpose === state.filter.purpose || state.filter.purpose === 'all');
+				return (
+					(n.expenses === state.filter.expenses || state.filter.expenses === 'all') &&
+					(n.purpose === state.filter.purpose || state.filter.purpose === 'all')
+				);
 			});
 			filterList.forEach((n) => {
 				const day = dayjs(n.date).format('YYYY-MM-DD');

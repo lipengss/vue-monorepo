@@ -3,19 +3,21 @@
 	<div class="container">
 		<div class="content">
 			<div class="icon-line">
-				<div class="icon-purpose" style="--color: #1989fa">
+				<div class="icon-purpose" :style="`--color: ${EXPENSES.get(currentBill.expenses)?.color}`">
 					<svg-icon :name="_PURPOSE.get(currentBill.purpose)?.icon || ''" />
 				</div>
 				{{ _PURPOSE.get(currentBill.purpose)?.label }}
 			</div>
-			<div class="line-price">
-				{{ formatNum(currentBill.price) }}
-			</div>
+			<div class="line-price">{{ EXPENSES.get(currentBill.expenses)?.unit }}{{ formatNum(currentBill.price) }}</div>
 			<div class="line">
 				<div class="title">类型</div>
 				<div class="value">
 					<van-tag :type="EXPENSES.get(currentBill.expenses)?.type">{{ EXPENSES.get(currentBill.expenses)?.label }}</van-tag>
 				</div>
+			</div>
+			<div class="line" v-if="currentBill.serviceFee">
+				<div class="title">服务费</div>
+				<div class="value">-{{ currentBill.serviceFee }}</div>
 			</div>
 			<div class="line">
 				<div class="title">经过人</div>
@@ -60,14 +62,15 @@ const router = useRouter();
 const route = useRoute();
 const formRef = ref();
 const currentBill = ref<IOrder>({
-  expenses: 'income',
-  price: '',
-  payMethod: 'cash',
-  purpose: 'other',
-  staff: '娇娇',
-  remarks: '',
-  date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-  id: '',
+	expenses: 'income',
+	price: '',
+	payMethod: 'cash',
+	purpose: 'other',
+	staff: '娇娇',
+	remarks: '',
+	serviceFee: 0,
+	date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+	id: '',
 });
 
 function setData() {
@@ -106,11 +109,13 @@ onActivated(() => {
 		}
 		.line {
 			display: flex;
-			align-items: center;
-			line-height: 30px;
+			align-items: first baseline;
+			line-height: 22px;
+			margin-bottom: 10px;
 			font-size: 14px;
 			.title {
 				min-width: 90px;
+				text-align: justify;
 				color: var(--van-cell-label-color);
 			}
 			.btn1 {

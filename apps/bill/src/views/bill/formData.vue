@@ -1,5 +1,5 @@
 <template>
-	<van-popup v-model:show="state.showPopup" round closeable position="bottom" :style="{ height: '80%' }">
+	<van-popup v-model:show="state.showPopup" round closeable position="bottom" :style="{ height: '94%' }">
 		<van-form @submit="onSubmit" @failed="onFailed" :show-error-message="false" :validate-first="true" :style="{ '--color': themeColor }">
 			<van-cell>
 				<template #title>
@@ -16,7 +16,6 @@
 				clickable
 				@touchstart.stop="state.showKeyboard = true"
 				size="large"
-				:border="false"
 				:rules="[{ required: true, message: '填写金额' }]"
 			>
 				<template #left-icon><svg-icon name="symbol" /></template>
@@ -28,15 +27,15 @@
 				:maxlength="6"
 				theme="custom"
 				close-button-text="完成"
-				@blur="state.showKeyboard = false"
+				@blur="onKeyboardBlur"
 			/>
 			<van-cell>
 				<template #title>
 					<GridItem :options="formatMap(_PURPOSE)" v-model:value="state.data.purpose" :active-color="themeColor" />
 				</template>
 			</van-cell>
-			<van-field v-if="['meituan', 'douyin', 'zhifubao'].includes(state.data.purpose)" label="手续费" readonly>
-				<template #right-icon>费率 0.10%</template>
+			<van-field v-if="RATE_LIST.includes(state.data.purpose)" label="手续费" v-model="state.data.serviceFee">
+				<template #right-icon>费率 {{ formatNum(_PURPOSE.get(state.data.purpose)?.rate || 0) }}%</template>
 			</van-field>
 			<van-cell>
 				<template #title>
@@ -55,11 +54,11 @@
 	</van-popup>
 </template>
 <script setup lang="ts">
-import { reactive, computed, defineExpose, defineEmits } from 'vue';
-import { EXPENSES, _PURPOSE, STAFF, formatMap } from '@/assets/data';
+import { reactive, computed, defineExpose, defineEmits, watchEffect } from 'vue';
+import { EXPENSES, _PURPOSE, STAFF, RATE_LIST, formatMap } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { showToast } from 'vant';
-import { cloneDeep, nanoid, dayjs } from '@common/utils/src';
+import { cloneDeep, nanoid, formatNum, dayjs, multiply } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import GridItem from '@/components/GridItem/index.vue';
 import DateTag from '@/components/DateTag/index.vue';
@@ -78,22 +77,41 @@ const themeColor = computed(() => {
 
 const emits = defineEmits(['pull']);
 
+// 显示 添加账单弹窗
 function onAddOrder() {
 	state.data.price = '';
 	state.data.remarks = '';
 	state.showPopup = true;
 }
-
+// 显示 修改账单弹窗
 function onEditOrder(data: IOrder) {
 	state.data = cloneDeep(data);
 	state.showPopup = true;
 }
 
+// 金额  失去光标
+function onKeyboardBlur() {
+	state.showKeyboard = false;
+}
+
+watchEffect(() => {
+	if (RATE_LIST.includes(state.data.purpose)) {
+		const rate = _PURPOSE.get(state.data.purpose)?.rate;
+		if (rate === undefined) return;
+		const sFee = multiply(state.data.price, rate);
+		state.data.serviceFee = typeof sFee === 'number' ? sFee : parseFloat(sFee);
+	} else {
+		state.data.serviceFee = 0;
+	}
+});
+
+// 监听错误
 function onFailed(errorInfo: any) {
 	const msg = errorInfo.errors[0].message;
 	showToast(msg);
 }
 
+// 提交账单
 function onSubmit() {
 	const data = cloneDeep(state.data);
 	data.date = dayjs(state.data.date).format('YYYY-MM-DD HH:mm:ss');

@@ -1,0 +1,52 @@
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useBillStore } from '@/stores/bill';
+import { dayjs, formatNum, subtract } from '@common/utils/src';
+export function useBill() {
+	const { billList } = storeToRefs(useBillStore());
+	// 根据月份过滤数据
+	function filterMonthData(month: string, expenses: string): IOrder[] {
+		const filterList = computed(() => billList.value.filter((n) => dayjs(month).isSame(n.date, 'month')).filter((n) => n.expenses === expenses));
+		return filterList.value;
+	}
+	// 收入合计
+	function incomeTotal(month: string): string {
+		const filterList = filterMonthData(month, 'income');
+		const total = computed(() =>
+			filterList.reduce((pre, cur) => {
+				return pre + parseFloat(cur.price);
+			}, 0)
+		);
+
+		return formatNum(total.value);
+	}
+	// 支出合计
+	function payTotal(month: string): string {
+		const filterList = filterMonthData(month, 'pay');
+		const total = computed(() =>
+			filterList.reduce((pre, cur) => {
+				return pre + parseFloat(cur.price);
+			}, 0)
+		);
+		return formatNum(total.value);
+	}
+	function serviceFeeTotal(month: string): string {
+		const filterList = filterMonthData(month, 'income').filter((n) => n.serviceFee && n.serviceFee !== 0);
+		const total = computed(() =>
+			filterList.reduce((pre, cur) => {
+				return pre + cur.serviceFee;
+			}, 0)
+		);
+		return formatNum(total.value);
+	}
+	function balance(month: string) {
+		return subtract(incomeTotal(month), payTotal(month));
+	}
+	return {
+		incomeTotal,
+		payTotal,
+		balance,
+		serviceFeeTotal,
+		filterMonthData,
+	};
+}
