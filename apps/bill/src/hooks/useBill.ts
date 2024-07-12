@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
-import { dayjs, formatNum, subtract } from '@common/utils/src';
+import { dayjs, formatNum, subtract, add } from '@common/utils/src';
 export function useBill() {
 	const { billList } = storeToRefs(useBillStore());
 	// 根据月份过滤数据
@@ -14,7 +14,7 @@ export function useBill() {
 		const filterList = filterMonthData(month, 'income');
 		const total = computed(() =>
 			filterList.reduce((pre, cur) => {
-				return pre + parseFloat(cur.price);
+				return parseFloat(add(pre, cur.price));
 			}, 0)
 		);
 
@@ -25,7 +25,7 @@ export function useBill() {
 		const filterList = filterMonthData(month, 'pay');
 		const total = computed(() =>
 			filterList.reduce((pre, cur) => {
-				return pre + parseFloat(cur.price);
+				return parseFloat(add(pre, cur.price));
 			}, 0)
 		);
 		return formatNum(total.value);
@@ -34,13 +34,14 @@ export function useBill() {
 		const filterList = filterMonthData(month, 'income').filter((n) => n.serviceFee && n.serviceFee !== 0);
 		const total = computed(() =>
 			filterList.reduce((pre, cur) => {
-				return pre + cur.serviceFee;
+				return parseFloat(add(pre, cur.serviceFee));
 			}, 0)
 		);
 		return formatNum(total.value);
 	}
 	function balance(month: string) {
-		return subtract(incomeTotal(month), payTotal(month));
+		console.log(serviceFeeTotal(month));
+		return subtract(incomeTotal(month), add(payTotal(month), serviceFeeTotal(month)));
 	}
 	return {
 		incomeTotal,

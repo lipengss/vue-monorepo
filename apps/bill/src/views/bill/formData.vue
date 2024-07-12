@@ -34,8 +34,12 @@
 					<GridItem :options="formatMap(_PURPOSE)" v-model:value="state.data.purpose" :active-color="themeColor" />
 				</template>
 			</van-cell>
-			<van-field v-if="RATE_LIST.includes(state.data.purpose)" label="手续费" v-model="state.data.serviceFee">
-				<template #right-icon>费率 {{ formatNum(_PURPOSE.get(state.data.purpose)?.rate || 0) }}%</template>
+			<van-field v-if="RATE_LIST.includes(state.data.purpose)" label="手续费" v-model="state.data.serviceFee" border>
+				<template #right-icon>
+					<van-cell title="费率" class="fee-cell" style="width: 120px" :value="_PURPOSE.get(state.data.purpose)?.rate">
+						<template #right-icon>%</template>
+					</van-cell>
+				</template>
 			</van-field>
 			<van-cell>
 				<template #title>
@@ -58,7 +62,7 @@ import { reactive, computed, defineExpose, defineEmits, watchEffect } from 'vue'
 import { EXPENSES, _PURPOSE, STAFF, RATE_LIST, formatMap } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { showToast } from 'vant';
-import { cloneDeep, nanoid, formatNum, dayjs, multiply } from '@common/utils/src';
+import { cloneDeep, nanoid, dayjs, multiply } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import GridItem from '@/components/GridItem/index.vue';
 import DateTag from '@/components/DateTag/index.vue';
@@ -135,6 +139,14 @@ defineExpose({ onAddOrder, onEditOrder });
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
+	}
+}
+:deep .fee-cell {
+	font-size: 12px;
+	color: var(--van-cell-value-color);
+	padding: 0;
+	.van-cell__value {
+		text-align: center;
 	}
 }
 </style>

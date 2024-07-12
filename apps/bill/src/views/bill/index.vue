@@ -5,10 +5,10 @@
 			<div class="line">
 				<div class="date">{{ dayjs(item.date).format('MM月DD日') }} {{ getDayOfWeek(item.date) }}</div>
 				<div class="price">
-					<div class="text">出</div>
-					<div class="num num1">{{ formatNum(item.totalPay) }}</div>
 					<div class="text">入</div>
-					<div class="num">{{ formatNum(item.totalIncome) }}</div>
+					<div class="num num1">{{ formatNum(item.totalIncome) }}</div>
+					<div class="text">出</div>
+					<div class="num">{{ formatNum(item.totalPay) }}</div>
 				</div>
 			</div>
 			<van-swipe-cell v-for="bill in item.list">
@@ -17,7 +17,6 @@
 					title-class="single-line-ellipsis"
 					title-style="flex:2;"
 					:label="bill.remarks"
-					:value="formatNum(bill.price)"
 					:to="{
 						path: '/details',
 						query: { id: bill.id },
@@ -30,7 +29,14 @@
 						</div>
 					</template>
 					<template #title>
-						<van-tag round :type="EXPENSES.get(bill.expenses)?.type">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
+						<van-space>
+							{{ _PURPOSE.get(bill.purpose)?.label }}
+							<van-tag round plain :type="EXPENSES.get(bill.expenses)?.type">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
+						</van-space>
+					</template>
+					<template #value>
+						<div>{{ EXPENSES.get(bill.expenses)?.unit }} {{ formatNum(bill.price) }}</div>
+						<div v-if="bill.serviceFee" style="font-size: 12px">- {{ bill.serviceFee }}</div>
 					</template>
 				</van-cell>
 				<template #right>

@@ -223,7 +223,8 @@ onActivated(() => {
 </script>
 <style lang="scss" scoped>
 .info {
-	padding: 20px;
+	height: 120px;
+	padding: 10px 20px 20px 14px;
 	background-color: v-bind(themeColor);
 	.text {
 		color: var(--van-white);

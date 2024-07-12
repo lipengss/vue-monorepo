@@ -23,8 +23,8 @@ const _PURPOSE = new Map([
 	['eyelash', { label: '睫毛', icon: 'eyelash' }],
 	['beauty', { label: '美容', icon: 'beauty' }],
 	['meituan', { label: '美团', icon: 'meituan', rate: 0.08 }],
-	['douyin', { label: '抖音', icon: 'douyin', rate: 0.1 }],
-	['zhifubao', { label: '支付宝', icon: 'zhifubao', rate: 0.0038 }],
+	['douyin', { label: '抖音', icon: 'douyin', rate: 0 }],
+	['zhifubao', { label: '支付宝', icon: 'zhifubao', rate: 0.038 }],
 	['liveExpenses', { label: '生活缴费', icon: 'liveExpenses' }],
 ]);
 

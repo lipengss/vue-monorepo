@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { dayjs, sortBy, Local } from '@common/utils';
+import { dayjs, sortBy, Local, add, subtract } from '@common/utils';
 import { showConfirmDialog, showSuccessToast } from 'vant';
 import router from '@/router';
 
@@ -49,7 +49,7 @@ export const useBillStore = defineStore('bill', {
 				}
 			});
 			function sum(list: IOrder[]): number {
-				return list.map((n) => parseFloat(n.price)).reduce((pre, cur) => pre + cur, 0);
+				return list.map((n) => parseFloat(n.price)).reduce((pre, cur) => parseFloat(add(pre, cur)), 0);
 			}
 			return sortBy(Object.values(data), (n) => dayjs(n.date).valueOf()).reverse();
 		},

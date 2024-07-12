@@ -12,15 +12,15 @@
 			<div class="details">
 				<div class="line">
 					<div class="title">总收入</div>
-					<div class="value">￥{{ incomeTotal(day) }}</div>
+					<div class="value">+ {{ incomeTotal(day) }}</div>
 				</div>
 				<div class="line">
 					<div class="title">总支出</div>
-					<div class="value">￥{{ payTotal(day) }}</div>
+					<div class="value">- {{ payTotal(day) }}</div>
 				</div>
 				<div class="line">
 					<div class="title">总手续费</div>
-					<div class="value">￥{{ serviceFeeTotal(day) }}</div>
+					<div class="value">- {{ serviceFeeTotal(day) }}</div>
 				</div>
 			</div>
 		</div>
@@ -74,8 +74,13 @@ function onChange(val: string) {
 	padding: 16px;
 }
 .banner {
+	height: 120px;
 	padding: 10px 20px 20px 14px;
-	background-color: #1989fa;
+	background-image: url('../../assets/banner.svg');
+	background-size: cover;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	.banner-bot {
 		display: grid;
 		grid-template-columns: 1fr 140px;
@@ -85,7 +90,7 @@ function onChange(val: string) {
 			.line {
 				display: grid;
 				line-height: 22px;
-				font-size: 12px;
+				font-size: 14px;
 				grid-template-columns: 60px 80px;
 				.value {
 					text-align: right;
