@@ -40,7 +40,6 @@ export function useBill() {
 		return formatNum(total.value);
 	}
 	function balance(month: string) {
-		console.log(serviceFeeTotal(month));
 		return subtract(incomeTotal(month), add(payTotal(month), serviceFeeTotal(month)));
 	}
 	return {

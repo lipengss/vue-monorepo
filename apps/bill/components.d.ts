@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CheckBoxTag: typeof import('./src/components/CheckBoxTag/index.vue')['default']
+    DatePicker: typeof import('./src/components/DatePicker/index.vue')['default']
     DateTag: typeof import('./src/components/DateTag/index.vue')['default']
     GridItem: typeof import('./src/components/GridItem/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
@@ -16,6 +17,7 @@ declare module 'vue' {
     VanButton: typeof import('vant/es')['Button']
     VanCalendar: typeof import('vant/es')['Calendar']
     VanCell: typeof import('vant/es')['Cell']
+    VanDatePicker: typeof import('vant/es')['DatePicker']
     VanDialog: typeof import('vant/es')['Dialog']
     VanDropdownItem: typeof import('vant/es')['DropdownItem']
     VanDropdownMenu: typeof import('vant/es')['DropdownMenu']

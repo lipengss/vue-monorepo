@@ -1,7 +1,7 @@
 <template>
 	<div class="info">
 		<div class="flex-bl-bt">
-			<DateTag v-model:value="day" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+			<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
 			<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="expenses" bg-color="transparent" color="#fff" active-color="rgba(255,255,255,.2)" />
 		</div>
 		<div class="text">
@@ -25,7 +25,7 @@
 					title: item.name,
 					key: item.key,
 					total: item.value,
-					date: day,
+					date: filter.month,
 					expenses: expenses,
 				},
 			}"
@@ -59,12 +59,13 @@ import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/sr
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
-import DateTag from '@/components/DateTag/index.vue';
+import { storeToRefs } from 'pinia';
+import { useBillStore } from '@/stores/bill';
 
+const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, filterMonthData } = useBill();
 
 const expenses = ref<'income' | 'pay'>('income');
-const day = ref(dayjs().format('YYYY-MM'));
 const total = ref('0.00');
 
 const option = ref<any>({
@@ -164,11 +165,11 @@ const dayRatioOption = ref<any>({
 });
 
 watchEffect(() => {
-	total.value = expenses.value === 'income' ? incomeTotal(day.value) : payTotal(day.value);
+	total.value = expenses.value === 'income' ? incomeTotal(filter.value.month) : payTotal(filter.value.month);
 });
 
 // 过滤日期相同的数据 并返回所有账单记录
-const allOrderList = computed(() => filterMonthData(day.value, expenses.value));
+const allOrderList = computed(() => filterMonthData(filter.value.month, expenses.value));
 
 const themeColor = computed(() => EXPENSES.get(expenses.value)?.color);
 
@@ -216,7 +217,7 @@ watch(() => expenses.value, setPieData, {
 	immediate: true,
 });
 
-watch(() => day.value, setPieData);
+watch(() => filter.value.month, setPieData);
 onActivated(() => {
 	setPieData();
 });

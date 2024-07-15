@@ -5,15 +5,34 @@
 	</van-dialog>
 </template>
 <script setup lang="ts">
-import { ref, defineExpose } from 'vue';
+import { ref, defineExpose, withDefaults, defineProps } from 'vue';
 import { showToast } from 'vant';
 import { isEqual, dayjs, flatten } from '@common/utils/src';
 import { useClipboard, useFile } from '@common/hooks';
+import {
+	Document,
+	Packer,
+	TextRun,
+	Paragraph,
+	Table,
+	TableCell,
+	TableRow,
+	WidthType,
+	HeightRule,
+	VerticalAlign,
+	AlignmentType,
+	PageOrientation,
+	convertInchesToTwip,
+} from '@common/hooks/node_modules/docx';
+import { saveAs } from '@common/hooks/node_modules/file-saver';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { _PURPOSE, EXPENSES } from '@/assets/data';
+import { useBill } from '@/hooks/useBill';
+
 const { addBill } = useBillStore();
-const { billList, defaultBillItemData, formatBillList } = storeToRefs(useBillStore());
+const { billList, defaultBillItemData, formatBillList, filter } = storeToRefs(useBillStore());
+const { incomeTotal, payTotal, serviceFeeTotal, balance } = useBill();
 
 const { copy } = useClipboard();
 const { exportFileExcel } = useFile();
@@ -24,9 +43,9 @@ const billData = ref();
 const type = ref<'export' | 'import'>('export');
 
 const exoprtList = [
-	{ name: '拷贝账单', callback: onCopy },
-	{ name: '粘贴账单', callback: () => (showDialog.value = true) },
-	{ name: '导出表格', callback: exportExcel },
+	{ name: '复制账单', callback: onCopy },
+	{ name: '导入账单', callback: () => (showDialog.value = true) },
+	{ name: '导出表格', callback: exportExcel, subname: '只支持在浏览器端下载' },
 ];
 
 // 拷贝
@@ -61,22 +80,148 @@ function onConfirm() {
 	}
 }
 
-// 导出表格
-function exportExcel() {
-	const heads = ['日期', '经过人', '收支', '金额', '用途', '备注'];
-	const list = flatten(formatBillList.value.map((n) => n.list)).map((n) => {
-		return [
-			dayjs(n.date).format('YYYY-MM-DD'),
-			n.staff,
-			EXPENSES.get(n.expenses)?.label,
-			parseFloat(n.price),
-			_PURPOSE.get(n.purpose)?.label,
-			n.remarks,
-		];
-	});
-	const data = [heads, ...list];
+const expenses: any = {
+	all: {
+		text: '收支明细',
+		total: () => `共计收入 ${incomeTotal(filter.value.month)} 元；共计支出 ${payTotal(filter.value.month)} 元`,
+	},
+	pay: {
+		text: '支出明细',
+		total: () => `共计支出 ${payTotal(filter.value.month)} 元`,
+	},
+	income: {
+		text: '收入明细',
+		total: () => `共计收入 ${incomeTotal(filter.value.month)} 元`,
+	},
+};
 
-	exportFileExcel(data);
+// 导出表格
+async function exportExcel() {
+	const heads = ['日期', '经过人', '收支', '金额', '用途', '备注'];
+	function tableCell(value: string) {
+		return new TableCell({
+			children: [
+				new Paragraph({
+					children: [
+						new TextRun({
+							text: value,
+							size: 18,
+						}),
+					],
+				}),
+			],
+			verticalAlign: VerticalAlign.CENTER,
+			margins: {
+				left: 100,
+			},
+		});
+	}
+	const table = new Table({
+		rows: [
+			new TableRow({
+				tableHeader: true,
+				children: heads.map((n) => {
+					return new TableCell({
+						children: [
+							new Paragraph({
+								children: [
+									new TextRun({
+										text: n,
+										size: 20,
+									}),
+								],
+							}),
+						],
+						verticalAlign: VerticalAlign.CENTER,
+						margins: {
+							left: 100,
+						},
+					});
+				}),
+				height: {
+					value: 340,
+					rule: HeightRule.EXACT,
+				},
+			}),
+			...flatten(formatBillList.value.map((n) => n.list)).map((n, index) => {
+				return new TableRow({
+					children: [
+						tableCell(dayjs(n.date).format('YYYY-MM-DD')),
+						tableCell(n.staff),
+						tableCell(EXPENSES.get(n.expenses)?.label || ''),
+						tableCell(`￥${n.price}`),
+						tableCell(_PURPOSE.get(n.purpose)?.label || ''),
+						tableCell(n.remarks),
+					],
+					height: {
+						value: 280,
+						rule: HeightRule.EXACT,
+					},
+				});
+			}),
+		],
+		width: {
+			size: 100,
+			type: WidthType.PERCENTAGE,
+		},
+	});
+
+	const doc = new Document({
+		sections: [
+			{
+				children: [
+					new Paragraph({
+						heading: 'Heading1',
+						alignment: AlignmentType.CENTER, // 设置标题居中
+						spacing: {
+							after: convertInchesToTwip(0.1), // 设置标题下边距为0.2英寸
+						},
+						children: [
+							new TextRun({
+								text: `纤指妆容 ${dayjs(filter.value.month).format('YYYY年MM月')} ${expenses[filter.value.expenses].text}`,
+								size: 32,
+								color: '#333333',
+							}),
+						],
+					}),
+					table,
+					new Paragraph({
+						spacing: {
+							before: convertInchesToTwip(0.1),
+						},
+						children: [
+							new TextRun({
+								text: `${expenses[filter.value.expenses].total()}`,
+								size: 26,
+								color: '#333333',
+							}),
+						],
+					}),
+				],
+				properties: {
+					page: {
+						size: {
+							orientation: PageOrientation.LANDSCAPE, // 纸张方向改为横向
+						},
+						margin: {
+							top: convertInchesToTwip(0.4), // 顶部边距 1 英寸
+							right: convertInchesToTwip(0.4), // 右侧边距 1 英寸
+							bottom: convertInchesToTwip(0.4), // 底部边距 1 英寸
+							left: convertInchesToTwip(0.4), // 左侧边距 1 英寸
+						},
+					},
+				},
+			},
+		],
+	});
+
+	const base64string = await Packer.toBase64String(doc);
+	const binaryString = atob(base64string);
+	const buffer = new Uint8Array(binaryString.length).map((item, index) => binaryString.charCodeAt(index));
+	const blob = new Blob([buffer], { type: 'application/octet-stream' });
+
+	// 使用file-saver保存文件
+	saveAs(blob, `纤指妆容 ${dayjs(filter.value.month).format('YYYY年MM月')} ${expenses[filter.value.expenses].text}.doc`);
 }
 
 function open(t: 'export' | 'import') {

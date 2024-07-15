@@ -41,5 +41,6 @@ export function useFile() {
 	return {
 		exportFileTxt,
 		exportFileExcel,
+		saveAs,
 	};
 }

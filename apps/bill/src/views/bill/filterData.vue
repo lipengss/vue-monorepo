@@ -1,26 +1,26 @@
 <template>
 	<div class="banner">
 		<div class="flex-bl-bt mb10">
-			<DateTag v-model:value="day" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+			<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
 			<van-icon name="list-switch" color="#fff" size="20" @click="actionSheetRef.open()" />
 		</div>
 		<div class="banner-bot">
 			<div class="balance">
 				<div class="title">结余</div>
-				<div class="value">￥{{ balance(day) }}</div>
+				<div class="value">￥{{ balance(filter.month) }}</div>
 			</div>
 			<div class="details">
 				<div class="line">
 					<div class="title">总收入</div>
-					<div class="value">+ {{ incomeTotal(day) }}</div>
+					<div class="value">+ {{ incomeTotal(filter.month) }}</div>
 				</div>
 				<div class="line">
 					<div class="title">总支出</div>
-					<div class="value">- {{ payTotal(day) }}</div>
+					<div class="value">- {{ payTotal(filter.month) }}</div>
 				</div>
 				<div class="line">
 					<div class="title">总手续费</div>
-					<div class="value">- {{ serviceFeeTotal(day) }}</div>
+					<div class="value">- {{ serviceFeeTotal(filter.month) }}</div>
 				</div>
 			</div>
 		</div>
@@ -41,7 +41,6 @@
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
-import { dayjs } from '@common/utils/src';
 import { useBill } from '@/hooks/useBill';
 import actionSheet from './actionSheet.vue';
 import GridItem from '@/components/GridItem/index.vue';
@@ -50,14 +49,10 @@ import { _PURPOSE, EXPENSES, formatMap } from '@/assets/data';
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, serviceFeeTotal, balance } = useBill();
 
-const day = ref(dayjs().format('YYYY-MM'));
 const actionSheetRef = ref();
 const title = ref('全部用途');
 const purposeRef = ref();
-const expensesList = computed(() => {
-	const arr = formatMap(EXPENSES);
-	return [{ text: '全部收支', value: 'all' }, ...arr];
-});
+const expensesList = computed(() => [{ text: '全部收支', value: 'all' }, ...formatMap(EXPENSES)]);
 
 const purposeList = [{ text: '全部用途', value: 'all' }, ...formatMap(_PURPOSE)];
 

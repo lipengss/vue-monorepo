@@ -9,7 +9,8 @@ interface StoreState {
 	billList: IOrder[];
 	defaultBillItemData: IOrder;
 	filter: {
+		month: string;
 		expenses: string;
 		purpose: string;
-	}
+	};
 }
