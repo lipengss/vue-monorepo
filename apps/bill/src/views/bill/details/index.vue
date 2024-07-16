@@ -1,5 +1,5 @@
 <template>
-	<van-nav-bar left-text="返回" title="详情" left-arrow @click-left="router.back()" />
+	<van-nav-bar left-text="返回" left-arrow fixed :border="false" @click-left="router.back()" />
 	<div class="container">
 		<div class="content">
 			<div class="icon-line">
@@ -54,24 +54,14 @@ import { EXPENSES, PURPOSE, PAY_METHOD } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { useRouter, useRoute, type LocationQuery } from 'vue-router';
 import formData from '../formData.vue';
-import { cloneDeep, formatNum, dayjs } from '@common/utils/src';
+import { cloneDeep, formatNum } from '@common/utils/src';
 
 const billStore = useBillStore();
 const router = useRouter();
 
 const route = useRoute();
 const formRef = ref();
-const currentBill = ref<IOrder>({
-	expenses: 'income',
-	price: '',
-	payMethod: 'cash',
-	purpose: 'other',
-	staff: '娇娇',
-	remarks: '',
-	serviceFee: 0,
-	date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-	id: '',
-});
+const currentBill = ref<IOrder>(cloneDeep(billStore.defaultBillItemData));
 
 function setData() {
 	const { id }: LocationQuery = route.query;
@@ -90,7 +80,7 @@ onActivated(() => {
 .container {
 	padding: 10px;
 	.content {
-		padding: 30px 16px 0 16px;
+		padding: 40px 16px 0 16px;
 		border-radius: 10px;
 		background-color: var(--van-white);
 		.icon-line {

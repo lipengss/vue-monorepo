@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 import Layout from '@/layout/index.vue';
 
-const routes:RouteRecordRaw[] = [
+const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
 		name: 'layout',
@@ -26,14 +26,14 @@ const routes:RouteRecordRaw[] = [
 				},
 				component: () => import('@/views/statistics/index.vue'),
 			},
-			// {
-			// 	path: '/settings',
-			// 	name: 'settings',
-			// 	meta: {
-			// 		title: '设置',
-			// 	},
-			// 	component: () => import('@/views/settings/index.vue'),
-			// },
+			{
+				path: '/settings',
+				name: 'settings',
+				meta: {
+					title: '设置',
+				},
+				component: () => import('@/views/settings/index.vue'),
+			},
 		],
 	},
 	{

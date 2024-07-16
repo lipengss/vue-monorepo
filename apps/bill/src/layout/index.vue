@@ -7,7 +7,7 @@
 	<van-tabbar v-model="state.active" @change="onTabChange">
 		<van-tabbar-item icon="orders-o" name="/bill">明细</van-tabbar-item>
 		<van-tabbar-item icon="bar-chart-o" name="/statistics">统计</van-tabbar-item>
-<!--		    <van-tabbar-item icon="setting-o" name="/settings">设置</van-tabbar-item>-->
+		<van-tabbar-item icon="setting-o" name="/settings">设置</van-tabbar-item>
 	</van-tabbar>
 </template>
 <script setup lang="ts">

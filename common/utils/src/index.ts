@@ -1,9 +1,11 @@
 import { nanoid } from 'nanoid';
 import { cloneDeep, isEqual, sortBy, flatten } from 'lodash-es';
-import { formatNum, multiply, add, subtract, convertToPercentages } from './count';
+import { formatNum, multiply, add, subtract, convertToPercentages, numeral } from './count';
 import dayjs from 'dayjs';
 import { Local, Session } from './storage';
 import qs from 'qs';
+
+import { getBytes, filesize } from './filesize';
 
 function getDayOfWeek(date: string) {
 	const today = dayjs();
@@ -33,6 +35,9 @@ export {
 	add,
 	subtract,
 	formatNum,
+	numeral,
 	convertToPercentages,
 	getDayOfWeek,
+	getBytes,
+	filesize,
 };

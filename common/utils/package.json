@@ -8,6 +8,7 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.11",
+    "filesize": "^10.1.4",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
     "nanoid": "^5.0.7",

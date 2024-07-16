@@ -65,6 +65,9 @@ importers:
       '@vueuse/core':
         specifier: ^10.10.0
         version: 10.11.0(vue@3.4.21(typescript@5.4.5))
+      echarts-liquidfill:
+        specifier: ^3.1.0
+        version: 3.1.0(echarts@5.5.1)
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.21(typescript@5.4.5))
@@ -286,6 +289,9 @@ importers:
       echarts:
         specifier: ^5.5.0
         version: 5.5.1
+      echarts-liquidfill:
+        specifier: ^3.1.0
+        version: 3.1.0(echarts@5.5.1)
       element-plus:
         specifier: ^2.2.21
         version: 2.7.6(vue@3.4.31(typescript@5.4.5))
@@ -329,6 +335,9 @@ importers:
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
+      filesize:
+        specifier: ^10.1.4
+        version: 10.1.4
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -2422,6 +2431,11 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
+  echarts-liquidfill@3.1.0:
+    resolution: {integrity: sha512-5Dlqs/jTsdTUAsd+K5LPLLTgrbbNORUSBQyk8PSy1Mg2zgHDWm83FmvA4s0ooNepCJojFYRITTQ4GU1UUSKYLw==, tarball: https://r2.cnpmjs.org/echarts-liquidfill/-/echarts-liquidfill-3.1.0.tgz}
+    peerDependencies:
+      echarts: ^5.0.1
+
   echarts@5.5.1:
     resolution: {integrity: sha512-Fce8upazaAXUVUVsjgV6mBnGuqgO+JNDlcgF79Dksy4+wgGpQB2lmYoO4TSweFg/mZITdpGHomw/cNBJZj1icA==}
 
@@ -2702,6 +2716,10 @@ packages:
   filename-regex@2.0.1:
     resolution: {integrity: sha512-BTCqyBaWBTsauvnHiE8i562+EdJj+oUpkqWp2R1iCoR8f6oo8STRu3of7WJJ0TqWtxN50a5YFpzYK4Jj9esYfQ==}
     engines: {node: '>=0.10.0'}
+
+  filesize@10.1.4:
+    resolution: {integrity: sha512-ryBwPIIeErmxgPnm6cbESAzXjuEFubs+yKYLBZvg3CaiNcmkJChoOGcBSrZ6IwkMwPABwPpVXE6IlNdGJJrvEg==}
+    engines: {node: '>= 10.4.0'}
 
   fill-range@2.2.4:
     resolution: {integrity: sha512-cnrcCbj01+j2gTG921VZPnHbjmdAf8oQV/iGeV2kZxGSyfYjjTyY79ErsK1WJWMpw6DaApEX72binqJE+/d+5Q==}
@@ -7966,6 +7984,10 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
+  echarts-liquidfill@3.1.0(echarts@5.5.1):
+    dependencies:
+      echarts: 5.5.1
+
   echarts@5.5.1:
     dependencies:
       tslib: 2.3.0
@@ -8507,6 +8529,8 @@ snapshots:
 
   filename-regex@2.0.1:
     optional: true
+
+  filesize@10.1.4: {}
 
   fill-range@2.2.4:
     dependencies:

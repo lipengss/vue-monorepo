@@ -26,4 +26,4 @@ function subtract(num1: number | string, num2: number | string): string {
 	return numeral(num1).subtract(num2).format('0.00');
 }
 
-export { formatNum, multiply, add, subtract, convertToPercentages };
+export { formatNum, multiply, add, subtract, convertToPercentages, numeral };
