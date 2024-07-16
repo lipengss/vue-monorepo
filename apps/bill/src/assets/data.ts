@@ -10,7 +10,7 @@ const EXPENSES: Map<EXPENSE_TYPE, { label: string; type: TagType; unit: string; 
 const PAY_METHOD = new Map([
 	['cash', { label: '现金', icon: 'cash' }],
 	['alipay', { label: '支付宝', icon: 'alipay', rate: 0.38 }],
-	['meituan', { label: '美团', icon: 'meituan', rate: 0.8 }],
+	['meituan', { label: '美团', icon: 'meituan', rate: 8 }],
 	['douyin', { label: '抖音', icon: 'douyin', rate: 0 }],
 	['wechat', { label: '微信', icon: 'wechat', rate: 0 }],
 ]);
