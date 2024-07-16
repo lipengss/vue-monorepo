@@ -10,9 +10,8 @@ export const useBillStore = defineStore('bill', {
 			defaultBillItemData: {
 				expenses: 'income',
 				price: '',
-				payMethod: 'cash',
+				payMethod: 'alipay',
 				purpose: 'other',
-				staff: '娇娇',
 				remarks: '',
 				serviceFee: 0,
 				date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -27,7 +26,7 @@ export const useBillStore = defineStore('bill', {
 	},
 	getters: {
 		formatBillList(state) {
-			const data: { [key: string]: { list: IOrder[]; totalIncome: number; totalPay: number; date: string } } = {};
+			const data: { [key: string]: { list: IOrder[]; totalIncome: number; totalPay: number; totalServiceFee: number; date: string } } = {};
 			const filterList = state.billList.filter((n) => {
 				return (
 					(n.expenses === state.filter.expenses || state.filter.expenses === 'all') &&
@@ -39,19 +38,21 @@ export const useBillStore = defineStore('bill', {
 				const day = dayjs(n.date).format('YYYY-MM-DD');
 				if (data[day]) {
 					data[day].list.push(n);
-					data[day].totalIncome = sum(data[day].list.filter((n) => n.expenses === 'income'));
-					data[day].totalPay = sum(data[day].list.filter((n) => n.expenses === 'pay'));
+					data[day].totalIncome = sum(data[day].list.filter((n) => n.expenses === 'income').map((n) => parseFloat(n.price)));
+					data[day].totalPay = sum(data[day].list.filter((n) => n.expenses === 'pay').map((n) => parseFloat(n.price)));
+					data[day].totalServiceFee = sum(data[day].list.filter((n) => n.serviceFee > 0).map((n) => n.serviceFee));
 				} else {
 					data[day] = {
 						date: day,
 						totalIncome: n.expenses === 'income' ? parseFloat(n.price) : 0,
 						totalPay: n.expenses === 'pay' ? parseFloat(n.price) : 0,
+						totalServiceFee: n.serviceFee > 0 ? n.serviceFee : 0,
 						list: [n],
 					};
 				}
 			});
-			function sum(list: IOrder[]): number {
-				return list.map((n) => parseFloat(n.price)).reduce((pre, cur) => parseFloat(add(pre, cur)), 0);
+			function sum(list: number[]): number {
+				return list.reduce((pre, cur) => parseFloat(add(pre, cur)), 0);
 			}
 			return sortBy(Object.values(data), (n) => dayjs(n.date).valueOf()).reverse();
 		},

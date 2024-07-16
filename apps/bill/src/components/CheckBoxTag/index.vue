@@ -1,14 +1,14 @@
 <template>
 	<van-space :size="10" wrap>
-		<div class="checkbox-tag" v-for="tag in props.options" :class="{ active: isActive(tag.value) }" @click="onClick(tag.value)">
+		<div class="checkbox-tag" v-for="tag in props.options" :class="[isActive(tag.value) ? 'active' : '', props.size]" @click="onClick(tag.value)">
 			{{ tag.text }}
 		</div>
 	</van-space>
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps, ref, defineEmits, watch } from 'vue';
-import type { DropdownItemOption } from "vant";
-import type { DropdownItemOptionValue, } from 'vant/lib/dropdown-item/types';
+import type { DropdownItemOption } from 'vant';
+import type { DropdownItemOptionValue } from 'vant/lib/dropdown-item/types';
 
 interface Props {
 	value: string | Array<DropdownItemOptionValue>; // 值
@@ -17,6 +17,7 @@ interface Props {
 	color?: string; // 文字颜色
 	multiple?: boolean; // 是否多选
 	activeColor?: string; // 选中颜色
+	size?: string; // small default larger
 }
 const props = withDefaults(defineProps<Props>(), {
 	value: '',
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 	color: '#969799',
 	multiple: false,
 	activeColor: '#07c160',
+	size: 'default',
 });
 
 const emits = defineEmits(['update:value']);
@@ -79,6 +81,15 @@ watch(
 	border-radius: 4px;
 	background-color: v-bind('props.bgColor');
 	color: v-bind('props.color');
+}
+.small {
+	padding: 3px 10px;
+}
+.default {
+	padding: 4px 16px;
+}
+.larger {
+	padding: 5px 22px;
 }
 .active {
 	background-color: v-bind('props.activeColor');

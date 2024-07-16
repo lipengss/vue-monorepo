@@ -4,9 +4,9 @@
 		<div class="content">
 			<div class="icon-line">
 				<div class="icon-purpose" :style="`--color: ${EXPENSES.get(currentBill.expenses)?.color}`">
-					<svg-icon :name="_PURPOSE.get(currentBill.purpose)?.icon || ''" />
+					<svg-icon :name="PURPOSE.get(currentBill.purpose)?.icon || ''" />
 				</div>
-				{{ _PURPOSE.get(currentBill.purpose)?.label }}
+				{{ PURPOSE.get(currentBill.purpose)?.label }}
 			</div>
 			<div class="line-price">{{ EXPENSES.get(currentBill.expenses)?.unit }}{{ formatNum(currentBill.price) }}</div>
 			<div class="line">
@@ -15,15 +15,15 @@
 					<van-tag :type="EXPENSES.get(currentBill.expenses)?.type">{{ EXPENSES.get(currentBill.expenses)?.label }}</van-tag>
 				</div>
 			</div>
+			<div class="line">
+				<div class="title">支付尝试</div>
+				<div class="value">
+					{{ PAY_METHOD.get(currentBill.payMethod)?.label }}
+				</div>
+			</div>
 			<div class="line" v-if="currentBill.serviceFee">
 				<div class="title">服务费</div>
 				<div class="value">-{{ currentBill.serviceFee }}</div>
-			</div>
-			<div class="line">
-				<div class="title">经过人</div>
-				<div class="value">
-					{{ currentBill.staff }}
-				</div>
 			</div>
 			<div class="line">
 				<div class="title">记录时间</div>
@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { ref, onActivated } from 'vue';
-import { EXPENSES, _PURPOSE } from '@/assets/data';
+import { EXPENSES, PURPOSE, PAY_METHOD } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { useRouter, useRoute, type LocationQuery } from 'vue-router';
 import formData from '../formData.vue';

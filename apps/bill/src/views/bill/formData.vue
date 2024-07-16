@@ -27,29 +27,25 @@
 				:maxlength="6"
 				theme="custom"
 				close-button-text="完成"
-				@blur="onKeyboardBlur"
+				@blur="state.showKeyboard = false"
 			/>
 			<van-cell>
 				<template #title>
-					<GridItem :options="formatMap(_PURPOSE)" v-model:value="state.data.purpose" :active-color="themeColor" />
+					<GridItem :options="formatMap(PURPOSE)" v-model:value="state.data.purpose" :active-color="themeColor" />
 				</template>
 			</van-cell>
-			<van-field v-if="RATE_LIST.includes(state.data.purpose)" label="手续费" v-model="state.data.serviceFee" border>
+			<van-cell>
+				<template #title>
+					<CheckBoxTag :options="formatMap(PAY_METHOD)" v-model:value="state.data.payMethod" :active-color="themeColor" size="small" />
+				</template>
+			</van-cell>
+			<van-field v-if="currentPayMethod?.rate !== undefined" label="手续费" v-model="state.data.serviceFee" border>
 				<template #right-icon>
-					<van-cell title="费率" class="fee-cell" style="width: 120px" :value="_PURPOSE.get(state.data.purpose)?.rate">
+					<van-cell title="费率" class="fee-cell" style="width: 120px" :value="currentPayMethod?.rate">
 						<template #right-icon>%</template>
 					</van-cell>
 				</template>
 			</van-field>
-			<van-cell>
-				<template #title>
-					<div class="expenses-wrap">
-						<van-space :size="10" wrap>
-							<CheckBoxTag :options="STAFF.map((i) => ({ text: i, value: i }))" v-model:value="state.data.staff" :active-color="themeColor" />
-						</van-space>
-					</div>
-				</template>
-			</van-cell>
 			<van-field v-model="state.data.remarks" border rows="2" autosize type="textarea" maxlength="50" placeholder="备注信息" show-word-limit />
 			<van-cell>
 				<van-button round block native-type="submit" :type="EXPENSES.get(state.data.expenses)?.type" sizi="large">保存</van-button>
@@ -59,7 +55,7 @@
 </template>
 <script setup lang="ts">
 import { reactive, computed, defineExpose, defineEmits, watchEffect } from 'vue';
-import { EXPENSES, _PURPOSE, STAFF, RATE_LIST, formatMap } from '@/assets/data';
+import { EXPENSES, PURPOSE, PAY_METHOD, formatMap } from '@/assets/data';
 import { useBillStore } from '@/stores/bill';
 import { showToast } from 'vant';
 import { cloneDeep, nanoid, dayjs, multiply } from '@common/utils/src';
@@ -93,15 +89,17 @@ function onEditOrder(data: IOrder) {
 	state.showPopup = true;
 }
 
-// 金额  失去光标
-function onKeyboardBlur() {
-	state.showKeyboard = false;
-}
+const currentPayMethod = computed(() => {
+	return PAY_METHOD.get(state.data.payMethod);
+});
 
 watchEffect(() => {
-	if (RATE_LIST.includes(state.data.purpose)) {
-		const rate = _PURPOSE.get(state.data.purpose)?.rate;
-		if (rate === undefined) return;
+	if (currentPayMethod.value) {
+		const rate = currentPayMethod.value?.rate;
+		if (rate === undefined) {
+			state.data.serviceFee = 0;
+			return;
+		}
 		const sFee = multiply(state.data.price, rate);
 		state.data.serviceFee = typeof sFee === 'number' ? sFee : parseFloat(sFee);
 	} else {

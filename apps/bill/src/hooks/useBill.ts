@@ -31,9 +31,10 @@ export function useBill() {
 		return formatNum(total.value);
 	}
 	function serviceFeeTotal(month: string): string {
-		const filterList = filterMonthData(month, 'income').filter((n) => n.serviceFee && n.serviceFee !== 0);
+		const incomeList = filterMonthData(month, 'income').filter((n) => n.serviceFee && n.serviceFee !== 0);
+		const payList = filterMonthData(month, 'pay').filter((n) => n.serviceFee && n.serviceFee !== 0);
 		const total = computed(() =>
-			filterList.reduce((pre, cur) => {
+			[...payList, ...incomeList].reduce((pre, cur) => {
 				return parseFloat(add(pre, cur.serviceFee));
 			}, 0)
 		);

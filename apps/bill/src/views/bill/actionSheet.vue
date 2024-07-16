@@ -8,7 +8,7 @@
 import { ref, defineExpose, withDefaults, defineProps } from 'vue';
 import { showToast } from 'vant';
 import { isEqual, dayjs, flatten } from '@common/utils/src';
-import { useClipboard, useFile } from '@common/hooks';
+import { useClipboard, useFile, saveAs } from '@common/hooks';
 import {
 	Document,
 	Packer,
@@ -24,10 +24,9 @@ import {
 	PageOrientation,
 	convertInchesToTwip,
 } from '@common/hooks/node_modules/docx';
-import { saveAs } from '@common/hooks/node_modules/file-saver';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
-import { _PURPOSE, EXPENSES } from '@/assets/data';
+import { PURPOSE, EXPENSES, PAY_METHOD } from '@/assets/data';
 import { useBill } from '@/hooks/useBill';
 
 const { addBill } = useBillStore();
@@ -83,21 +82,22 @@ function onConfirm() {
 const expenses: any = {
 	all: {
 		text: '收支明细',
-		total: () => `共计收入 ${incomeTotal(filter.value.month)} 元；共计支出 ${payTotal(filter.value.month)} 元`,
+		total: () =>
+			`收入共计 ${incomeTotal(filter.value.month)} 元；支出共计 ${payTotal(filter.value.month)} 元；手续费共计 ${serviceFeeTotal(filter.value.month)} 元`,
 	},
 	pay: {
 		text: '支出明细',
-		total: () => `共计支出 ${payTotal(filter.value.month)} 元`,
+		total: () => `支出共计 ${payTotal(filter.value.month)} 元；手续费共计 ${serviceFeeTotal(filter.value.month)} 元`,
 	},
 	income: {
 		text: '收入明细',
-		total: () => `共计收入 ${incomeTotal(filter.value.month)} 元`,
+		total: () => `收入共计 ${incomeTotal(filter.value.month)} 元；手续费共计 ${serviceFeeTotal(filter.value.month)} 元`,
 	},
 };
 
 // 导出表格
 async function exportExcel() {
-	const heads = ['日期', '经过人', '收支', '金额', '用途', '备注'];
+	const heads = ['日期', '收支类型', '金额', '支付方式', '手续费', '用途', '备注'];
 	function tableCell(value: string) {
 		return new TableCell({
 			children: [
@@ -147,10 +147,11 @@ async function exportExcel() {
 				return new TableRow({
 					children: [
 						tableCell(dayjs(n.date).format('YYYY-MM-DD')),
-						tableCell(n.staff),
 						tableCell(EXPENSES.get(n.expenses)?.label || ''),
 						tableCell(`￥${n.price}`),
-						tableCell(_PURPOSE.get(n.purpose)?.label || ''),
+						tableCell(PAY_METHOD.get(n.payMethod)?.label || ''),
+						tableCell(`${n.serviceFee}`),
+						tableCell(PURPOSE.get(n.purpose)?.label || ''),
 						tableCell(n.remarks),
 					],
 					height: {

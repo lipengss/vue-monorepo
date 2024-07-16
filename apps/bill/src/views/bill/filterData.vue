@@ -44,7 +44,7 @@ import { useBillStore } from '@/stores/bill';
 import { useBill } from '@/hooks/useBill';
 import actionSheet from './actionSheet.vue';
 import GridItem from '@/components/GridItem/index.vue';
-import { _PURPOSE, EXPENSES, formatMap } from '@/assets/data';
+import { PURPOSE, EXPENSES, formatMap } from '@/assets/data';
 
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, serviceFeeTotal, balance } = useBill();
@@ -54,7 +54,7 @@ const title = ref('全部用途');
 const purposeRef = ref();
 const expensesList = computed(() => [{ text: '全部收支', value: 'all' }, ...formatMap(EXPENSES)]);
 
-const purposeList = [{ text: '全部用途', value: 'all' }, ...formatMap(_PURPOSE)];
+const purposeList = [{ text: '全部用途', value: 'all' }, ...formatMap(PURPOSE)];
 
 function onChange(val: string) {
 	const item = purposeList.find((n) => n.value === val);

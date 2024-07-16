@@ -32,7 +32,7 @@
 		>
 			<template #icon>
 				<div class="icon-purpose" :style="{ '--color': themeColor }">
-					<svg-icon :name="_PURPOSE.get(item.key)?.icon || ''" />
+					<svg-icon :name="PURPOSE.get(item.key)?.icon || ''" />
 				</div>
 			</template>
 			<template #title>
@@ -53,7 +53,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, computed, watch, onActivated, watchEffect } from 'vue';
-import { EXPENSES, formatMap, _PURPOSE } from '@/assets/data';
+import { EXPENSES, formatMap, PURPOSE } from '@/assets/data';
 import { useBill } from '@/hooks/useBill';
 import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
@@ -188,7 +188,7 @@ function setPieData() {
 	const dataList = Object.keys(data).map((n, index) => {
 		return {
 			value: data[n],
-			name: _PURPOSE.get(n)?.label,
+			name: PURPOSE.get(n)?.label,
 			key: n,
 			per: perList[index],
 		};

@@ -16,11 +16,11 @@
 	>
 		<template #icon>
 			<div class="icon-purpose" :style="{ '--color': EXPENSES.get(item.expenses)?.color }">
-				<svg-icon :name="_PURPOSE.get(item.purpose)?.icon || ''" />
+				<svg-icon :name="PURPOSE.get(item.purpose)?.icon || ''" />
 			</div>
 		</template>
 		<template #title>
-			{{ _PURPOSE.get(item.purpose)?.label }}
+			{{ PURPOSE.get(item.purpose)?.label }}
 		</template>
 	</van-cell>
 </template>
@@ -30,7 +30,7 @@ import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { useRoute, useRouter, type LocationQuery } from 'vue-router';
 import { flatten, dayjs, formatNum } from '@common/utils';
-import { _PURPOSE, EXPENSES } from '@/assets/data';
+import { PURPOSE, EXPENSES } from '@/assets/data';
 
 const route = useRoute();
 const router = useRouter();

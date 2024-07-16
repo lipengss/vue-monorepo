@@ -8,7 +8,9 @@
 					<div class="text">入</div>
 					<div class="num num1">{{ formatNum(item.totalIncome) }}</div>
 					<div class="text">出</div>
-					<div class="num">{{ formatNum(item.totalPay) }}</div>
+					<div class="num num1">{{ formatNum(item.totalPay) }}</div>
+					<div class="text">费</div>
+					<div class="num">{{ formatNum(item.totalServiceFee) }}</div>
 				</div>
 			</div>
 			<van-swipe-cell v-for="bill in item.list">
@@ -16,7 +18,6 @@
 					center
 					title-class="single-line-ellipsis"
 					title-style="flex:2;"
-					:label="bill.remarks"
 					:to="{
 						path: '/details',
 						query: { id: bill.id },
@@ -25,22 +26,24 @@
 				>
 					<template #icon>
 						<div class="icon-purpose" :style="`--color: ${EXPENSES.get(bill.expenses)?.color}`">
-							<svg-icon :name="_PURPOSE.get(bill.purpose)?.icon || ''" />
+							<svg-icon :name="PURPOSE.get(bill.purpose)?.icon || ''" />
 						</div>
 					</template>
 					<template #title>
 						<van-space>
-							{{ _PURPOSE.get(bill.purpose)?.label }}
-							<van-tag round plain :type="EXPENSES.get(bill.expenses)?.type">{{ EXPENSES.get(bill.expenses)?.label }}</van-tag>
+							{{ PURPOSE.get(bill.purpose)?.label }}
+							<van-tag round plain :type="EXPENSES.get(bill.expenses)?.type">
+								{{ EXPENSES.get(bill.expenses)?.label }}
+							</van-tag>
 						</van-space>
 					</template>
+					<template #label> {{ PAY_METHOD.get(bill.payMethod)?.label }} | {{ bill.remarks || '无备注' }} </template>
 					<template #value>
 						<div>{{ EXPENSES.get(bill.expenses)?.unit }} {{ formatNum(bill.price) }}</div>
 						<div v-if="bill.serviceFee" style="font-size: 12px">- {{ bill.serviceFee }}</div>
 					</template>
 				</van-cell>
 				<template #right>
-					<!--					<van-button square text="修改分类" type="primary" class="delete-button" />-->
 					<van-button square text="删除" type="danger" class="delete-button" @click="billStore.deleteBillOrder(bill.id)" />
 				</template>
 			</van-swipe-cell>
@@ -55,7 +58,7 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
 import { dayjs, formatNum, getDayOfWeek } from '@common/utils/src';
-import { _PURPOSE, EXPENSES } from '@/assets/data';
+import { PURPOSE, EXPENSES, PAY_METHOD } from '@/assets/data';
 import formData from './formData.vue';
 import filterData from './filterData.vue';
 import { useBillStore } from '@/stores/bill';
@@ -93,6 +96,7 @@ billStore.init();
 		padding-top: 10px;
 		padding-bottom: 10px;
 		.date {
+			font-size: 14px;
 			font-weight: bold;
 		}
 		.price {
@@ -101,13 +105,16 @@ billStore.init();
 			.text {
 				font-size: 10px;
 				padding: 2px 3px;
-				border-radius: 3px;
-				margin-right: 6px;
+				border-radius: 2px;
+				margin-right: 4px;
 				background-color: var(--van-active-color);
 				color: var(--van-text-color-2);
 			}
+			.num {
+				font-size: 12px;
+			}
 			.num1 {
-				margin-right: 20px;
+				margin-right: 10px;
 			}
 		}
 	}

@@ -5,9 +5,8 @@ interface IOrder {
 	expenses: EXPENSE_TYPE;
 	price: string;
 	serviceFee: number;
-	payMethod: string;
 	purpose: string;
-	staff: string;
+	payMethod: string;
 	remarks: string;
 	id: string;
 }
@@ -19,7 +18,7 @@ interface ISeriesData {
 
 interface IState {
 	search: {
-		staff: string;
+		payMethod: string;
 		expenses: string;
 		dateType: string;
 		date: string;
