@@ -4,33 +4,15 @@
 		<div class="text">{{ dayjs(date).format('M月') }}{{ query.title }}{{ query.expenses === 'income' ? '共收入' : '共支出' }}</div>
 		<div class="total"><small>￥</small>{{ formatNum(total) }}</div>
 	</div>
-	<van-cell
-		v-for="item in allOrderList"
-		:value="'￥' + formatNum(item.price)"
-		:label="item.remarks"
-		center
-		:to="{
-			path: '/details',
-			query: { id: item.id },
-		}"
-	>
-		<template #icon>
-			<div class="icon-purpose" :style="{ '--color': EXPENSES.get(item.expenses)?.color }">
-				<svg-icon :name="PURPOSE.get(item.purpose)?.icon || ''" />
-			</div>
-		</template>
-		<template #title>
-			{{ PURPOSE.get(item.purpose)?.label }}
-		</template>
-	</van-cell>
+	<OrderItem v-for="bill in allOrderList" :bill="bill" />
 </template>
 <script setup lang="ts">
 import { computed, ref, onActivated } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { useRoute, useRouter, type LocationQuery } from 'vue-router';
-import { flatten, dayjs, formatNum } from '@common/utils';
-import { PURPOSE, EXPENSES } from '@/assets/data';
+import { dayjs, formatNum } from '@common/utils';
+import OrderItem from '@/components/OrderItem/index.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -39,25 +21,33 @@ const { billList } = storeToRefs(useBillStore());
 const total = ref(0);
 const date = ref('');
 
+const query = computed<LocationQuery>(() => route.query);
+
 function initData() {
-	if (typeof route.query.total === 'string') {
-		total.value = parseFloat(route.query.total);
+	if (typeof query.value.total === 'string') {
+		total.value = parseFloat(query.value.total);
 	}
-	if (typeof route.query.date === 'string') {
-		date.value = route.query.date;
+	if (typeof query.value.date === 'string') {
+		date.value = query.value.date;
 	}
 }
 
-const query = computed<LocationQuery>(() => route.query);
+interface ENUMITEM extends IOrder {
+	[key: string]: any;
+}
 
 // 过滤日期相同的数据 并返回当前类型的消费订单
-const allOrderList = computed(() =>
-	flatten(
-		billList.value.filter((n) => {
-			return dayjs(date.value).isSame(n.date, 'month');
-		})
-	).filter((n) => n.expenses === query.value.expenses && n.purpose === query.value.key)
-);
+const allOrderList = computed(() => {
+	// 根据 月份 和支出/收入 和 支付平台/用途 过滤出数据
+	const list = billList.value.filter(
+		(n: ENUMITEM) =>
+			dayjs(date.value).isSame(n.date, 'month') &&
+			n.expenses === query.value.expenses &&
+			typeof query.value.statisticsType === 'string' &&
+			n[query.value.statisticsType] === query.value.key
+	);
+	return list;
+});
 
 onActivated(() => {
 	initData();

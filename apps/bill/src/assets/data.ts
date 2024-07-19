@@ -15,6 +15,12 @@ const PAY_METHOD = new Map([
 	['wechat', { label: '微信', icon: 'wechat', rate: 0 }],
 ]);
 
+// 统计类型
+const STATISTICS_TYPE = new Map<'purpose' | 'payMethod', { label: string; field: string }>([
+	['purpose', { label: '用途分类', field: 'purpose' }],
+	['payMethod', { label: '支付平台', field: 'payMethod' }],
+]);
+
 // 用途
 const PURPOSE = new Map([
 	['other', { label: '其他', icon: 'other' }],
@@ -38,4 +44,4 @@ function formatMap(map: Map<string, any>): DropdownItemOption[] {
 	});
 }
 
-export { EXPENSES, PAY_METHOD, PURPOSE, formatMap };
+export { EXPENSES, PAY_METHOD, PURPOSE, STATISTICS_TYPE, formatMap };

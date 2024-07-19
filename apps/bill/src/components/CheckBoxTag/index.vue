@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 	size: 'default',
 });
 
-const emits = defineEmits(['update:value']);
+const emits = defineEmits(['update:value', 'change']);
 
 const tagValue = ref<string | number | Array<DropdownItemOptionValue>>('');
 
@@ -56,11 +56,14 @@ function onClick(val: DropdownItemOptionValue) {
 				props.value.push(val);
 			}
 			emits('update:value', props.value);
+			emits('change', props.value);
 		} else {
 			emits('update:value', [val]);
+			emits('change', [val]);
 		}
 	} else {
 		emits('update:value', val);
+		emits('change', val);
 	}
 }
 

@@ -13,40 +13,7 @@
 					<div class="num">{{ formatNum(item.totalServiceFee) }}</div>
 				</div>
 			</div>
-			<van-swipe-cell v-for="bill in item.list">
-				<van-cell
-					center
-					title-class="single-line-ellipsis"
-					title-style="flex:2;"
-					:to="{
-						path: '/details',
-						query: { id: bill.id },
-					}"
-					size="large"
-				>
-					<template #icon>
-						<div class="icon-purpose" :style="`--color: ${EXPENSES.get(bill.expenses)?.color}`">
-							<svg-icon :name="PURPOSE.get(bill.purpose)?.icon || ''" />
-						</div>
-					</template>
-					<template #title>
-						<van-space>
-							{{ PURPOSE.get(bill.purpose)?.label }}
-							<van-tag round plain :type="EXPENSES.get(bill.expenses)?.type">
-								{{ EXPENSES.get(bill.expenses)?.label }}
-							</van-tag>
-						</van-space>
-					</template>
-					<template #label> {{ PAY_METHOD.get(bill.payMethod)?.label }} | {{ bill.remarks || '无备注' }} </template>
-					<template #value>
-						<div>{{ EXPENSES.get(bill.expenses)?.unit }} {{ formatNum(bill.price) }}</div>
-						<div v-if="bill.serviceFee" style="font-size: 12px">- {{ bill.serviceFee }}</div>
-					</template>
-				</van-cell>
-				<template #right>
-					<van-button square text="删除" type="danger" class="delete-button" @click="billStore.deleteBillOrder(bill.id)" />
-				</template>
-			</van-swipe-cell>
+			<OrderItem v-for="bill in item.list" :bill="bill" />
 		</div>
 	</van-list>
 	<van-empty v-else description="掌握财务，从记账开始。">
@@ -58,10 +25,10 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
 import { dayjs, formatNum, getDayOfWeek } from '@common/utils/src';
-import { PURPOSE, EXPENSES, PAY_METHOD } from '@/assets/data';
 import formData from './formData.vue';
 import filterData from './filterData.vue';
 import { useBillStore } from '@/stores/bill';
+import OrderItem from '@/components/OrderItem/index.vue';
 
 const billStore = useBillStore();
 

@@ -7,10 +7,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CellItem: typeof import('./src/components/CellItem/index.vue')['default']
     CheckBoxTag: typeof import('./src/components/CheckBoxTag/index.vue')['default']
     DatePicker: typeof import('./src/components/DatePicker/index.vue')['default']
     DateTag: typeof import('./src/components/DateTag/index.vue')['default']
     GridItem: typeof import('./src/components/GridItem/index.vue')['default']
+    OrderItem: typeof import('./src/components/OrderItem/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     VanActionSheet: typeof import('vant/es')['ActionSheet']

@@ -10,12 +10,14 @@
 		</div>
 	</div>
 	<div class="container mb10">
-		<div class="big-title">支出构成</div>
-		<PieChart :option="option" />
+		<div class="tag">
+			<CheckBoxTag :options="formatMap(STATISTICS_TYPE)" v-model:value="statisticsType" @change="setPieData" />
+		</div>
+		<PieChart :option="pieOption" />
 	</div>
 	<div class="container mb10">
 		<van-cell
-			v-for="item in option.series.data"
+			v-for="item in pieOption.series.data"
 			:value="'￥' + formatNum(item.value)"
 			is-link
 			center
@@ -27,12 +29,13 @@
 					total: item.value,
 					date: filter.month,
 					expenses: expenses,
+					statisticsType: statisticsType,
 				},
 			}"
 		>
 			<template #icon>
 				<div class="icon-purpose" :style="{ '--color': themeColor }">
-					<svg-icon :name="PURPOSE.get(item.key)?.icon || ''" />
+					<svg-icon :name="formatIcon(item.key)" />
 				</div>
 			</template>
 			<template #title>
@@ -53,7 +56,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, computed, watch, onActivated, watchEffect } from 'vue';
-import { EXPENSES, formatMap, PURPOSE } from '@/assets/data';
+import { EXPENSES, formatMap, PURPOSE, STATISTICS_TYPE, PAY_METHOD } from '@/assets/data';
 import { useBill } from '@/hooks/useBill';
 import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
@@ -65,10 +68,11 @@ import { useBillStore } from '@/stores/bill';
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, filterMonthData } = useBill();
 
+const statisticsType = ref<'purpose' | 'payMethod'>('purpose');
 const expenses = ref<'income' | 'pay'>('income');
 const total = ref('0.00');
 
-const option = ref<any>({
+const pieOption = ref<any>({
 	grid: {
 		top: 10,
 	},
@@ -173,14 +177,18 @@ const allOrderList = computed(() => filterMonthData(filter.value.month, expenses
 
 const themeColor = computed(() => EXPENSES.get(expenses.value)?.color);
 
+function formatIcon(key: string): string {
+	return statisticsType.value === 'purpose' ? PURPOSE.get(key)?.icon || '' : PAY_METHOD.get(key)?.icon || '';
+}
+
 function setPieData() {
 	const data: { [key: string]: number } = {};
 	// 将不同类型的账单分别累加
 	allOrderList.value.forEach((n) => {
-		if (data[n.purpose]) {
-			data[n.purpose] = data[n.purpose] + parseFloat(n.price);
+		if (data[n[statisticsType.value]]) {
+			data[n[statisticsType.value]] = data[n[statisticsType.value]] + parseFloat(n.price);
 		} else {
-			data[n.purpose] = parseFloat(n.price);
+			data[n[statisticsType.value]] = parseFloat(n.price);
 		}
 	});
 	// 将累加后的金额 以最大的为基数 转化成百分比
@@ -188,13 +196,13 @@ function setPieData() {
 	const dataList = Object.keys(data).map((n, index) => {
 		return {
 			value: data[n],
-			name: PURPOSE.get(n)?.label,
+			name: statisticsType.value === 'purpose' ? PURPOSE.get(n)?.label : PAY_METHOD.get(n)?.label,
 			key: n,
 			per: perList[index],
 		};
 	});
 	// 设置饼图的数据
-	option.value.series.data = sortBy(dataList, 'per').reverse();
+	pieOption.value.series.data = sortBy(dataList, 'per').reverse();
 	setBarData();
 }
 
@@ -237,6 +245,11 @@ onActivated(() => {
 			font-size: 40px;
 		}
 	}
+}
+.tag {
+	padding-top: 10px;
+	display: flex;
+	justify-content: center;
 }
 :deep .van-cell {
 	display: grid;
