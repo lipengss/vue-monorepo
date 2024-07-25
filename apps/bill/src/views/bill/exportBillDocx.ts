@@ -53,7 +53,7 @@ export function exportBillDocx() {
 				return tableCell(n, 20);
 			}),
 			height: {
-				value: 340,
+				value: 200,
 				rule: HeightRule.EXACT,
 			},
 		});
@@ -102,14 +102,11 @@ export function exportBillDocx() {
 					],
 					properties: {
 						page: {
-							size: {
-								orientation: PageOrientation.LANDSCAPE, // 纸张方向改为横向
-							},
 							margin: {
-								top: convertInchesToTwip(0.4), // 顶部边距 1 英寸
-								right: convertInchesToTwip(0.4), // 右侧边距 1 英寸
-								bottom: convertInchesToTwip(0.4), // 底部边距 1 英寸
-								left: convertInchesToTwip(0.4), // 左侧边距 1 英寸
+								top: convertInchesToTwip(0.2), // 顶部边距 1 英寸
+								right: convertInchesToTwip(0.2), // 右侧边距 1 英寸
+								bottom: convertInchesToTwip(0.2), // 底部边距 1 英寸
+								left: convertInchesToTwip(0.2), // 左侧边距 1 英寸
 							},
 						},
 					},
@@ -134,7 +131,7 @@ export function exportBillDocx() {
 							tableCell(n.remarks),
 						],
 						height: {
-							value: 280,
+							value: 160,
 							rule: HeightRule.EXACT,
 						},
 					});

@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    CellItem: typeof import('./src/components/CellItem/index.vue')['default']
     CheckBoxTag: typeof import('./src/components/CheckBoxTag/index.vue')['default']
     DatePicker: typeof import('./src/components/DatePicker/index.vue')['default']
     DateTag: typeof import('./src/components/DateTag/index.vue')['default']
