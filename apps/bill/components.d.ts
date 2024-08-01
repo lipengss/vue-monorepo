@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    CellItem: typeof import('./src/components/CellItem/index.vue')['default']
     CheckBoxTag: typeof import('./src/components/CheckBoxTag/index.vue')['default']
     DatePicker: typeof import('./src/components/DatePicker/index.vue')['default']
     DateTag: typeof import('./src/components/DateTag/index.vue')['default']
@@ -29,7 +28,6 @@ declare module 'vue' {
     VanForm: typeof import('vant/es')['Form']
     VanIcon: typeof import('vant/es')['Icon']
     VanList: typeof import('vant/es')['List']
-    VanNavBar: typeof import('vant/es')['NavBar']
     VanNumberKeyboard: typeof import('vant/es')['NumberKeyboard']
     VanPopup: typeof import('vant/es')['Popup']
     VanProgress: typeof import('vant/es')['Progress']
