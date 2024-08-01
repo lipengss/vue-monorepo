@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 	bgColor: '#f7f8fa',
 	color: '#969799',
 	multiple: false,
-	activeColor: '#07c160',
+	activeColor: '#1989fa',
 	size: 'default',
 });
 

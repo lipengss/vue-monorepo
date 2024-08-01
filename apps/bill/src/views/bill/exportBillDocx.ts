@@ -21,21 +21,17 @@ import { PURPOSE, EXPENSES, PAY_METHOD } from '@/assets/data';
 import { useBill } from '@/hooks/useBill';
 
 const { formatBillList, filter } = storeToRefs(useBillStore());
-const { incomeTotal, payTotal, serviceFeeTotal } = useBill();
+const { incomeTotal, payTotal, serviceFeeTotal, platformFeeTotal, balance } = useBill();
 
 const expenses: any = {
 	all: {
 		text: '收支明细',
-		total: () =>
-			`收入共计 ${incomeTotal(filter.value.month)} 元；支出共计 ${payTotal(filter.value.month)} 元；手续费共计 ${serviceFeeTotal(filter.value.month)} 元`,
 	},
 	pay: {
 		text: '支出明细',
-		total: () => `支出共计 ${payTotal(filter.value.month)} 元；手续费共计 ${serviceFeeTotal(filter.value.month)} 元`,
 	},
 	income: {
 		text: '收入明细',
-		total: () => `收入共计 ${incomeTotal(filter.value.month)} 元；手续费共计 ${serviceFeeTotal(filter.value.month)} 元`,
 	},
 };
 
@@ -46,7 +42,7 @@ export function exportBillDocx() {
 	function init() {
 		const billTable = createBillTabel();
 		const totalTable = createTotalTable();
-		const doc = createDocument([billTable, totalTable]);
+		const doc = createDocument([billTable, new Paragraph({ text: '', spacing: { after: 100 } }), totalTable]);
 		downLoad(doc);
 	}
 	// 创建表格表头
@@ -57,7 +53,7 @@ export function exportBillDocx() {
 				return tableCell(n, 20);
 			}),
 			height: {
-				value: 340,
+				value: 200,
 				rule: HeightRule.EXACT,
 			},
 		});
@@ -103,29 +99,14 @@ export function exportBillDocx() {
 							],
 						}),
 						...table,
-						new Paragraph({
-							spacing: {
-								before: convertInchesToTwip(0.1),
-							},
-							children: [
-								new TextRun({
-									text: `${expenses[filter.value.expenses].total()}`,
-									size: 26,
-									color: '#333333',
-								}),
-							],
-						}),
 					],
 					properties: {
 						page: {
-							size: {
-								orientation: PageOrientation.LANDSCAPE, // 纸张方向改为横向
-							},
 							margin: {
-								top: convertInchesToTwip(0.4), // 顶部边距 1 英寸
-								right: convertInchesToTwip(0.4), // 右侧边距 1 英寸
-								bottom: convertInchesToTwip(0.4), // 底部边距 1 英寸
-								left: convertInchesToTwip(0.4), // 左侧边距 1 英寸
+								top: convertInchesToTwip(0.2), // 顶部边距 1 英寸
+								right: convertInchesToTwip(0.2), // 右侧边距 1 英寸
+								bottom: convertInchesToTwip(0.2), // 底部边距 1 英寸
+								left: convertInchesToTwip(0.2), // 左侧边距 1 英寸
 							},
 						},
 					},
@@ -150,7 +131,7 @@ export function exportBillDocx() {
 							tableCell(n.remarks),
 						],
 						height: {
-							value: 280,
+							value: 160,
 							rule: HeightRule.EXACT,
 						},
 					});
@@ -160,14 +141,25 @@ export function exportBillDocx() {
 				size: 100,
 				type: WidthType.PERCENTAGE,
 			},
+			margins: {
+				bottom: convertInchesToTwip(0.1),
+			},
 		});
 	}
+	// 创建共支付方式表格
 	function createTotalTable() {
 		return new Table({
 			rows: [
 				createTableHeaderRow(payMethodHeaderName),
 				new TableRow({
-					children: [tableCell('2000'), tableCell('1000'), tableCell('240'), tableCell('120'), tableCell('80'), tableCell('208')],
+					children: [
+						tableCell(incomeTotal(filter.value.month)),
+						tableCell(payTotal(filter.value.month)),
+						tableCell(platformFeeTotal(filter.value.month, 'douyin')),
+						tableCell(platformFeeTotal(filter.value.month, 'meituan')),
+						tableCell(platformFeeTotal(filter.value.month, 'alipay')),
+						tableCell(balance(filter.value.month)),
+					],
 					height: {
 						value: 280,
 						rule: HeightRule.EXACT,

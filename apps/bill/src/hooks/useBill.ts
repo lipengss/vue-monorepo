@@ -31,10 +31,19 @@ export function useBill() {
 		return formatNum(total.value);
 	}
 	function serviceFeeTotal(month: string): string {
-		const incomeList = filterMonthData(month, 'income').filter((n) => n.serviceFee && n.serviceFee !== 0);
-		const payList = filterMonthData(month, 'pay').filter((n) => n.serviceFee && n.serviceFee !== 0);
+		const incomeList = filterMonthData(month, 'income').filter((n) => n.serviceFee);
+		const payList = filterMonthData(month, 'pay').filter((n) => n.serviceFee);
 		const total = computed(() =>
 			[...payList, ...incomeList].reduce((pre, cur) => {
+				return parseFloat(add(pre, cur.serviceFee));
+			}, 0)
+		);
+		return formatNum(total.value);
+	}
+	function platformFeeTotal(month: string, payMethod: 'douyin' | 'meituan' | 'alipay') {
+		const filterList = billList.value.filter((n) => dayjs(month).isSame(n.date, 'month')).filter((n) => n.payMethod === payMethod && n.serviceFee);
+		const total = computed(() =>
+			filterList.reduce((pre, cur) => {
 				return parseFloat(add(pre, cur.serviceFee));
 			}, 0)
 		);
@@ -49,5 +58,6 @@ export function useBill() {
 		balance,
 		serviceFeeTotal,
 		filterMonthData,
+		platformFeeTotal,
 	};
 }
