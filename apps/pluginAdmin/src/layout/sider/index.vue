@@ -17,7 +17,7 @@ const route = useRoute()
 const router = useRouter()
 const settingStore = useSettingStore()
 
-const routes = computed(() => router.options.routes.find((route) => route.name === 'Home')?.children || [])
+const routes = computed(() => router.options.routes.find((route) => route.name === 'Entry')?.children || [])
 
 const selectedKeys = ref<string>('')
 
