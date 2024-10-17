@@ -3,6 +3,7 @@
 		<keep-alive :include="['statistics']">
 			<component :is="Component" />
 		</keep-alive>
+		<a href="https://beian.miit.gov.cn" target="_blank" class="icp">备案号：京ICP备2024051908号-1</a>
 	</router-view>
 	<van-tabbar v-model="state.active" @change="onTabChange">
 		<van-tabbar-item icon="orders-o" name="/bill">明细</van-tabbar-item>
@@ -30,3 +31,11 @@ watchEffect(() => {
 	state.active = route.path;
 });
 </script>
+<style lang="scss" scoped>
+.icp {
+	display: block;
+	text-align: center;
+	padding: 10px 0 100px;
+	color: #ccc;
+}
+</style>

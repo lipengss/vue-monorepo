@@ -1,9 +1,15 @@
 <template>
 	<div class="banner">
-		<div class="flex-bl-bt mb10">
-			<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
-			<van-icon name="list-switch" color="#fff" size="20" @click="actionSheetRef.open()" />
-		</div>
+		<van-sticky>
+			<div class="flex-bl-bt">
+				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+				<van-space>
+					<van-tag type="primary" size="large" @click="dataSourceRef.operation('copy')">复制</van-tag>
+					<van-tag type="success" size="large" @click="dataSourceRef.operation('load')">导入</van-tag>
+					<van-tag type="warning" size="large" @click="dataSourceRef.operation('export')">导出</van-tag>
+				</van-space>
+			</div>
+		</van-sticky>
 		<div class="banner-bot">
 			<div class="balance">
 				<div class="title">结余</div>
@@ -25,7 +31,7 @@
 			</div>
 		</div>
 	</div>
-	<van-sticky>
+	<van-sticky :offset-top="50">
 		<van-dropdown-menu ref="menuRef">
 			<van-dropdown-item v-model="filter.expenses" :options="expensesList" />
 			<van-dropdown-item :title="title" ref="purposeRef">
@@ -35,21 +41,21 @@
 			</van-dropdown-item>
 		</van-dropdown-menu>
 	</van-sticky>
-	<actionSheet ref="actionSheetRef" />
+	<dataSource ref="dataSourceRef" />
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { useBill } from '@/hooks/useBill';
-import actionSheet from './actionSheet.vue';
+import dataSource from './dataSource.vue';
 import GridItem from '@/components/GridItem/index.vue';
 import { PURPOSE, EXPENSES, formatMap } from '@/assets/data';
 
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, serviceFeeTotal, balance } = useBill();
 
-const actionSheetRef = ref();
+const dataSourceRef = ref();
 const title = ref('全部用途');
 const purposeRef = ref();
 const expensesList = computed(() => [{ text: '全部收支', value: 'all' }, ...formatMap(EXPENSES)]);
@@ -69,14 +75,18 @@ function onChange(val: string) {
 	padding: 16px;
 }
 .banner {
-	height: 120px;
-	padding: 10px 20px 20px 14px;
 	background-image: url('../../assets/banner.svg');
 	background-size: cover;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	.flex-bl-bt {
+		padding: 10px;
+		background-image: url('../../assets/banner.svg');
+		background-size: cover;
+	}
 	.banner-bot {
+		padding: 0 10px 10px;
 		display: grid;
 		grid-template-columns: 1fr 140px;
 		align-items: center;

@@ -178,6 +178,6 @@ export function exportBillDocx() {
 		const buffer = new Uint8Array(binaryString.length).map((item, index) => binaryString.charCodeAt(index));
 		const blob = new Blob([buffer], { type: 'application/octet-stream' });
 		// 使用file-saver保存文件
-		saveAs(blob, `纤指妆容 ${dayjs(filter.value.month).format('YYYY年MM月')} ${expenses[filter.value.expenses].text}.doc`);
+		saveAs(blob, `纤指妆容 ${dayjs(filter.value.month).format('YYYY年MM月')} ${expenses[filter.value.expenses].text}.pdf`);
 	}
 }

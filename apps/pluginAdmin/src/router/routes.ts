@@ -4,7 +4,7 @@ import Layout from '@/layout/index.vue'
 export const dynamicRoutes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		name: 'Home',
+		name: 'Entry',
 		component: Layout,
 		redirect: '/home',
 		children: [

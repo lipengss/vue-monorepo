@@ -11,13 +11,13 @@ import { resolve } from 'path';
 const pathResolve = (dir: string) => resolve(__dirname, dir);
 
 // https://vitejs.dev/config/
-export default defineConfig((mode:ConfigEnv) => {
+export default defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
 		define: {
-			'__VUE_OPTIONS_API__': true,
-			'__VUE_PROD_DEVTOOLS__': false,
-			'__VUE_PROD_HYDRATION_MISMATCH_DETAILS__': false
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: false,
+			__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
 		},
 		plugins: [
 			vue(),
@@ -47,5 +47,5 @@ export default defineConfig((mode:ConfigEnv) => {
 			hmr: true,
 		},
 		// build: build({ outDir: 'bill' })
-	}
+	};
 });
