@@ -1,73 +1,59 @@
 <template>
-	<div class="banner">
-		<van-sticky>
-			<div class="flex-bl-bt">
-				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+	<van-sticky>
+		<div class="banner">
+			<div class="flex-bl-bt mb10">
+				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" />
 				<van-space>
 					<van-tag type="primary" size="large" @click="dataSourceRef.operation('copy')">复制</van-tag>
-					<van-tag type="success" size="large" @click="dataSourceRef.operation('load')">导入</van-tag>
+					<van-tag type="success" size="large" @click="dataSourceRef.operation('load')">粘贴</van-tag>
 					<van-tag type="warning" size="large" @click="dataSourceRef.operation('export')">导出</van-tag>
 				</van-space>
 			</div>
-		</van-sticky>
-		<div class="banner-bot">
-			<div class="balance">
-				<div class="title">结余</div>
-				<div class="value">￥{{ balance(filter.month) }}</div>
+			<div class="banner-bot">
+				<div class="balance">
+					<div class="title">结余</div>
+					<div class="value">￥{{ balance(filter.month) }}</div>
+				</div>
+				<div class="details">
+					<div class="line">
+						<div class="title">总收入</div>
+						<div class="value">+ {{ incomeTotal(filter.month) }}</div>
+					</div>
+					<div class="line">
+						<div class="title">总支出</div>
+						<div class="value">- {{ payTotal(filter.month) }}</div>
+					</div>
+					<div class="line">
+						<div class="title">总手续费</div>
+						<div class="value">- {{ serviceFeeTotal(filter.month) }}</div>
+					</div>
+				</div>
 			</div>
-			<div class="details">
-				<div class="line">
-					<div class="title">总收入</div>
-					<div class="value">+ {{ incomeTotal(filter.month) }}</div>
-				</div>
-				<div class="line">
-					<div class="title">总支出</div>
-					<div class="value">- {{ payTotal(filter.month) }}</div>
-				</div>
-				<div class="line">
-					<div class="title">总手续费</div>
-					<div class="value">- {{ serviceFeeTotal(filter.month) }}</div>
-				</div>
-			</div>
+			<van-space>
+				<CheckBoxTag
+					:options="formatMap(EXPENSES)"
+					v-model:value="filter.expenses"
+					bg-color="transparent"
+					color="#fff"
+					active-color="rgba(255,255,255,.2)"
+				/>
+			</van-space>
 		</div>
-	</div>
-	<van-sticky :offset-top="50">
-		<van-dropdown-menu ref="menuRef">
-			<van-dropdown-item v-model="filter.expenses" :options="expensesList" />
-			<van-dropdown-item :title="title" ref="purposeRef">
-				<div class="box">
-					<GridItem :options="purposeList" v-model:value="filter.purpose" active-color="#1989fa" @change="onChange" />
-				</div>
-			</van-dropdown-item>
-		</van-dropdown-menu>
 	</van-sticky>
 	<dataSource ref="dataSourceRef" />
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { useBill } from '@/hooks/useBill';
 import dataSource from './dataSource.vue';
-import GridItem from '@/components/GridItem/index.vue';
-import { PURPOSE, EXPENSES, formatMap } from '@/assets/data';
+import { EXPENSES, formatMap } from '@/assets/data';
 
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, serviceFeeTotal, balance } = useBill();
 
 const dataSourceRef = ref();
-const title = ref('全部用途');
-const purposeRef = ref();
-const expensesList = computed(() => [{ text: '全部收支', value: 'all' }, ...formatMap(EXPENSES)]);
-
-const purposeList = [{ text: '全部用途', value: 'all' }, ...formatMap(PURPOSE)];
-
-function onChange(val: string) {
-	const item = purposeList.find((n) => n.value === val);
-	if (!item) return;
-	title.value = item.text;
-	purposeRef.value.toggle();
-}
 </script>
 
 <style scoped lang="scss">
@@ -75,18 +61,13 @@ function onChange(val: string) {
 	padding: 16px;
 }
 .banner {
+	padding: 10px;
 	background-image: url('../../assets/banner.svg');
 	background-size: cover;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	.flex-bl-bt {
-		padding: 10px;
-		background-image: url('../../assets/banner.svg');
-		background-size: cover;
-	}
 	.banner-bot {
-		padding: 0 10px 10px;
 		display: grid;
 		grid-template-columns: 1fr 140px;
 		align-items: center;

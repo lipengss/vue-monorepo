@@ -1,10 +1,16 @@
 <template>
-	<van-dialog v-model:show="showDialog" title="粘贴文本" show-cancel-button @confirm="onConfirm">
-		<van-field v-model="billData" rows="2" :autosize="{ maxHeight: 200, minHeight: 200 }" type="textarea" placeholder="录入账单数据" />
-	</van-dialog>
+	<van-popup v-model:show="showDialog" position="bottom" :style="{ height: '60%' }" round>
+		<van-nav-bar title="粘贴账单" left-text="取消" right-text="导入" @click-left="showDialog = false" @click-right="onConfirm" />
+		<van-field v-model="billData" rows="2" autofocus :autosize="{ maxHeight: 390, minHeight: 390 }" type="textarea" :placeholder="placeholder" />
+		<van-cell title="账单条数" :value="length" center>
+			<template #right-icon>
+				<van-icon :name="statusMap[status].icon" :color="statusMap[status].color" size="20" style="margin-left: 10px" />
+			</template>
+		</van-cell>
+	</van-popup>
 </template>
 <script setup lang="ts">
-import { ref, defineExpose } from 'vue';
+import { ref, defineExpose, computed } from 'vue';
 import { showToast } from 'vant';
 import { isEqual } from '@common/utils/src';
 import { useClipboard } from '@common/hooks';
@@ -19,6 +25,51 @@ const { copy } = useClipboard();
 
 const showDialog = ref(false);
 const billData = ref();
+const status = ref();
+const statusMap: any = {
+	close: {
+		icon: 'close',
+		color: '#ee0a24',
+	},
+	passed: {
+		icon: 'passed',
+		color: '#07c160',
+	},
+	warning: {
+		icon: 'warning-o',
+		color: '#969799',
+	},
+};
+
+const length = computed(() => {
+	if (billData.value === undefined || billData.value === '') {
+		status.value = 'warning';
+		return 0 + ' 条';
+	} else {
+		try {
+			status.value = 'passed';
+			return JSON.parse(billData.value).length + ' 条';
+		} catch (err) {
+			status.value = 'close';
+			return '数据格式错误，请检查！';
+		}
+	}
+});
+
+const placeholder = `
+[
+	{
+		date: "2024-06-01 14:26:45",
+		expenses: "pay",
+		id: "ZrhNqy3FrANgq8JUs8HHc",
+		payMethod: "cash",
+		price: "1000",
+		purpose: "other",
+		remarks: "备注信息",
+		staff: "员工"
+	}...
+]
+`;
 
 // 拷贝
 function onCopy() {

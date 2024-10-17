@@ -78,6 +78,9 @@ watch(
 );
 </script>
 <style lang="scss" scoped>
+:deep .van-space-item {
+	margin-bottom: 0 !important;
+}
 .checkbox-tag {
 	text-wrap: nowrap;
 	padding: 4px 16px;

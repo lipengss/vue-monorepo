@@ -19,8 +19,7 @@ export const useBillStore = defineStore('bill', {
 			},
 			filter: {
 				month: dayjs().format('YYYY-MM'),
-				expenses: 'all',
-				purpose: 'all',
+				expenses: 'income',
 			},
 		};
 	},
@@ -28,11 +27,7 @@ export const useBillStore = defineStore('bill', {
 		formatBillList(state) {
 			const data: { [key: string]: { list: IOrder[]; totalIncome: number; totalPay: number; totalServiceFee: number; date: string } } = {};
 			const filterList = state.billList.filter((n) => {
-				return (
-					(n.expenses === state.filter.expenses || state.filter.expenses === 'all') &&
-					(n.purpose === state.filter.purpose || state.filter.purpose === 'all') &&
-					dayjs(n.date).isSame(state.filter.month, 'month')
-				);
+				return n.expenses === state.filter.expenses && dayjs(n.date).isSame(state.filter.month, 'month');
 			});
 			filterList.forEach((n) => {
 				const day = dayjs(n.date).format('YYYY-MM-DD');

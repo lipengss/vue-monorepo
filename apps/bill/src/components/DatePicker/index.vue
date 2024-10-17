@@ -1,10 +1,11 @@
 <template>
-	<div class="expenses" @click="showPicker = true" :style="props.style">
-		{{ dayjs(props.value).format(props.showFormat) }}
-		<van-icon :size="16" :color="props.color">
-			<svg-icon name="calendar" />
-		</van-icon>
-	</div>
+	<van-space>
+		<van-button size="mini" type="primary" icon="arrow-left" />
+		<div class="expenses" @click="showPicker = true" :style="props.style">
+			{{ dayjs(props.value).format(props.showFormat) }}
+		</div>
+		<van-button size="mini" type="primary" icon="arrow" />
+	</van-space>
 	<van-popup v-model:show="showPicker" position="bottom">
 		<van-date-picker
 			v-model="dateValue"
@@ -65,12 +66,8 @@ watch(() => props.value, setDate, {
 .expenses {
 	display: flex;
 	align-items: center;
-	padding: 4px 16px;
 	border-radius: 4px;
 	background-color: v-bind('props.bgColor');
 	color: v-bind('props.color');
-	.van-icon {
-		margin-left: 4px;
-	}
 }
 </style>

@@ -2,7 +2,7 @@
 	<div class="info">
 		<van-sticky>
 			<div class="flex-bl-bt">
-				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" />
 				<CheckBoxTag
 					:options="formatMap(EXPENSES)"
 					v-model:value="expenses"

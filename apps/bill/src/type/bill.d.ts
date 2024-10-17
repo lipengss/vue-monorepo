@@ -11,6 +11,5 @@ interface StoreState {
 	filter: {
 		month: string;
 		expenses: string;
-		purpose: string;
 	};
 }
