@@ -71,6 +71,9 @@ importers:
       echarts-liquidfill:
         specifier: ^3.1.0
         version: 3.1.0(echarts@5.5.1)
+      html2pdf:
+        specifier: ^0.0.11
+        version: 0.0.11
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.21(typescript@5.4.5))
@@ -3146,6 +3149,9 @@ packages:
     engines: {node: '>=4.0.0'}
     deprecated: Please migrate your projects to a newer library like puppeteer
     hasBin: true
+
+  html2pdf@0.0.11:
+    resolution: {integrity: sha512-Kx3I5r7lazHZzZv5lDk59jQoTxqaEGlf2BcGNvzWGPQVu0hE8jYCk4hboksuaCvmMJPa0S0A+156ZbE71Wdo2w==}
 
   htmlparser2@3.10.1:
     resolution: {integrity: sha512-IgieNijUMbkDovyoKObU1DUhm1iwNYE/fuifEoEHfd1oZKZDaONBSkal7Y01shxsM49R4XaMdGez3WnF9UfiCQ==}
@@ -9264,6 +9270,8 @@ snapshots:
       phantomjs-prebuilt: 2.1.16
     transitivePeerDependencies:
       - supports-color
+
+  html2pdf@0.0.11: {}
 
   htmlparser2@3.10.1:
     dependencies:

@@ -1,5 +1,4 @@
 <template>
-	<van-action-sheet v-model:show="show" :actions="exoprtList" cancel-text="取消" close-on-click-action @cancel="onCancel" />
 	<van-dialog v-model:show="showDialog" title="粘贴文本" show-cancel-button @confirm="onConfirm">
 		<van-field v-model="billData" rows="2" :autosize="{ maxHeight: 200, minHeight: 200 }" type="textarea" placeholder="录入账单数据" />
 	</van-dialog>
@@ -18,16 +17,8 @@ const { billList, defaultBillItemData } = storeToRefs(useBillStore());
 
 const { copy } = useClipboard();
 
-const show = ref(false);
 const showDialog = ref(false);
 const billData = ref();
-const type = ref<'export' | 'import'>('export');
-
-const exoprtList = [
-	{ name: '复制账单', callback: onCopy },
-	{ name: '导入账单', callback: () => (showDialog.value = true) },
-	{ name: '导出表格', callback: exportBillDocx, subname: '只支持在浏览器端下载' },
-];
 
 // 拷贝
 function onCopy() {
@@ -60,17 +51,21 @@ function onConfirm() {
 		showToast('导入的数据格式有误');
 	}
 }
-function open(t: 'export' | 'import') {
-	type.value = t;
-	show.value = true;
-}
-
-function onCancel() {
-	show.value = false;
+function operation(method: string) {
+	switch (method) {
+		case 'copy':
+			onCopy();
+			break;
+		case 'load':
+			showDialog.value = true;
+			break;
+		default:
+			exportBillDocx();
+	}
 }
 
 defineExpose({
-	open,
+	operation,
 });
 </script>
 <style scoped lang="scss"></style>

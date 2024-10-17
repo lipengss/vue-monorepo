@@ -1,9 +1,17 @@
 <template>
 	<div class="info">
-		<div class="flex-bl-bt">
-			<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
-			<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="expenses" bg-color="transparent" color="#fff" active-color="rgba(255,255,255,.2)" />
-		</div>
+		<van-sticky>
+			<div class="flex-bl-bt">
+				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" style="padding-left: 6px" />
+				<CheckBoxTag
+					:options="formatMap(EXPENSES)"
+					v-model:value="expenses"
+					bg-color="transparent"
+					color="#fff"
+					active-color="rgba(255,255,255,.2)"
+				/>
+			</div>
+		</van-sticky>
 		<div class="text">
 			<div class="title">{{ expenses === 'income' ? '共收入' : '共支出' }}</div>
 			<div class="num">￥{{ formatNum(total) }}</div>
@@ -232,10 +240,13 @@ onActivated(() => {
 </script>
 <style lang="scss" scoped>
 .info {
-	height: 120px;
-	padding: 10px 20px 20px 14px;
 	background-color: v-bind(themeColor);
+	.flex-bl-bt {
+		background-color: v-bind(themeColor);
+		padding: 10px 10px 0;
+	}
 	.text {
+		padding: 0 10px 10px;
 		color: var(--van-white);
 		.title {
 			line-height: 30px;
