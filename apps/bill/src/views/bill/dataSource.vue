@@ -1,5 +1,5 @@
 <template>
-	<van-popup v-model:show="showDialog" position="bottom" :style="{ height: '60%' }" round>
+	<van-popup v-model:show="showDialog" position="bottom" :style="{ height: '70%' }" round>
 		<van-nav-bar title="粘贴账单" left-text="取消" right-text="导入" @click-left="showDialog = false" @click-right="onConfirm" />
 		<van-field v-model="billData" rows="2" autofocus :autosize="{ maxHeight: 390, minHeight: 390 }" type="textarea" :placeholder="placeholder" />
 		<van-cell title="账单条数" :value="length" center>
