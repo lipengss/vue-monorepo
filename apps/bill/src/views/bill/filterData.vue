@@ -45,7 +45,7 @@
 	<dataSource ref="dataSourceRef" />
 	<van-popup v-model:show="copyBill.visible" position="bottom" :style="{ height: '60%' }" round safe-area-inset-bottom>
 		<van-nav-bar
-			:title="`共 ${formatBillList.length} 笔账单`"
+			:title="`共 ${expandBillList.length} 笔 账单`"
 			left-text="取消"
 			right-text="全部复制"
 			class="mb10"
@@ -75,6 +75,7 @@ import dataSource from './dataSource.vue';
 import { EXPENSES, formatMap } from '@/assets/data';
 import { showToast } from 'vant';
 import { useClipboard } from '@common/hooks';
+import { flatten } from '@common/utils';
 import { splitArrayIntoChunks } from '@/assets/data';
 
 const splitNums = [
@@ -94,26 +95,27 @@ const copyBill = reactive({
 	splitNum: '30',
 });
 
-const splitBillList = computed(() => splitArrayIntoChunks(formatBillList.value, Number(copyBill.splitNum)));
+const expandBillList = computed(() => flatten(formatBillList.value.map((n) => n.list)));
+
+const splitBillList = computed(() => splitArrayIntoChunks(expandBillList.value, Number(copyBill.splitNum)));
 
 const dataSourceRef = ref();
 
 // 拷贝
 function onCopy() {
-	const content = JSON.stringify(formatBillList.value, undefined, 4);
+	const content = JSON.stringify(expandBillList.value, undefined, 4);
 	copy(content);
 	showToast(`账单 ${formatBillList.value.length} 条已复制到粘贴板！`);
 }
 
-function copySplitBill(bill: FormatBillItem[], index: number) {
+function copySplitBill(bill: IOrder[], index: number) {
 	const title = formatTitle(bill, index);
 	const content = JSON.stringify(bill, undefined, 4);
 	copy(content);
 	showToast(`账单 ${title} 已复制到粘贴板！`);
 }
 
-function formatTitle(bill: FormatBillItem[], index: number) {
-	console.log(bill);
+function formatTitle(bill: IOrder[], index: number) {
 	const start = index * Number(copyBill.splitNum) + 1; // 当前块的起始索引
 	const end = start + bill.length - 1; // 当前块的结束索引
 	return `${start} ~ ${end} 条`;

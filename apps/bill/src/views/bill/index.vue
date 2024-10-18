@@ -1,7 +1,7 @@
 <template>
 	<filterData />
-	<van-list v-model:loading="state.loading" :finished="state.finished" finished-text="没有更多了" v-if="billStore.billList.length">
-		<div v-for="item in billStore.formatBillList" :key="item.date" class="card">
+	<van-list v-model:loading="state.loading" :finished="state.finished" finished-text="没有更多了" v-if="formatBillList.length">
+		<div v-for="item in formatBillList" :key="item.date" class="card">
 			<div class="line">
 				<div class="date">{{ dayjs(item.date).format('MM月DD日') }} {{ getDayOfWeek(item.date) }}</div>
 				<div class="price">
@@ -13,24 +13,34 @@
 					<div class="num">{{ formatNum(item.totalServiceFee) }}</div>
 				</div>
 			</div>
-			<OrderItem v-for="bill in item.list" :bill="bill" />
+			<OrderItem v-for="bill in item.list" :bill="bill" class="home-cell-list" />
 		</div>
 	</van-list>
 	<van-empty v-else description="掌握财务，从记账开始。">
-		<van-button round block type="primary" class="bottom-button" @click="formRef.onAddOrder()"> 点 亮 财 富 之 旅 </van-button>
+		<van-button round block type="primary" class="bottom-button" @click="formRef.onAddOrder()"> 记 一 笔 </van-button>
 	</van-empty>
 	<formData ref="formRef" />
-	<van-floating-bubble axis="xy" icon="records-o" magnetic="x" v-model:offset="offset" @click="formRef.onAddOrder()" />
+	<van-floating-bubble
+		axis="xy"
+		icon="records-o"
+		magnetic="x"
+		v-model:offset="offset"
+		@click="formRef.onAddOrder()"
+		:style="{ backgroundColor: themeColor }"
+	/>
 </template>
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue';
 import { dayjs, formatNum, getDayOfWeek } from '@common/utils/src';
 import formData from './formData.vue';
 import filterData from './filterData.vue';
+import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import OrderItem from '@/components/OrderItem/index.vue';
+import { EXPENSES } from '@/assets/data';
 
 const billStore = useBillStore();
+const { filter, formatBillList, billList } = storeToRefs(useBillStore());
 
 const formRef = ref();
 
@@ -38,7 +48,9 @@ const state = reactive({
 	loading: false,
 	finished: true,
 });
-window.innerWidth;
+
+const themeColor = computed(() => EXPENSES.get(filter.value.expenses)?.color || '');
+
 const offset = computed(() => {
 	return {
 		x: window.innerWidth - (50 + 10),
@@ -51,6 +63,11 @@ billStore.init();
 <style scoped lang="scss">
 .van-list {
 	padding: 10px;
+	:deep .home-cell-list {
+		.van-cell {
+			padding: var(--van-cell-large-vertical-padding) 0;
+		}
+	}
 }
 .card {
 	padding: 10px;

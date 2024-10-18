@@ -2,7 +2,7 @@
 	<filterData />
 	<div class="container mb10">
 		<div class="tag">
-			<CheckBoxTag :options="formatMap(STATISTICS_TYPE)" v-model:value="statisticsType" @change="setPieData" />
+			<CheckBoxTag :options="formatMap(STATISTICS_TYPE)" v-model:value="statisticsType" @change="setPieData" :activeColor="themeColor" />
 		</div>
 		<PieChart :option="pieOption" />
 	</div>
@@ -47,9 +47,10 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, computed, watch, onActivated, watchEffect } from 'vue';
-import { EXPENSES, formatMap, PURPOSE, STATISTICS_TYPE, PAY_METHOD } from '@/assets/data';
+import { EXPENSES, formatMap, PURPOSE, STATISTICS_TYPE, PAY_METHOD, formatNumber } from '@/assets/data';
 import { useBill } from '@/hooks/useBill';
 import { sortBy, dayjs, formatNum, convertToPercentages } from '@common/utils/src';
+import { useChangeColor } from '@common/hooks';
 import CheckBoxTag from '@/components/CheckBoxTag/index.vue';
 import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
@@ -59,6 +60,7 @@ import filterData from '@/views/bill/filterData.vue';
 
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, filterMonthData } = useBill();
+const { getLightColor } = useChangeColor();
 
 const statisticsType = ref<'purpose' | 'payMethod'>('purpose');
 const total = ref('0.00');
@@ -103,6 +105,7 @@ const dayRatioOption = ref<any>({
 		containLabel: true,
 		left: 10,
 		top: 10,
+		right: 20,
 	},
 	yAxis: {
 		type: 'value',
@@ -113,7 +116,7 @@ const dayRatioOption = ref<any>({
 		},
 		axisLabel: {
 			color: '#969799',
-			formatter: '￥{value}',
+			formatter: (val: number) => formatNumber(val),
 		},
 	},
 	xAxis: {
@@ -158,15 +161,18 @@ const dayRatioOption = ref<any>({
 		},
 	},
 });
+const themeColor = computed(() => EXPENSES.get(filter.value.expenses)?.color || '');
 
 watchEffect(() => {
 	total.value = filter.value.expenses === 'income' ? incomeTotal(filter.value.month) : payTotal(filter.value.month);
+	pieOption.value.color = Array.from({ length: 10 }).map((n, index) => {
+		return getLightColor(themeColor.value, index / 6);
+	});
+	dayRatioOption.value.color = themeColor.value;
 });
 
 // 过滤日期相同的数据 并返回所有账单记录
 const allOrderList = computed(() => filterMonthData(filter.value.month, filter.value.expenses));
-
-const themeColor = computed(() => EXPENSES.get(filter.value.expenses)?.color);
 
 function formatIcon(key: string): string {
 	return statisticsType.value === 'purpose' ? PURPOSE.get(key)?.icon || '' : PAY_METHOD.get(key)?.icon || '';
@@ -208,7 +214,7 @@ function setBarData() {
 			data[day] = parseFloat(n.price);
 		}
 	});
-	dayRatioOption.value.xAxis.data = Object.keys(data).map((n) => dayjs(n).format('M.DD'));
+	dayRatioOption.value.xAxis.data = Object.keys(data).map((n) => dayjs(n).format('D'));
 	dayRatioOption.value.series.data = Object.values(data);
 }
 

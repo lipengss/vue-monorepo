@@ -23,7 +23,14 @@
 					</van-tag>
 				</van-space>
 			</template>
-			<template #label> {{ PAY_METHOD.get(bill.payMethod)?.label }} | {{ bill.remarks || '无备注' }} </template>
+			<template #label>
+				<el-space align="center">
+					<van-icon :size="18">
+						<svg-icon :name="PAY_METHOD.get(bill.payMethod)?.icon" :color="PAY_METHOD.get(bill.payMethod)?.color" />
+					</van-icon>
+					{{ bill.remarks || '无备注' }}
+				</el-space>
+			</template>
 			<template #value>
 				<div>{{ EXPENSES.get(bill.expenses)?.unit }} {{ formatNum(bill.price) }}</div>
 				<div v-if="bill.serviceFee" style="font-size: 12px">- {{ bill.serviceFee }}</div>

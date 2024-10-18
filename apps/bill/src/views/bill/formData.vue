@@ -4,7 +4,7 @@
 			<van-cell>
 				<template #title>
 					<div class="expenses-wrap">
-						<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="state.data.expenses" :active-color="themeColor" />
+						<CheckBoxTag :options="formatMap(EXPENSES)" v-model:value="billStore.filter.expenses" :active-color="themeColor" />
 						<DateTag v-model:value="state.data.date" />
 					</div>
 				</template>
@@ -48,7 +48,7 @@
 			</van-field>
 			<van-field v-model="state.data.remarks" border rows="2" autosize type="textarea" maxlength="50" placeholder="备注信息" show-word-limit />
 			<van-cell>
-				<van-button round block native-type="submit" :type="EXPENSES.get(state.data.expenses)?.type" sizi="large">保存</van-button>
+				<van-button round block native-type="submit" :type="EXPENSES.get(billStore.filter.expenses)?.type" sizi="large">保存</van-button>
 			</van-cell>
 		</van-form>
 	</van-popup>
@@ -72,7 +72,7 @@ const state: IBillState = reactive({
 	data: cloneDeep(billStore.defaultBillItemData),
 });
 const themeColor = computed(() => {
-	return EXPENSES.get(state.data.expenses)?.color;
+	return EXPENSES.get(billStore.filter.expenses)?.color;
 });
 
 const emits = defineEmits(['pull']);
@@ -115,6 +115,7 @@ function onFailed(errorInfo: any) {
 
 // 提交账单
 function onSubmit() {
+	state.data.expenses = billStore.filter.expenses;
 	const data = cloneDeep(state.data);
 	data.date = dayjs(state.data.date).format('YYYY-MM-DD HH:mm:ss');
 	if (data.id === '') {

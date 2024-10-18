@@ -1,7 +1,15 @@
 <template>
 	<van-popup v-model:show="showDialog" position="bottom" :style="{ height: '56%' }" round safe-area-inset-bottom>
 		<van-nav-bar title="粘贴账单" left-text="取消" right-text="导入" @click-left="showDialog = false" @click-right="onConfirm" />
-		<van-field v-model="billData" rows="2" autofocus :autosize="{ maxHeight: 390, minHeight: 390 }" type="textarea" :placeholder="placeholder" />
+		<van-field
+			v-model="billData"
+			rows="2"
+			autofocus
+			clearable
+			:autosize="{ maxHeight: 390, minHeight: 390 }"
+			type="textarea"
+			:placeholder="placeholder"
+		/>
 		<van-cell title="账单条数" :value="length" center>
 			<template #right-icon>
 				<van-icon :name="statusMap[status].icon" :color="statusMap[status].color" size="20" style="margin-left: 10px" />

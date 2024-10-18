@@ -1,5 +1,5 @@
 <template>
-	<van-nav-bar left-text="返回" left-arrow @click-left="router.back()" :title="dayjs(date).format('M月') + '续卡'" />
+	<van-nav-bar left-text="返回" left-arrow fixed placeholder @click-left="router.back()" :title="dayjs(date).format('M月') + query.title" />
 	<div class="container mb10">
 		<div class="text">{{ dayjs(date).format('M月') }}{{ query.title }}{{ query.expenses === 'income' ? '共收入' : '共支出' }}</div>
 		<div class="total"><small>￥</small>{{ formatNum(total) }}</div>

@@ -8,11 +8,11 @@ const EXPENSES: Map<EXPENSE_TYPE, { label: string; type: TagType; unit: string; 
 
 // 支付方式
 const PAY_METHOD = new Map([
-	['cash', { label: '现金', icon: 'cash' }],
-	['alipay', { label: '支付宝', icon: 'alipay', rate: 0.38 }],
-	['meituan', { label: '美团', icon: 'meituan', rate: 8 }],
-	['douyin', { label: '抖音', icon: 'douyin', rate: 0 }],
-	['wechat', { label: '微信', icon: 'wechat', rate: 0 }],
+	['cash', { label: '现金', icon: 'cash', color: 'rgb(232, 56, 67)' }],
+	['alipay', { label: '支付宝', icon: 'alipay', color: 'rgb(0, 159, 232)', rate: 0.38 }],
+	['meituan', { label: '美团', icon: 'meituan', color: 'rgb(255, 195, 0)', rate: 8 }],
+	['douyin', { label: '抖音', icon: 'douyin', color: 'rgb(1, 1, 1)', rate: 0 }],
+	['wechat', { label: '微信', icon: 'wechat', color: 'rgb(72, 179, 56)', rate: 0 }],
 ]);
 
 // 统计类型
@@ -53,4 +53,17 @@ function splitArrayIntoChunks<T>(arr: T[], chunkSize = 20) {
 	return result;
 }
 
-export { EXPENSES, PAY_METHOD, PURPOSE, STATISTICS_TYPE, formatMap, splitArrayIntoChunks };
+function formatNumber(value: number) {
+	if (value >= 10000) {
+		// 如果大于等于 10000，使用 'w' 表示万，并保留一位小数
+		return (value / 10000).toFixed(1) + 'w';
+	} else if (value >= 1000) {
+		// 如果大于等于 1000，使用 'k' 表示千，并保留一位小数
+		return (value / 1000).toFixed(1) + 'k';
+	} else {
+		// 小于 1000 的数值保持原样
+		return value.toString();
+	}
+}
+
+export { EXPENSES, PAY_METHOD, PURPOSE, STATISTICS_TYPE, formatMap, splitArrayIntoChunks, formatNumber };
