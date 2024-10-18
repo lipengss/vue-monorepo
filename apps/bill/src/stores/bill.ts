@@ -25,7 +25,7 @@ export const useBillStore = defineStore('bill', {
 	},
 	getters: {
 		formatBillList(state) {
-			const data: { [key: string]: { list: IOrder[]; totalIncome: number; totalPay: number; totalServiceFee: number; date: string } } = {};
+			const data: { [key: string]: FormatBillItem } = {};
 			const filterList = state.billList.filter((n) => {
 				return n.expenses === state.filter.expenses && dayjs(n.date).isSame(state.filter.month, 'month');
 			});

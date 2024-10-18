@@ -1,10 +1,10 @@
 <template>
 	<van-space>
-		<van-button size="mini" type="primary" icon="arrow-left" />
+		<van-button size="mini" type="primary" icon="arrow-left" @click="handlePrevMonth" />
 		<div class="expenses" @click="showPicker = true" :style="props.style">
 			{{ dayjs(props.value).format(props.showFormat) }}
 		</div>
-		<van-button size="mini" type="primary" icon="arrow" />
+		<van-button size="mini" type="primary" icon="arrow" @click="handleNextMonth" />
 	</van-space>
 	<van-popup v-model:show="showPicker" position="bottom">
 		<van-date-picker
@@ -49,6 +49,16 @@ function onCancel() {
 function onConfirm({ selectedValues }: any) {
 	showPicker.value = false;
 	const date = dayjs(selectedValues).format('YYYY-MM');
+	emits('update:value', date);
+}
+
+function handlePrevMonth() {
+	const date = dayjs(props.value).subtract(1, 'month').format('YYYY-MM');
+	emits('update:value', date);
+}
+
+function handleNextMonth() {
+	const date = dayjs(props.value).add(1, 'month').format('YYYY-MM');
 	emits('update:value', date);
 }
 

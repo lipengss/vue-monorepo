@@ -44,4 +44,13 @@ function formatMap(map: Map<string, any>): DropdownItemOption[] {
 	});
 }
 
-export { EXPENSES, PAY_METHOD, PURPOSE, STATISTICS_TYPE, formatMap };
+// 分割数据
+function splitArrayIntoChunks<T>(arr: T[], chunkSize = 20) {
+	const result = [];
+	for (let i = 0; i < arr.length; i += chunkSize) {
+		result.push(arr.slice(i, i + chunkSize));
+	}
+	return result;
+}
+
+export { EXPENSES, PAY_METHOD, PURPOSE, STATISTICS_TYPE, formatMap, splitArrayIntoChunks };

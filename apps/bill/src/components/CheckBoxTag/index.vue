@@ -83,13 +83,15 @@ watch(
 }
 .checkbox-tag {
 	text-wrap: nowrap;
-	padding: 4px 16px;
+	display: flex;
+	align-items: center;
 	border-radius: 4px;
 	background-color: v-bind('props.bgColor');
 	color: v-bind('props.color');
+	font-size: var(--van-tag-large-font-size);
 }
 .small {
-	padding: 3px 10px;
+	padding: var(--van-tag-large-padding);
 }
 .default {
 	padding: 4px 16px;

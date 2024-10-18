@@ -10,6 +10,14 @@ interface StoreState {
 	defaultBillItemData: IOrder;
 	filter: {
 		month: string;
-		expenses: string;
+		expenses: EXPENSE_TYPE;
 	};
+}
+
+interface FormatBillItem {
+	list: IOrder[];
+	totalIncome: number;
+	totalPay: number;
+	totalServiceFee: number;
+	date: string;
 }

@@ -1,22 +1,5 @@
 <template>
-	<div class="info">
-		<van-sticky>
-			<div class="flex-bl-bt">
-				<DatePicker v-model:value="filter.month" show-format="YYYY年MM月" bg-color="transparent" color="#fff" />
-				<CheckBoxTag
-					:options="formatMap(EXPENSES)"
-					v-model:value="expenses"
-					bg-color="transparent"
-					color="#fff"
-					active-color="rgba(255,255,255,.2)"
-				/>
-			</div>
-		</van-sticky>
-		<div class="text">
-			<div class="title">{{ expenses === 'income' ? '共收入' : '共支出' }}</div>
-			<div class="num">￥{{ formatNum(total) }}</div>
-		</div>
-	</div>
+	<filterData />
 	<div class="container mb10">
 		<div class="tag">
 			<CheckBoxTag :options="formatMap(STATISTICS_TYPE)" v-model:value="statisticsType" @change="setPieData" />
@@ -36,7 +19,7 @@
 					key: item.key,
 					total: item.value,
 					date: filter.month,
-					expenses: expenses,
+					expenses: filter.expenses,
 					statisticsType: statisticsType,
 				},
 			}"
@@ -72,12 +55,12 @@ import PieChart from '@common/component/src/component/PieChart/index.vue';
 import BarChart from '@common/component/src/component/BarChart/index.vue';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
+import filterData from '@/views/bill/filterData.vue';
 
 const { filter } = storeToRefs(useBillStore());
 const { incomeTotal, payTotal, filterMonthData } = useBill();
 
 const statisticsType = ref<'purpose' | 'payMethod'>('purpose');
-const expenses = ref<'income' | 'pay'>('income');
 const total = ref('0.00');
 
 const pieOption = ref<any>({
@@ -177,13 +160,13 @@ const dayRatioOption = ref<any>({
 });
 
 watchEffect(() => {
-	total.value = expenses.value === 'income' ? incomeTotal(filter.value.month) : payTotal(filter.value.month);
+	total.value = filter.value.expenses === 'income' ? incomeTotal(filter.value.month) : payTotal(filter.value.month);
 });
 
 // 过滤日期相同的数据 并返回所有账单记录
-const allOrderList = computed(() => filterMonthData(filter.value.month, expenses.value));
+const allOrderList = computed(() => filterMonthData(filter.value.month, filter.value.expenses));
 
-const themeColor = computed(() => EXPENSES.get(expenses.value)?.color);
+const themeColor = computed(() => EXPENSES.get(filter.value.expenses)?.color);
 
 function formatIcon(key: string): string {
 	return statisticsType.value === 'purpose' ? PURPOSE.get(key)?.icon || '' : PAY_METHOD.get(key)?.icon || '';
@@ -229,7 +212,7 @@ function setBarData() {
 	dayRatioOption.value.series.data = Object.values(data);
 }
 
-watch(() => expenses.value, setPieData, {
+watch(() => filter.value.expenses, setPieData, {
 	immediate: true,
 });
 
@@ -239,24 +222,6 @@ onActivated(() => {
 });
 </script>
 <style lang="scss" scoped>
-.info {
-	background-color: v-bind(themeColor);
-	.flex-bl-bt {
-		background-color: v-bind(themeColor);
-		padding: 10px 10px 0;
-	}
-	.text {
-		padding: 0 10px 10px;
-		color: var(--van-white);
-		.title {
-			line-height: 30px;
-			padding-left: 8px;
-		}
-		.num {
-			font-size: 40px;
-		}
-	}
-}
 .tag {
 	padding-top: 10px;
 	display: flex;

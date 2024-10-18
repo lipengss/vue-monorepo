@@ -1,5 +1,5 @@
 <template>
-	<van-popup v-model:show="showDialog" position="bottom" :style="{ height: '70%' }" round>
+	<van-popup v-model:show="showDialog" position="bottom" :style="{ height: '56%' }" round safe-area-inset-bottom>
 		<van-nav-bar title="粘贴账单" left-text="取消" right-text="导入" @click-left="showDialog = false" @click-right="onConfirm" />
 		<van-field v-model="billData" rows="2" autofocus :autosize="{ maxHeight: 390, minHeight: 390 }" type="textarea" :placeholder="placeholder" />
 		<van-cell title="账单条数" :value="length" center>
@@ -13,15 +13,12 @@
 import { ref, defineExpose, computed } from 'vue';
 import { showToast } from 'vant';
 import { isEqual } from '@common/utils/src';
-import { useClipboard } from '@common/hooks';
 import { storeToRefs } from 'pinia';
 import { useBillStore } from '@/stores/bill';
 import { exportBillDocx } from './exportBillDocx';
 
 const { addBill } = useBillStore();
 const { billList, defaultBillItemData } = storeToRefs(useBillStore());
-
-const { copy } = useClipboard();
 
 const showDialog = ref(false);
 const billData = ref();
@@ -57,26 +54,20 @@ const length = computed(() => {
 });
 
 const placeholder = `
-[
-	{
-		date: "2024-06-01 14:26:45",
-		expenses: "pay",
-		id: "ZrhNqy3FrANgq8JUs8HHc",
-		payMethod: "cash",
-		price: "1000",
-		purpose: "other",
-		remarks: "备注信息",
-		staff: "员工"
-	}...
-]
-`;
+	[
+		{
+			date: "2024-06-01 14:26:45",
+			expenses: "pay",
+			id: "ZrhNqy3FrANgq8JUs8HHc",
+			payMethod: "cash",
+			price: "1000",
+			purpose: "other",
+			remarks: "备注信息",
+			staff: "员工"
+		}...
+	]
+	`;
 
-// 拷贝
-function onCopy() {
-	const content = JSON.stringify(billList.value, undefined, 4);
-	copy(content);
-	showToast('已将账单拷贝到粘贴板！');
-}
 // 粘贴
 function onConfirm() {
 	try {
@@ -98,15 +89,13 @@ function onConfirm() {
 				addBill(json);
 			}
 		}
+		showDialog.value = false;
 	} catch (err) {
 		showToast('导入的数据格式有误');
 	}
 }
 function operation(method: string) {
 	switch (method) {
-		case 'copy':
-			onCopy();
-			break;
 		case 'load':
 			showDialog.value = true;
 			break;
@@ -119,4 +108,12 @@ defineExpose({
 	operation,
 });
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.van-popup {
+	display: flex;
+	flex-direction: column;
+	.van-field {
+		flex: 1;
+	}
+}
+</style>

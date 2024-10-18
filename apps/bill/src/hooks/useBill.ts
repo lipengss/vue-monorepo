@@ -49,7 +49,7 @@ export function useBill() {
 		);
 		return formatNum(total.value);
 	}
-	function balance(month: string) {
+	function balance(month: string): string {
 		return subtract(incomeTotal(month), add(payTotal(month), serviceFeeTotal(month)));
 	}
 	return {
