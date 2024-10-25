@@ -1,4 +1,4 @@
-export enum ENUM_TYPE {
+declare enum ENUM_TYPE {
 	input = 'input',
 	numberInput = 'numberInput',
 	select = 'select',
@@ -10,7 +10,7 @@ export enum ENUM_TYPE {
 	object = 'object',
 }
 
-export enum DATE_TYPE {
+declare enum DATE_TYPE {
 	year = 'year',
 	month = 'month',
 	week = 'week',
@@ -18,21 +18,21 @@ export enum DATE_TYPE {
 	daterange = 'daterange',
 }
 
-export interface Ioption {
+interface Ioption {
 	value: string
 	label: string
 	id?: string
 }
 
-interface Rules {
+interface IRules {
 	required: boolean
 	message: string
 }
 
-export interface Idata {
+interface Idata {
 	label: string
 	field: string
-	type: ENUM_TYPE
+	type: string
 	id: string
 	required: boolean
 	parent: string
@@ -40,31 +40,31 @@ export interface Idata {
 	expand: {
 		[key: string]: any
 	}
-	rules?: Rules | Rules[]
+	rules?: IRules | IRules[]
 	defaultValue?: any // 表单默认值
 	options?: Ioption[] // type 为select radio checkbox是设置的字段
 	children?: Idata[]
 }
 
-export interface Ifunction {
+interface Ifunction {
 	name: string
-	type: string
+	type: 'success' | 'default' | 'primary' | 'warning'
 	fun_type: string
-	icon?: string
+	icon?: any
 	id: string
 }
 
-export interface Ievent {
+interface Ievent {
 	name: string
 	relation: {
-		from: string
-		to: string[]
+		from: string[]
+		to: [string, string][]
 	}
 	action: string
 	id: string
 }
 
-export interface IformState {
+interface IformState {
 	attrs: {
 		[key: string]: any
 	}
@@ -73,7 +73,7 @@ export interface IformState {
 	events: Ievent[]
 }
 
-export interface IstateData {
+interface IstateData {
 	visible: boolean
 	title: string
 	tabActive: string

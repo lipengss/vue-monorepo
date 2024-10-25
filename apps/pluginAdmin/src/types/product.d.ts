@@ -7,16 +7,17 @@ interface EnumItem {
 
 interface DataType {
 	type: typeList
-	default_value: string
+	default_value?: string | boolean
 	min?: number
 	max?: number
 	step?: number
 	unit?: string
+	length?: number
 	elements?: EnumItem[]
 }
 
 interface FieldItem {
-	name: string
+	label: string
 	prop: string
 	dataType: DataType
 }

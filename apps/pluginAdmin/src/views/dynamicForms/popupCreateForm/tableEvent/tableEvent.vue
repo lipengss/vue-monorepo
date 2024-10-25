@@ -41,7 +41,6 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps } from 'vue'
-import { Idata, Ievent } from '@/types/IModel'
 import { ElTable, ElTableColumn, ElButton, ElFormItem, ElSelect, ElOption, ElCascader, ElInput } from 'element-plus'
 
 import { useTableEvent } from './hook'

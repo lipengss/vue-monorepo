@@ -16,7 +16,7 @@
 				</el-form-item>
 			</template>
 		</el-table-column>
-		<el-table-column prop="icon" label="按钮图表" align="center">
+		<el-table-column prop="icon" label="按钮图标" align="center">
 			<template #default="{ row }">
 				<el-form-item :rules="{ required: true }">
 					<icon-select v-model:value="row.icon" />
@@ -43,7 +43,6 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps } from 'vue'
-import { Ifunction } from '@/types/IModel'
 import IconSelect from '@/components/IconSelect/IconSelect.vue'
 import { useTableEvent } from './hook'
 

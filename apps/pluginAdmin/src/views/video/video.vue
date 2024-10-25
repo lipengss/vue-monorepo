@@ -76,6 +76,7 @@ import {
 import videoWindow from './video-window/video-window.vue'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+import { IShowType, IStyle } from '@/utils/common'
 
 const optionForm: IOptions = reactive({
 	show: IShowType.cover,

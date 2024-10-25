@@ -4,7 +4,7 @@ import { formatNum, multiply, add, subtract, convertToPercentages, numeral } fro
 import dayjs from 'dayjs';
 import { Local, Session } from './storage';
 import qs from 'qs';
-import mittBus from 'mitt';
+import mitt from 'mitt';
 import { getBytes, filesize } from './filesize';
 
 function getDayOfWeek(date: string) {
@@ -20,6 +20,8 @@ function getDayOfWeek(date: string) {
 		return daysOfWeek[dayOfWeek];
 	}
 }
+
+const mittBus = mitt();
 
 export {
 	qs,

@@ -10,7 +10,6 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, reactive, defineProps, watch, ref, provide, computed } from 'vue'
-import { IformState } from '@/types/IModel'
 import formItem from './formItem.vue'
 import type { FormInstance } from 'element-plus'
 import { useFormEvent, useWatchFun } from './hook'

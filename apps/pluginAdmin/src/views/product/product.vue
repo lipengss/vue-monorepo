@@ -89,6 +89,7 @@ const dialog: DialogState = reactive({
 		prop: '',
 		readWrite: true,
 		dataType: {
+			default_value: '',
 			type: 'string',
 			length: 100,
 		},
@@ -100,6 +101,7 @@ const dialog: DialogState = reactive({
 const dataType = computed(() => dialog.data.dataType.type)
 
 function onHandleMitt() {
+	console.log('mittBus', mittBus)
 	mittBus.emit('events')
 }
 
@@ -145,8 +147,8 @@ watch(
 					type,
 					default_value: true,
 					elements: [
-						{ label: '是', value: true },
-						{ label: '否', value: false },
+						{ text: '是', value: true },
+						{ text: '否', value: false },
 					],
 				}
 				break

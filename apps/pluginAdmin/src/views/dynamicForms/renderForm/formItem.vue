@@ -55,7 +55,6 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps, inject } from 'vue'
-import { Idata } from '@/types/IModel'
 import { onChangeEvent } from './hook'
 import {
 	ElSwitch,

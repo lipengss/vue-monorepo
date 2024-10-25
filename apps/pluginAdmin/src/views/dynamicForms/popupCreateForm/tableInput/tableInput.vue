@@ -17,10 +17,12 @@
 		<el-table-column prop="type" label="表单类型" width="297">
 			<template #default="{ row }">
 				<el-form-item :rules="{ required: true }">
-					<el-select v-model="row.type" @change="onTypeChange($event, row)">
-						<el-option v-for="item in ENUM_TYPE" :key="item" :label="item" :value="item" />
-					</el-select>
-					<el-button class="ml6" :disabled="row.type === 'object'" @click="operationRef.operation(row)">更多</el-button>
+					<el-space>
+						<el-select v-model="row.type" style="width: 160px" @change="onTypeChange($event, row)">
+							<el-option v-for="item in ENUM_TYPE" :key="item" :label="item" :value="item" />
+						</el-select>
+						<el-button class="ml6" :disabled="row.type === 'object'" @click="operationRef.operation(row)">更多</el-button>
+					</el-space>
 				</el-form-item>
 			</template>
 		</el-table-column>
@@ -62,7 +64,7 @@
 import { withDefaults, defineProps, ref } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import inputOperation from './inputOperation/inputOperation.vue'
-import { ENUM_TYPE, Idata } from '@/types/IModel'
+import { ENUM_TYPE } from '@/utils/common'
 import { useTableTree, useInputEvent } from './hook'
 import {
 	ElTable,

@@ -74,7 +74,7 @@
 </template>
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { ENUM_TYPE, DATE_TYPE } from '@/types/IModel'
+import { ENUM_TYPE } from '@/utils/common'
 import IconSelect from '@/components/IconSelect/IconSelect.vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import { defineExpose } from 'vue'

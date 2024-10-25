@@ -1,6 +1,5 @@
 import { Ref, ComputedRef } from 'vue'
-import { Idata, Ievent } from '@/types/IModel'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from '@common/utils'
 import type { FormInstance } from 'element-plus'
 
 export function useFormEvent(formRef: Ref<FormInstance | undefined>) {

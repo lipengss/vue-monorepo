@@ -28,15 +28,16 @@
 		</template>
 	</el-drawer>
 	<el-button-group class="mb18">
-		<el-button icon="Edit" type="primary" @click="editor">编辑表单</el-button>
-		<el-button icon="Download" type="danger" @click="downLoad">下载表单JSON</el-button>
+		<el-button :icon="Edit" type="primary" @click="editor">编辑表单</el-button>
+		<el-button :icon="Download" type="danger" @click="downLoad">下载表单JSON</el-button>
 	</el-button-group>
 </template>
 <script setup lang="ts">
 import { reactive, ref, defineAsyncComponent, defineEmits } from 'vue'
-import { IstateData, ENUM_TYPE } from '@/types/IModel'
 import { FormInstance, ElMessage } from 'element-plus'
 import { saveAs } from 'file-saver'
+import { ENUM_TYPE } from '@/utils/common'
+import { Edit, Download, Plus, Refresh } from '@element-plus/icons-vue'
 import { ElDrawer, ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElTabs, ElTabPane, ElButton, ElButtonGroup } from 'element-plus'
 
 const tableInput = defineAsyncComponent(() => import('./tableInput/tableInput.vue'))
@@ -226,8 +227,8 @@ const stateData: IstateData = reactive({
 			},
 		],
 		functions: [
-			{ name: '表单提交', type: 'success', icon: 'Plus', fun_type: 'submitForm', id: 'vR6oBGfpmy6hiIIFHgWSu' },
-			{ name: '表单重置', type: 'default', icon: 'Refresh', fun_type: 'resetForm', id: 'bqb4KZdh_rnCcLVrLX0eh' },
+			{ name: '表单提交', type: 'success', icon: Plus, fun_type: 'submitForm', id: 'vR6oBGfpmy6hiIIFHgWSu' },
+			{ name: '表单重置', type: 'default', icon: Refresh, fun_type: 'resetForm', id: 'bqb4KZdh_rnCcLVrLX0eh' },
 		],
 		events: [
 			{

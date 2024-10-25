@@ -1,14 +1,5 @@
-declare enum IShowType {
-	cover = 'cover',
-	mobile = 'mobile',
-}
-
-enum IStyle {
-	style1 = 'style1',
-}
-
 interface IOptions {
-	show: IShowType
+	show: string
 	title: {
 		text: string
 		size: number
@@ -19,7 +10,7 @@ interface IOptions {
 		show: boolean
 	}
 	cover: {
-		show_style: IStyle
+		show_style: string
 		background_path: string
 		blur: number
 		rotate: number
