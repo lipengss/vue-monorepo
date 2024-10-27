@@ -3,11 +3,9 @@
 		<sider />
 		<div class="section">
 			<header-bar />
-			<el-scrollbar>
-				<div class="main">
-					<LayoutRouterView />
-				</div>
-			</el-scrollbar>
+			<div class="main">
+				<LayoutRouterView />
+			</div>
 			<footer class="footer">
 				<a href="https://lukelili.github.io/plugins.github.io/#/home">https://lukelili.github.io/plugins.github.io/#/home</a>
 			</footer>
@@ -18,7 +16,6 @@
 import LayoutRouterView from './routerView.vue'
 import sider from './sider/index.vue'
 import headerBar from './header-bar/header-bar.vue'
-import { ElScrollbar } from 'element-plus'
 </script>
 <style lang="scss" scoped>
 .layout {
@@ -35,6 +32,7 @@ import { ElScrollbar } from 'element-plus'
 			width: 100%;
 			padding: 10px;
 			box-sizing: border-box;
+			overflow: hidden;
 		}
 	}
 	.footer {
