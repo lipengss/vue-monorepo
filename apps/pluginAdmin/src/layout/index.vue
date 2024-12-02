@@ -27,6 +27,7 @@ import headerBar from './header-bar/header-bar.vue'
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 		.main {
 			flex: 1;
 			width: 100%;

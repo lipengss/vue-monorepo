@@ -39,6 +39,8 @@ export default defineConfig({
 	},
 	server: {
 		host: '0.0.0.0',
+		port: 8080,
+		open: true,
 		proxy: {
 			'/api': {
 				target: 'https://www.fastmock.site/mock/dfdcb909418cae662050b8993ef89675/admin',
