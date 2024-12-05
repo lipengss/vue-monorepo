@@ -158,38 +158,37 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 			{
 				path: '/pixi',
 				name: 'pixi',
-				component: () => import('@/layout/routerView.vue'),
-				redirect: '/brake',
+				component: () => import('@/views/pixi/index.vue'),
 				meta: {
-					title: 'Pixi 2D渲染引擎',
+					title: 'Pixi.js & Gsap',
 				},
-				children: [
-					{
-						path: '/brake',
-						name: 'brake',
-						meta: {
-							title: 'brake',
-						},
-						component: () => import('@/views/pixi/brake/index.vue'),
-					},
-					{
-						path: '/sprite',
-						name: 'sprite',
-						meta: {
-							title: 'sprite',
-						},
-						component: () => import('@/views/pixi/sprite/index.vue'),
-					},
-					{
-						path: '/waterRipples',
-						name: 'waterRipples',
-						meta: {
-							title: '滤镜',
-						},
-						component: () => import('@/views/pixi/waterRipples/index.vue'),
-					},
-					// waterRipples
-				],
+				// children: [
+				// 	{
+				// 		path: '/brake',
+				// 		name: 'brake',
+				// 		meta: {
+				// 			title: 'brake',
+				// 		},
+				// 		component: () => import('@/views/pixi/brake/index.vue'),
+				// 	},
+				// 	{
+				// 		path: '/sprite',
+				// 		name: 'sprite',
+				// 		meta: {
+				// 			title: 'sprite',
+				// 		},
+				// 		component: () => import('@/views/pixi/sprite/index.vue'),
+				// 	},
+				// 	{
+				// 		path: '/waterRipples',
+				// 		name: 'waterRipples',
+				// 		meta: {
+				// 			title: '滤镜',
+				// 		},
+				// 		component: () => import('@/views/pixi/waterRipples/index.vue'),
+				// 	},
+				// 	// waterRipples
+				// ],
 			},
 			// {
 			// 	path: '/chatRoom',
