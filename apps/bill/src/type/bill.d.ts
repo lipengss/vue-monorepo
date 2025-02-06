@@ -21,3 +21,4 @@ interface FormatBillItem {
 	totalServiceFee: number;
 	date: string;
 }
+interface Test {}
