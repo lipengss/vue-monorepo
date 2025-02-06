@@ -165,6 +165,8 @@ const chartOptions: any = reactive({
 	series: setSeries(),
 })
 
+function handleClose() {}
+
 function initData() {
 	const tooal = props.towerData.reduce((pre, cur, index) => {
 		const num = pre + cur.tower_step

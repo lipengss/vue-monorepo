@@ -17,6 +17,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	app.component(key, component)
 }
 
+import HighchartsVue from 'highcharts-vue'
+
+app.use(HighchartsVue)
+
 import plugins from './utils/plugins'
 app.use(plugins)
 app.use(ElementPlus)

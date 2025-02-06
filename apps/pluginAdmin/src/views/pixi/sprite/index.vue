@@ -5,6 +5,8 @@
 import { Application, Container, Graphics, Assets, Sprite, Rectangle } from 'pixi.js'
 import { onMounted } from 'vue'
 
+import treasureHunter from './treasureHunter.json'
+
 const app = new Application()
 
 async function init() {
@@ -21,23 +23,49 @@ async function init() {
 
 	await Assets.load([{ src: new URL('./tileset.png', import.meta.url).href, name: 'tileset' }])
 
+	const sheet = await Assets.load(new URL('./treasureHunter.json', import.meta.url).href)
+	console.log(sheet)
+	// const sheet = await Assets.load({
+	// 	alias: 'spritesheet',
+	// 	src: './treasureHunter.json',
+	// 	data: {
+	// 		ignoreMultiPack: true,
+	// 	},
+	// })
+	const personInstance = new Sprite(sheet.textures['characters-0.png'])
+
+	const personRect = new Rectangle(0, 0, 10, 16)
+
+	const personTexture = app.renderer.generateTexture({
+		target: personInstance,
+		frame: personRect,
+		resolution: 2,
+		// style: { scaleMode: 'nearest' },
+	})
+	const person = Sprite.from(personTexture)
+
+	app.stage.addChild(person)
+	// await Loader.add(['./treaseureHunter.json'])
+
 	texture()
 }
 
-function texture() {
-	const tileset = Sprite.from(new URL('./tileset.png', import.meta.url).href)
+function texture() {}
 
-	const rect = new Rectangle(0, 0, 32, 32)
+// function texture() {
+// 	const tileset = Sprite.from(new URL('./tileset.png', import.meta.url).href)
 
-	const texture = app.renderer.generateTexture({
-		target: tileset,
-		frame: rect,
-	})
+// 	const rect = new Rectangle(96, 64, 32, 32)
 
-	const ux = Sprite.from(texture)
+// 	const texture = app.renderer.generateTexture({
+// 		target: tileset,
+// 		frame: rect,
+// 	})
 
-	app.stage.addChild(tileset)
-}
+// 	const ux = Sprite.from(texture)
+
+// 	app.stage.addChild(ux)
+// }
 
 function drwarLine() {
 	// const container = new Container()

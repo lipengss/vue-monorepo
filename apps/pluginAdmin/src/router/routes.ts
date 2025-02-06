@@ -28,6 +28,14 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				component: () => import('@/layout/routerView.vue'),
 				children: [
 					{
+						path: '/plugins/highcharts',
+						name: 'highcharts',
+						meta: {
+							title: 'HIGHCHARTS',
+						},
+						component: () => import('@/views/plugins/highcharts/index.vue'),
+					},
+					{
 						path: '/plugins/splitpanes',
 						name: 'splitpanes',
 						meta: {
@@ -100,6 +108,15 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						component: () => import('@/views/plugins/animate.vue'),
 					},
 				],
+			},
+			{
+				path: '/Cesium',
+				name: 'Cesium',
+				meta: {
+					title: 'cesium',
+					icon: 'cesium',
+				},
+				component: () => import('@/views/cesium/index.vue'),
 			},
 			{
 				path: '/dynamicForms',
@@ -217,6 +234,14 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		path: '/three',
 		name: 'Three',
 		component: () => import('@/views/three/three.vue'),
+	},
+	{
+		path: '/antv',
+		name: 'antv',
+		meta: {
+			title: 'antv',
+		},
+		component: () => import('@/views/plugins/antv.vue'),
 	},
 ]
 

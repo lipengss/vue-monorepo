@@ -1,10 +1,9 @@
-/// <reference types="vitest" />
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { resolve } from 'path'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import cesium from 'vite-plugin-cesium'
 
 const pathResolve = (dir: string): any => {
 	return resolve(__dirname, './', dir)
@@ -20,6 +19,7 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		vueJsx(),
+		cesium(),
 		createSvgIconsPlugin({
 			// 指定需要缓存的图标文件夹
 			iconDirs: [resolve(process.cwd(), 'src/assets/icons')],

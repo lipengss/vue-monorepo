@@ -11,15 +11,15 @@ import { defineAsyncComponent, ref } from 'vue'
 
 const selected = ref('sprite')
 
-const map = new Map([
-	['break', { title: '刹车动效', component: componentStr('./brake/index.vue') }],
-	['orbit', { title: '轨迹动效', component: componentStr('./motionPathPlugin.jsx') }],
-	['sprite', { title: '使用雪碧图', component: componentStr('./sprite/index.vue') }],
-])
+const componentStr = (path: string) => defineAsyncComponent(() => import(`./${path}`))
 
-function componentStr(str: string) {
-	return defineAsyncComponent(() => import(str))
-}
+const map = new Map([
+	['break', { title: '刹车动效', component: componentStr('brake/index.vue') }],
+	['orbit', { title: '轨迹动效', component: componentStr('motionPathPlugin.tsx') }],
+	['sprite', { title: '使用雪碧图', component: componentStr('sprite/index.vue') }],
+	['shape', { title: '形状', component: componentStr('shape/index.vue') }],
+	['train', { title: '小火车', component: componentStr('train/index.vue') }],
+])
 </script>
 <style lang="scss" scoped>
 .pixi-gsap {

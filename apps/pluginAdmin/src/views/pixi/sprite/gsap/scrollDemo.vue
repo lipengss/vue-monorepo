@@ -1,7 +1,5 @@
 <template>
-	<div class="container">
-		<canvas id="hero-lightpass" />
-	</div>
+	<div class="container"></div>
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue'
@@ -10,8 +8,8 @@ import ScrollTrigger from 'gsap/ScrollTrigger'
 
 function init() {
 	gsap.registerPlugin(ScrollTrigger)
-	const canvas = document.getElementById('hero-lightpass')
-	const context = canvas.getContext('2d')
+	const canvas: HTMLCanvasElement = document.createElement('canvas')
+	const context: CanvasRenderingContext2D | null = canvas.getContext('2d')
 
 	canvas.width = 1158
 	canvas.height = 770
@@ -41,6 +39,7 @@ function init() {
 	images[0].onload = render
 
 	function render() {
+		if (!context) return
 		context.clearRect(0, 0, canvas.width, canvas.height)
 		context.drawImage(images[airpods.frame], 0, 0)
 	}
