@@ -9,7 +9,7 @@
 		"type-check": "vue-tsc --build --force",
 		"deploy": "gh-pages -d dist"
 	},
-	"homepage": "https://github.com/lipengss/vue-monorepo.git",
+	"homepage": "https://lipengss.github.io/vue-monorepo",
 	"dependencies": {
 		"@common/component": "workspace:^",
 		"@common/hooks": "workspace:^",

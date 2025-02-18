@@ -10,10 +10,13 @@ import { resolve } from 'path';
 
 const pathResolve = (dir: string) => resolve(__dirname, dir);
 
+console.log(process.env.NODE_ENV);
+
 // https://vitejs.dev/config/
 export default defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
+		base: process.env.NODE_ENV === 'productor' ? '/vue-monorepo/' : '/',
 		define: {
 			__VUE_OPTIONS_API__: true,
 			__VUE_PROD_DEVTOOLS__: false,

@@ -6,7 +6,8 @@
 	"scripts": {
 		"billDev": "pnpm run -C apps/bill dev",
 		"pluginDev": "pnpm run -C apps/pluginAdmin dev",
-		"toolDev": "pnpm run -C apps/toolBox dev"
+		"toolDev": "pnpm run -C apps/toolBox dev",
+		"deploy": "cd apps/bill && npm run build && npm run deploy"
 	},
 	"keywords": [],
 	"author": "",
