@@ -1,0 +1,42 @@
+{
+	"folders": [
+		{
+			"name": "Root",
+			"path": ".",
+		},
+		{
+			"name": "SpinWin",
+			"path": "./apps/SpinWin",
+		},
+		{
+			"name": "Admin",
+			"path": "./apps/admin",
+		},
+		{
+			"name": "Bill",
+			"path": "./apps/bill",
+		},
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+		},
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"[vue]": {
+			"editor.defaultFormatter": "Vue.volar",
+		},
+		"[typescript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode",
+		},
+		"[javascript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode",
+		},
+		"[json]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode",
+		},
+	},
+	"extensions": {
+		"recommendations": ["Vue.volar", "vitest.explorer", "dbaeumer.vscode-eslint", "EditorConfig.EditorConfig", "esbenp.prettier-vscode"],
+	},
+}
