@@ -1,56 +1,52 @@
 <template>
   <div class="spin-wheel-container">
-    <!-- 使用 Naive UI 的 Grid 实现响应式布局 -->
-    <n-grid :cols="gridCols" :x-gap="24" :y-gap="24" responsive="screen">
+    <!-- 使用 Element Plus 的 Row/Col 实现响应式布局 -->
+    <el-row :gutter="24">
       <!-- 转盘区域 -->
-      <n-grid-item :span="wheelSpan">
-        <n-card class="wheel-card" :bordered="false">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+        <el-card class="wheel-card" shadow="never">
           <!-- 抽奖次数显示 -->
           <template #header>
-            <n-space justify="space-between" align="center">
-              <n-statistic label="剩余抽奖次数" :value="getRemainingSpins()">
-                <template #suffix>
-                  <n-text type="info">次</n-text>
-                </template>
-              </n-statistic>
-              <n-tag :type="getRemainingSpins() > 0 ? 'success' : 'error'">
+            <div class="header-content">
+              <el-statistic title="剩余抽奖次数" :value="getRemainingSpins()" suffix="次" />
+              <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
                 {{ todaySpinCount }}/{{ maxDailySpins }}
-              </n-tag>
-            </n-space>
+              </el-tag>
+            </div>
           </template>
 
           <div class="wheel-wrapper">
             <!-- SVG转盘 -->
-            <svg 
+            <svg
               ref="wheelRef"
-              class="wheel-svg" 
-              :width="wheelSize" 
-              :height="wheelSize" 
+              class="wheel-svg"
+              :width="wheelSize"
+              :height="wheelSize"
               :viewBox="`0 0 ${wheelSize} ${wheelSize}`"
               :style="{ transform: `rotate(${rotation}deg)` }"
             >
               <!-- 转盘背景圆 -->
-              <circle 
-                :cx="wheelSize / 2" 
-                :cy="wheelSize / 2" 
-                :r="wheelSize / 2 - 10" 
-                fill="#fff" 
-                stroke="#ddd" 
+              <circle
+                :cx="wheelSize / 2"
+                :cy="wheelSize / 2"
+                :r="wheelSize / 2 - 10"
+                fill="#fff"
+                stroke="#ddd"
                 stroke-width="4"
               />
-              
+
               <!-- 扇形区域 -->
               <g v-for="(prize, index) in prizes" :key="index">
-                <path 
+                <path
                   :d="getSegmentPath(index)"
                   :fill="prize.stock > 0 || prize.id === 7 ? prize.color : '#cccccc'"
                   stroke="rgba(255,255,255,0.3)"
                   stroke-width="2"
                   :opacity="prize.stock > 0 || prize.id === 7 ? 1 : 0.5"
                 />
-                
+
                 <!-- 奖品文字 -->
-                <text 
+                <text
                   :x="getTextX(index)"
                   :y="getTextY(index) - 10"
                   text-anchor="middle"
@@ -61,9 +57,9 @@
                 >
                   {{ prize.name }}
                 </text>
-                
+
                 <!-- 库存显示 -->
-                <text 
+                <text
                   v-if="prize.id !== 7"
                   :x="getTextX(index)"
                   :y="getTextY(index) + 5"
@@ -74,9 +70,9 @@
                 >
                   剩余: {{ prize.stock }}
                 </text>
-                
+
                 <!-- 奖品图标 -->
-                <text 
+                <text
                   v-if="prize.icon"
                   :x="getTextX(index)"
                   :y="getTextY(index) + 25"
@@ -87,125 +83,102 @@
                 </text>
               </g>
             </svg>
-            
+
             <!-- 中心指针 -->
             <div class="center-pointer" :style="pointerStyle">
               <div class="pointer-needle" :style="needleStyle"></div>
               <div class="pointer-center" :style="centerStyle"></div>
             </div>
-            
+
             <!-- 中心按钮 -->
-            <n-button 
-              class="spin-button" 
+            <el-button
+              class="spin-button"
               :style="buttonStyle"
               type="primary"
               size="large"
               round
-              @click="handleSpin" 
+              @click="handleSpin"
               :disabled="isSpinning || getRemainingSpins() <= 0"
               :loading="isSpinning"
             >
               {{ getButtonText() }}
-            </n-button>
+            </el-button>
           </div>
-        </n-card>
-      </n-grid-item>
+        </el-card>
+      </el-col>
+
       <!-- 信息面板区域 -->
-      <n-grid-item :span="infoSpan">
-        <n-space vertical :size="24">
-          <!-- 结果显示 -->
-          <n-card v-if="result" class="result-card" :bordered="false">
-            <template #header>
-              <n-text type="success" style="font-size: 18px; font-weight: bold;">
-                🎉 抽奖结果
-              </n-text>
-            </template>
-            
-            <n-result 
-              :status="result.prize && result.prize.id !== 7 ? 'success' : 'info'"
-              :title="result.message"
-            >
-              <template #icon v-if="result.prize && result.prize.id !== 7">
-                <div class="prize-icon">{{ result.prize.icon }}</div>
-              </template>
-              
-              <div v-if="result.prize && result.prize.id !== 7" class="prize-details">
-                <n-descriptions :column="1" bordered>
-                  <n-descriptions-item label="奖品名称">
-                    <n-text strong>{{ result.prize.name }}</n-text>
-                  </n-descriptions-item>
-                  <n-descriptions-item label="奖品描述">
-                    {{ result.prize.description }}
-                  </n-descriptions-item>
-                  <n-descriptions-item label="价值">
-                    <n-text type="error" strong>¥{{ result.prize.value }}</n-text>
-                  </n-descriptions-item>
-                </n-descriptions>
-              </div>
-            </n-result>
-          </n-card>
-
-          <!-- 奖品库存统计 -->
-          <n-card title="奖品库存" :bordered="false">
-            <n-list>
-              <n-list-item v-for="prize in prizes" :key="prize.id">
-                <template #prefix>
-                  <span style="font-size: 20px;">{{ prize.icon }}</span>
-                </template>
-                
-                <n-thing>
-                  <template #header>
-                    <n-space align="center">
-                      <span>{{ prize.name }}</span>
-                      <n-tag 
-                        :type="prize.stock > 10 ? 'success' : prize.stock > 0 ? 'warning' : 'error'"
-                        size="small"
-                      >
-                        {{ prize.id === 7 ? '无限' : `${prize.stock}件` }}
-                      </n-tag>
-                    </n-space>
-                  </template>
-                  
-                  <template #description>
-                    {{ prize.description }}
-                  </template>
-                  
-                  <template #action v-if="prize.id !== 7">
-                    <n-progress 
-                      type="line" 
-                      :percentage="(prize.stock / prize.totalCount) * 100"
-                      :show-indicator="false"
-                      :height="6"
-                      :color="prize.stock > 10 ? '#18a058' : prize.stock > 0 ? '#f0a020' : '#d03050'"
-                    />
-                  </template>
-                </n-thing>
-              </n-list-item>
-            </n-list>
-          </n-card>
-
-          <!-- 中奖历史 -->
-          <n-card title="最近中奖记录" :bordered="false">
-            <n-empty v-if="spinHistory.length === 0" description="暂无中奖记录" />
-            
-            <n-timeline v-else>
-              <n-timeline-item 
-                v-for="record in spinHistory.slice(0, 8)" 
-                :key="record.id"
-                :type="record.prizeId === 7 ? 'default' : 'success'"
-              >
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+        <div class="info-panel">
+          <Result />
+          <el-tabs>
+            <el-tab-pane label="抽奖结果" name="stork">
+              <!-- 奖品库存统计 -->
+              <el-card class="stock-card" shadow="never">
                 <template #header>
-                  <n-space align="center">
-                    <n-text strong>{{ record.prizeName }}</n-text>
-                    <n-time :time="record.timestamp" format="HH:mm:ss" />
-                  </n-space>
+                  <div class="card-header">奖品库存</div>
                 </template>
-              </n-timeline-item>
-            </n-timeline>
-          </n-card>
-        </n-space>
-      </n-grid-item>
-    </n-grid>
+
+                <div class="prize-list">
+                  <div v-for="prize in prizes" :key="prize.id" class="prize-item">
+                    <div class="prize-info">
+                      <span class="prize-icon-small">{{ prize.icon }}</span>
+                      <div class="prize-content">
+                        <div class="prize-header">
+                          <span class="prize-name">{{ prize.name }}</span>
+                          <el-tag
+                            :type="
+                              prize.stock > 10 ? 'success' : prize.stock > 0 ? 'warning' : 'danger'
+                            "
+                            size="small"
+                          >
+                            {{ prize.id === 7 ? '无限' : `${prize.stock}件` }}
+                          </el-tag>
+                        </div>
+                        <div class="prize-description">{{ prize.description }}</div>
+                        <div v-if="prize.id !== 7" class="prize-progress">
+                          <el-progress
+                            :percentage="(prize.stock / prize.totalCount) * 100"
+                            :show-text="false"
+                            :stroke-width="6"
+                            :color="
+                              prize.stock > 10 ? '#67c23a' : prize.stock > 0 ? '#e6a23c' : '#f56c6c'
+                            "
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </el-card>
+            </el-tab-pane>
+            <el-tab-pane label="最近中奖记录" name="history">
+              <!-- 中奖历史 -->
+              <el-card class="history-card" shadow="never">
+                <template #header>
+                  <div class="card-header">最近中奖记录</div>
+                </template>
+
+                <el-empty v-if="spinHistory.length === 0" description="暂无中奖记录" />
+
+                <el-timeline v-else>
+                  <el-timeline-item
+                    v-for="record in spinHistory.slice(0, 8)"
+                    :key="record.id"
+                    :type="record.prizeId === 7 ? 'primary' : 'success'"
+                    :timestamp="new Date(record.timestamp).toLocaleTimeString()"
+                  >
+                    <div class="timeline-content">
+                      <el-text tag="b">{{ record.prizeName }}</el-text>
+                    </div>
+                  </el-timeline-item>
+                </el-timeline>
+              </el-card>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -214,27 +187,20 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { storeToRefs } from 'pinia'
 import { usePrizesStore } from '@/stores/prizes'
-import { 
-  NGrid, 
-  NGridItem, 
-  NCard, 
-  NSpace, 
-  NStatistic, 
-  NText, 
-  NTag, 
-  NButton, 
-  NResult, 
-  NDescriptions, 
-  NDescriptionsItem, 
-  NList, 
-  NListItem, 
-  NThing, 
-  NProgress, 
-  NEmpty, 
-  NTimeline, 
-  NTimelineItem, 
-  NTime
-} from 'naive-ui'
+// import {
+//   ElRow,
+//   ElCol,
+//   ElCard,
+//   ElStatistic,
+//   ElText,
+//   ElTag,
+//   ElButton,
+//   ElProgress,
+//   ElEmpty,
+//   ElTimeline,
+//   ElTimelineItem
+// } from 'element-plus'
+import Result from './result.vue'
 
 const { prizes, spinHistory, todaySpinCount, maxDailySpins } = storeToRefs(usePrizesStore())
 const { spin, getRemainingSpins } = usePrizesStore()
@@ -249,22 +215,6 @@ const screenWidth = ref(window.innerWidth)
 
 const isMobile = computed(() => screenWidth.value < 768)
 const isTablet = computed(() => screenWidth.value >= 768 && screenWidth.value < 1200)
-
-// Grid 配置
-const gridCols = computed(() => {
-  if (isMobile.value) return 1
-  return 2
-})
-
-const wheelSpan = computed(() => {
-  if (isMobile.value) return 1
-  return 1
-})
-
-const infoSpan = computed(() => {
-  if (isMobile.value) return 1
-  return 1
-})
 
 // 转盘尺寸配置
 const wheelSize = computed(() => {
@@ -289,7 +239,7 @@ const pointerStyle = computed(() => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  zIndex: 15
+  zIndex: 15,
 }))
 
 const needleStyle = computed(() => {
@@ -301,7 +251,7 @@ const needleStyle = computed(() => {
     borderRadius: '2px',
     position: 'relative',
     transformOrigin: '50% 100%',
-    boxShadow: '0 0 10px rgba(255, 71, 87, 0.5)'
+    boxShadow: '0 0 10px rgba(255, 71, 87, 0.5)',
   }
 })
 
@@ -316,7 +266,7 @@ const centerStyle = computed(() => ({
   borderRadius: '50%',
   border: '3px solid #ff4757',
   boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
-  zIndex: 20
+  zIndex: 20,
 }))
 
 const buttonStyle = computed(() => {
@@ -330,7 +280,7 @@ const buttonStyle = computed(() => {
     height: `${size}px`,
     borderRadius: '50%',
     zIndex: 25,
-    fontSize: isMobile.value ? '10px' : '12px'
+    fontSize: isMobile.value ? '10px' : '12px',
   }
 })
 
@@ -355,38 +305,38 @@ const getSegmentPath = (index: number): string => {
   const segmentAngle = 360 / prizes.value.length
   const startAngle = index * segmentAngle - 90
   const endAngle = (index + 1) * segmentAngle - 90
-  
+
   const startAngleRad = (startAngle * Math.PI) / 180
   const endAngleRad = (endAngle * Math.PI) / 180
-  
+
   const x1 = centerX + radius * Math.cos(startAngleRad)
   const y1 = centerY + radius * Math.sin(startAngleRad)
   const x2 = centerX + radius * Math.cos(endAngleRad)
   const y2 = centerY + radius * Math.sin(endAngleRad)
-  
+
   const largeArcFlag = segmentAngle > 180 ? 1 : 0
-  
+
   return `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`
 }
 
 // 计算文字位置
 const getTextX = (index: number): number => {
   const segmentAngle = 360 / prizes.value.length
-  const angle = (index * segmentAngle + segmentAngle / 2 - 90) * Math.PI / 180
+  const angle = ((index * segmentAngle + segmentAngle / 2 - 90) * Math.PI) / 180
   const radius = (wheelSize.value / 2 - 10) * 0.6
   return wheelSize.value / 2 + radius * Math.cos(angle)
 }
 
 const getTextY = (index: number): number => {
   const segmentAngle = 360 / prizes.value.length
-  const angle = (index * segmentAngle + segmentAngle / 2 - 90) * Math.PI / 180
+  const angle = ((index * segmentAngle + segmentAngle / 2 - 90) * Math.PI) / 180
   const radius = (wheelSize.value / 2 - 10) * 0.6
   return wheelSize.value / 2 + radius * Math.sin(angle)
 }
 
 // 计算奖品对应的角度
 const getPrizeAngle = (prizeId: number): number => {
-  const index = prizes.value.findIndex(p => p.id === prizeId)
+  const index = prizes.value.findIndex((p) => p.id === prizeId)
   const segmentAngle = 360 / prizes.value.length
   return index * segmentAngle + segmentAngle / 2
 }
@@ -394,29 +344,29 @@ const getPrizeAngle = (prizeId: number): number => {
 // 处理抽奖
 const handleSpin = () => {
   if (isSpinning.value) return
-  
+
   const spinResult = spin()
-  
+
   if (!spinResult.success) {
     result.value = spinResult
     return
   }
-  
+
   isSpinning.value = true
   result.value = null
-  
+
   const targetAngle = getPrizeAngle(spinResult.prize!.id)
   const spins = 5 + Math.random() * 5
   const finalAngle = rotation.value + spins * 360 + (360 - targetAngle)
-  
+
   gsap.to(rotation, {
     value: finalAngle,
     duration: 3 + Math.random() * 2,
-    ease: "power3.out",
+    ease: 'power3.out',
     onComplete: () => {
       isSpinning.value = false
       result.value = spinResult
-    }
+    },
   })
 }
 
@@ -438,6 +388,13 @@ const getButtonText = (): string => {
 .wheel-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  margin-bottom: 24px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .wheel-wrapper {
@@ -454,9 +411,24 @@ const getButtonText = (): string => {
   background: white;
 }
 
-.result-card {
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.result-card,
+.stock-card,
+.history-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+}
+
+.result-header,
+.card-header {
+  font-size: 18px;
+  font-weight: bold;
+  color: #409eff;
 }
 
 .prize-icon {
@@ -468,14 +440,75 @@ const getButtonText = (): string => {
   margin-top: 1rem;
 }
 
+.prize-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.prize-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 16px;
+}
+
+.prize-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.prize-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.prize-icon-small {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.prize-content {
+  flex: 1;
+}
+
+.prize-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.prize-name {
+  font-weight: bold;
+}
+
+.prize-description {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.prize-progress {
+  margin-top: 8px;
+}
+
+.timeline-content {
+  display: flex;
+  align-items: center;
+}
+
 /* 移动端优化 */
 @media (max-width: 767px) {
   .spin-wheel-container {
     padding: 8px;
   }
-  
+
   .wheel-wrapper {
     padding: 10px;
+  }
+
+  .info-panel {
+    margin-top: 16px;
   }
 }
 

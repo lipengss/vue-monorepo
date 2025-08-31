@@ -1,4 +1,5 @@
 {
+	"editor.formatOnSave": true,
 	"folders": [
 		{
 			"name": "Root",

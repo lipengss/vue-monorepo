@@ -50,6 +50,24 @@
   }
 }
 
+@for $i from 1 through 40 {
+  .mt-#{$i} {
+    margin-top: #{$i}px;
+  }
+
+  .mb-#{$i} {
+    margin-bottom: #{$i}px;
+  }
+
+  .ml-#{$i} {
+    margin-left: #{$i}px;
+  }
+
+  .mr#{$i} {
+    margin-right: #{$i}px;
+  }
+}
+
 *,
 *::before,
 *::after {

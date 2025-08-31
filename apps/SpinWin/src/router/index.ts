@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path: '/config',
       name: 'config',
-      component: () => import('@/views/Config.vue'),
+      component: () => import('@/views/SpinConfig.vue'),
     }
   ],
 })

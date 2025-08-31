@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import SpinWheel from '@/components/SpinWheel.vue'
+import SpinWheel from '@/components/SpinWheel/index.vue'
 </script>
 
 <style scoped>
