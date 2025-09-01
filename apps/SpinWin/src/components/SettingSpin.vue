@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="props.visible" title="参数设置" direction="rtl" size="50%">
+  <el-drawer v-model="props.visible" title="参数设置" direction="rtl" size="80%" @close="onClose">
     <template #default>
       <el-tabs v-model="activeTab">
         <el-tab-pane label="转盘设置" name="base">
@@ -162,6 +162,9 @@ const removePrize = (row) => {
 }
 
 
+function onClose() {
+  emit('update:visible', false)
+}
 
 const confirmClick = () => {
   emit('update:visible', false)

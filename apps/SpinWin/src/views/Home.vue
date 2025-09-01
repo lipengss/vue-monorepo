@@ -1,10 +1,10 @@
 <template>
   <div class="home">
     <div class="area">
-      <el-card body-class="wheel-card">
+      <el-card body-class="wheel-card" size="small">
         <template #header>
           <div class="header-content">
-            <el-statistic title="剩余抽奖次数" :value="getRemainingSpins()" suffix="次" />
+             <span>剩余抽奖次数</span>
             <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
               {{ todaySpinCount }}/{{ maxDailySpins }}
             </el-tag>
