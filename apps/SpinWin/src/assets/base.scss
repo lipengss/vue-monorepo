@@ -50,22 +50,49 @@
   }
 }
 
-@for $i from 1 through 40 {
-  .mt-#{$i} {
-    margin-top: #{$i}px;
+/* 外边距、内边距全局样式
+------------------------------- */
+@for $i from 1 through 35 {
+  .mt#{$i} {
+    margin-top: #{$i}px !important;
   }
-
-  .mb-#{$i} {
-    margin-bottom: #{$i}px;
-  }
-
-  .ml-#{$i} {
-    margin-left: #{$i}px;
-  }
-
   .mr#{$i} {
-    margin-right: #{$i}px;
+    margin-right: #{$i}px !important;
   }
+  .mb#{$i} {
+    margin-bottom: #{$i}px !important;
+  }
+  .ml#{$i} {
+    margin-left: #{$i}px !important;
+  }
+  .pt#{$i} {
+    padding-top: #{$i}px !important;
+  }
+  .pr#{$i} {
+    padding-right: #{$i}px !important;
+  }
+  .pb#{$i} {
+    padding-bottom: #{$i}px !important;
+  }
+  .pl#{$i} {
+    padding-left: #{$i}px !important;
+  }
+  .pd#{$i} {
+    padding: #{$i}px !important;
+  }
+}
+
+.el-drawer {
+  .el-drawer__header {
+    padding: 20px;
+    margin: 0;
+    border-bottom: 1px solid var(--el-border-color-light);
+  }
+}
+
+.el-input-number.is-without-controls .el-input__wrapper {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 
 *,

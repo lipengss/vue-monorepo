@@ -9,8 +9,11 @@ import router from './router/index'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
+import VueLuckWheel from '@lucky-canvas/vue'
+
 const app = createApp(App)
 
+app.use(VueLuckWheel)
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
