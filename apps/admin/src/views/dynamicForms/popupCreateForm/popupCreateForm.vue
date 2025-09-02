@@ -34,7 +34,7 @@
 </template>
 <script setup lang="ts">
 import { reactive, ref, defineAsyncComponent, defineEmits } from 'vue'
-import { IstateData, ENUM_TYPE } from '@/types/IModel'
+import { IstateData, ENUM_TYPE } from "@/types/IModel.d"
 import { FormInstance, ElMessage } from 'element-plus'
 import { saveAs } from 'file-saver'
 import { ElDrawer, ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElTabs, ElTabPane, ElButton, ElButtonGroup } from 'element-plus'
@@ -44,7 +44,7 @@ const tableFunction = defineAsyncComponent(() => import('./tableFunction/tableFu
 const tableEvent = defineAsyncComponent(() => import('./tableEvent/tableEvent.vue'))
 
 const formRef = ref()
-const stateData: IstateData = reactive({
+const stateData = reactive<IstateData>({
 	visible: false,
 	title: '表单编辑',
 	tabActive: 'input',
@@ -184,7 +184,7 @@ const stateData: IstateData = reactive({
 			{
 				label: '数据表信息',
 				field: 'database_info',
-				type: 'object',
+				type: ENUM_TYPE.object,
 				id: '9cJTZq23XJuIIOA06gs9_',
 				parent: 'SK9hmOFKwEUDciGzYH6cr|9cJTZq23XJuIIOA06gs9_',
 				show: false,
@@ -280,6 +280,7 @@ function onSave(formRef: FormInstance | undefined) {
 :deep .cell {
 	.el-form-item {
 		margin-bottom: 0;
+
 		.el-form-item__content {
 			justify-content: center;
 		}

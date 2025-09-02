@@ -5,8 +5,34 @@
         <el-tab-pane label="转盘设置" name="base">
           <el-form :model="state.form" :rules="state.rules" ref="formRef" label-width="100px" class="demo-ruleForm">
             <el-form-item label="转盘大小" prop="time">
-              <el-input-number v-model="size" @blur="props.setSpinSize()" />
+              <el-input-number v-model="size" :min="100" :max="600" :step="10" @blur="props.setSpinSize" />
             </el-form-item>
+            <el-card header="转盘块设置" shadow="never" size="small" body-style="padding:6px;">
+              <el-table :data="blocks" border>
+                <el-table-column label="内边距" prop="padding" align="center">
+                  <template #default="{ row }">
+                    <el-input-number v-model="row.padding" />
+                  </template>
+                </el-table-column>
+                <el-table-column label="背景色" prop="background" align="center">
+                  <template #default="{ row }">
+                    <el-color-picker v-model="row.background" />
+                  </template>
+                </el-table-column>
+                <el-table-column label="背景图片" prop="imgs" align="center">
+                  <el-table-column label="图片" prop="imgs" align="center">
+                    <template #default="{ row }">
+                      <UploadPictureCard :imgs="row.imgs" @set-file-list="(imgs) => row.imgs = imgs" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="大小" prop="size" align="center">
+                    <template #default="{ row }">
+                      <el-input-number v-model="row.size" />
+                    </template>
+                  </el-table-column>
+                </el-table-column>
+              </el-table>
+            </el-card>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="奖品设置" name="prize">
@@ -102,8 +128,10 @@ import { iconList, prizeLevel } from '@/utils/publicData'
 import { Search, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { nanoid } from 'nanoid'
+import UploadPictureCard from '@/components/UploadPictureCard/index.vue'
+import { Row } from 'element-plus/es/components/table-v2/src/components/index.mjs'
 
-const { prizes, size } = storeToRefs(usePrizesStore())
+const { prizes, size, blocks } = storeToRefs(usePrizesStore())
 
 const props = defineProps({
   visible: {

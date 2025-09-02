@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { Ifunction } from '@/types/IModel'
+import { Ifunction } from '@/types/IMode'
 
 export function useTableEvent(datas: Ifunction[]) {
 	function onPushRow() {

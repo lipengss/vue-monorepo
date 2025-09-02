@@ -104,6 +104,17 @@ export const usePrizesStore = defineStore('prizes', {
       },
     ] as Prize[],
     size: 300,
+    blocks: [
+      {
+        padding: 13,
+        background: '#617df2',
+        imgs: [
+          {
+            url: 'https://w.wallhaven.cc/full/xe/wallhaven-xe8g6o.jpg',
+          },
+        ],
+      },
+    ],
     // 中奖记录
     spinHistory: [] as SpinRecord[],
     // 用户今日抽奖次数
@@ -112,6 +123,15 @@ export const usePrizesStore = defineStore('prizes', {
   }),
   getters: {
     getSpinSize: (state) => state.size + 'px',
+    getBlocks: (state) =>
+      state.blocks.map((item) => ({
+        background: item.background,
+        padding: item.padding + 'px',
+        imgs: item.imgs.map((img) => ({
+          ...img,
+          url: img.url,
+        })),
+      })),
   },
   actions: {
     // 根据概率和库存选择奖品

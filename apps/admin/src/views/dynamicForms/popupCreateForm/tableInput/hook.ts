@@ -1,6 +1,6 @@
 import { Ref } from 'vue'
 import { nanoid } from 'nanoid'
-import { Idata, ENUM_TYPE } from '@/types/IModel'
+import { Idata, ENUM_TYPE } from '@/types/IModel.d'
 
 export function useInputEvent() {
 	function onTypeChange(type: any, row: Idata): void {

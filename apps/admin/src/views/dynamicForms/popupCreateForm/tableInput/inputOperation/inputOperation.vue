@@ -21,9 +21,12 @@
 						<el-select v-model="state.data.expand.type">
 							<el-option v-for="item in DATE_TYPE" :key="item" :label="item" :value="item" />
 						</el-select>
-						<el-popover placement="top" title="提示" :width="200" trigger="hover" content="日期筛选以/年/月/周/日为单位的展示效果进行筛选">
+						<el-popover placement="top" title="提示" :width="200" trigger="hover"
+							content="日期筛选以/年/月/周/日为单位的展示效果进行筛选">
 							<template #reference>
-								<el-icon> <warning /></el-icon>
+								<el-icon>
+									<warning />
+								</el-icon>
 							</template>
 						</el-popover>
 					</el-space>
@@ -36,7 +39,8 @@
 						<span v-else> 单击表表格可选中枚举的默认显示值 </span>
 					</template>
 				</el-alert>
-				<el-table size="small" class="mb14" border :data="state.data.options" highlight-current-row @current-change="handleCurrentChange">
+				<el-table size="small" class="mb14" border :data="state.data.options" highlight-current-row
+					@current-change="handleCurrentChange">
 					<el-table-column type="index" label="序号" width="50" align="center" />
 					<el-table-column prop="value" label="值" align="center">
 						<template #default="{ row, $index }">
@@ -47,7 +51,8 @@
 					</el-table-column>
 					<el-table-column prop="label" label="文本" align="center">
 						<template #default="{ row, $index }">
-							<el-form-item :prop="`options[${$index}].label`" :rules="{ required: true, message: '请输入表单名称' }">
+							<el-form-item :prop="`options[${$index}].label`"
+								:rules="{ required: true, message: '请输入表单名称' }">
 								<el-input v-model="row.label" placeholder="输入表单名称"></el-input>
 							</el-form-item>
 						</template>
@@ -55,7 +60,8 @@
 					<el-table-column prop="required" label="操作" align="center">
 						<template #default="{ row, $index }">
 							<el-space>
-								<el-button type="success" size="small" @click="onAdd($index)" circle :icon="Plus" title="添加相邻元素" />
+								<el-button type="success" size="small" @click="onAdd($index)" circle :icon="Plus"
+									title="添加相邻元素" />
 								<el-button type="danger" size="small" @click="onDelete($index)" circle :icon="Delete" />
 							</el-space>
 						</template>
@@ -74,7 +80,7 @@
 </template>
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { ENUM_TYPE, DATE_TYPE } from '@/types/IModel'
+import { ENUM_TYPE, DATE_TYPE } from "@/types/IModel.d"
 import IconSelect from '@/components/IconSelect/IconSelect.vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import { defineExpose } from 'vue'

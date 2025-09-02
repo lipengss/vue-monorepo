@@ -20,14 +20,16 @@
 					<el-select v-model="row.type" @change="onTypeChange($event, row)">
 						<el-option v-for="item in ENUM_TYPE" :key="item" :label="item" :value="item" />
 					</el-select>
-					<el-button class="ml6" :disabled="row.type === 'object'" @click="operationRef.operation(row)">更多</el-button>
+					<el-button class="ml6" :disabled="row.type === 'object'"
+						@click="operationRef.operation(row)">更多</el-button>
 				</el-form-item>
 			</template>
 		</el-table-column>
 		<el-table-column prop="required" label="是否必填" align="center">
 			<template #default="{ row }">
 				<el-form-item>
-					<el-switch v-model="row.required" @change="onRequiredChange($event, row)" :disabled="['object', 'radio', 'switch'].includes(row.type)" />
+					<el-switch v-model="row.required" @change="onRequiredChange($event, row)"
+						:disabled="['object', 'radio', 'switch'].includes(row.type)" />
 				</el-form-item>
 			</template>
 		</el-table-column>
@@ -46,7 +48,8 @@
 						<template #dropdown>
 							<el-dropdown-menu>
 								<el-dropdown-item command="adjoin">添加相邻节点</el-dropdown-item>
-								<el-dropdown-item v-if="['object', 'array'].includes(row.type)" command="children">添加子节点</el-dropdown-item>
+								<el-dropdown-item v-if="['object', 'array'].includes(row.type)"
+									command="children">添加子节点</el-dropdown-item>
 							</el-dropdown-menu>
 						</template>
 					</el-dropdown>
@@ -62,7 +65,7 @@
 import { withDefaults, defineProps, ref } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import inputOperation from './inputOperation/inputOperation.vue'
-import { ENUM_TYPE, Idata } from '@/types/IModel'
+import { ENUM_TYPE, Idata } from "@/types/IModel.d"
 import { useTableTree, useInputEvent } from './hook'
 import {
 	ElTable,

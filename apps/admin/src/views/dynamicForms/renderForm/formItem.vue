@@ -5,7 +5,8 @@
 				{{ item.label }}
 				<small v-if="item.required" class="small">（必填）</small>
 			</template>
-			<el-input v-model="data[item.field]" :prefix-icon="item.expand.prefix" :placeholder="`请输入${item.label}`" v-bind="item.expand" />
+			<el-input v-model="data[item.field]" :prefix-icon="item.expand.prefix" :placeholder="`请输入${item.label}`"
+				v-bind="item.expand" />
 		</el-form-item>
 		<el-form-item v-else-if="isShow(item, 'select')" :prop="item.field" :rules="item.rules">
 			<template #label>
@@ -22,7 +23,8 @@
 				<small v-if="item.required" class="small">（必填）</small>
 			</template>
 			<el-radio-group v-model="data[item.field]" v-bind="item.expand" @change="onRadio($event, item.field)">
-				<el-radio v-for="radio in item.options" :key="radio.value" :label="radio.value">{{ radio.label }}</el-radio>
+				<el-radio v-for="radio in item.options" :key="radio.value" :label="radio.value">{{ radio.label
+				}}</el-radio>
 			</el-radio-group>
 		</el-form-item>
 		<el-form-item v-else-if="isShow(item, 'checkbox')" :prop="item.field" :rules="item.rules">
@@ -31,7 +33,8 @@
 				<small v-if="item.required" class="small">（必填）</small>
 			</template>
 			<el-checkbox-group v-model="data[item.field]" v-bind="item.expand">
-				<el-checkbox v-for="check in item.options" :key="check.value" :label="check.value">{{ check.label }}</el-checkbox>
+				<el-checkbox v-for="check in item.options" :key="check.value" :label="check.value">{{ check.label
+				}}</el-checkbox>
 			</el-checkbox-group>
 		</el-form-item>
 		<el-form-item v-else-if="isShow(item, 'switch')" :prop="item.field" :rules="item.rules">
@@ -46,7 +49,8 @@
 				{{ item.label }}
 				<small v-if="item.required" class="small">（必填）</small>
 			</template>
-			<el-date-picker v-model="data[item.field]" type="date" :placeholder="`请选择${item.label}`" v-bind="item.expand" />
+			<el-date-picker v-model="data[item.field]" type="date" :placeholder="`请选择${item.label}`"
+				v-bind="item.expand" />
 		</el-form-item>
 		<el-card v-else-if="isShow(item, 'object')" :header="item.label" class="mb18">
 			<form-item :input-datas="item.children" :data="props.data[item.field]" />
@@ -55,7 +59,7 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps, inject } from 'vue'
-import { Idata } from '@/types/IModel'
+import { Idata } from "@/types/IModel.d"
 import { onChangeEvent } from './hook'
 import {
 	ElSwitch,

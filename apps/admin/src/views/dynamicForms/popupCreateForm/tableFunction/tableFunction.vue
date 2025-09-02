@@ -43,7 +43,7 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps } from 'vue'
-import { Ifunction } from '@/types/IModel'
+import { Ifunction } from "@/types/IModel.d"
 import IconSelect from '@/components/IconSelect/IconSelect.vue'
 import { useTableEvent } from './hook'
 

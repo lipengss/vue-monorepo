@@ -155,6 +155,15 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('@/views/product/product.vue'),
 			},
+			{
+				path: '/phaser',
+				name: 'phaser',
+				meta: {
+					title: 'Phaser框架',
+					icon: 'animation',
+				},
+				component: () => import('@/views/phaser/phaser.vue'),
+			},
 			// {
 			// 	path: '/chatRoom',
 			// 	name: 'chatRoom',

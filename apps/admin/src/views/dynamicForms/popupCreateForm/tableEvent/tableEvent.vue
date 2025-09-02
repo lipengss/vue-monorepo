@@ -10,14 +10,16 @@
 		<el-table-column prop="type" label="from" align="center">
 			<template #default="{ row }">
 				<el-form-item :rules="{ required: true }">
-					<el-cascader v-model="row.relation.from" :options="inputs" :props="{ value: 'field' }" collapse-tags clearable />
+					<el-cascader v-model="row.relation.from" :options="inputs" :props="{ value: 'field' }" collapse-tags
+						clearable />
 				</el-form-item>
 			</template>
 		</el-table-column>
 		<el-table-column prop="type" label="to" align="center">
 			<template #default="{ row }">
 				<el-form-item :rules="{ required: true }">
-					<el-cascader v-model="row.relation.to" :options="inputs" :props="{ multiple: true, value: 'field' }" collapse-tags clearable />
+					<el-cascader v-model="row.relation.to" :options="inputs" :props="{ multiple: true, value: 'field' }"
+						collapse-tags clearable />
 				</el-form-item>
 			</template>
 		</el-table-column>
@@ -41,7 +43,7 @@
 </template>
 <script setup lang="ts">
 import { withDefaults, defineProps } from 'vue'
-import { Idata, Ievent } from '@/types/IModel'
+import { Idata, Ievent } from "@/types/IModel.d"
 import { ElTable, ElTableColumn, ElButton, ElFormItem, ElSelect, ElOption, ElCascader, ElInput } from 'element-plus'
 
 import { useTableEvent } from './hook'

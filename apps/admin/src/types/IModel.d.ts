@@ -57,8 +57,8 @@ export interface Ifunction {
 export interface Ievent {
 	name: string
 	relation: {
-		from: string
-		to: string[]
+		from: string[]
+		to: Array<string[]>
 	}
 	action: string
 	id: string

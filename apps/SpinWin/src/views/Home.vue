@@ -4,14 +4,14 @@
       <el-card body-class="wheel-card" size="small">
         <template #header>
           <div class="header-content">
-             <span>剩余抽奖次数</span>
+            <span>剩余抽奖次数</span>
             <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
               {{ todaySpinCount }}/{{ maxDailySpins }}
             </el-tag>
           </div>
         </template>
-        <LuckyWheel ref="myLuckyRef" :width="getSpinSize" :height="getSpinSize" :prizes="prizesList" :blocks="blocks"
-          :buttons="buttons" @start="startCallback" @end="endCallback" />
+        <LuckyWheel ref="myLuckyRef" :key="getSpinSize" :width="getSpinSize" :height="getSpinSize" :prizes="prizesList"
+          :blocks="getBlocks" :buttons="buttons" @start="startCallback" @end="endCallback" />
       </el-card>
       <el-card header="最近中奖记录" class="record-card">
         <el-empty v-if="spinHistory.length === 0" description="暂无中奖记录" />
@@ -69,14 +69,13 @@ import { computed, ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
 import { usePrizesStore } from '@/stores/prizes'
 import SettingSpin from '@/components/SettingSpin.vue'
-const { prizes, spinHistory, todaySpinCount, maxDailySpins, getSpinSize } = storeToRefs(usePrizesStore());
+const { prizes, spinHistory, todaySpinCount, maxDailySpins, getSpinSize, getBlocks } = storeToRefs(usePrizesStore());
 const { getRemainingSpins } = usePrizesStore()
 
 const myLuckyRef = ref()
 
 const isDrawer = ref(true)
 
-const blocks = [{ padding: '13px', background: '#617df2' }];
 const prizesList = computed(() => {
   return prizes.value.map(n => {
     return {
@@ -109,8 +108,8 @@ function startCallback() {
 }
 
 function setSpinSize() {
-  console.log('getSpinSize.value', getSpinSize.value)
-  myLuckyRef.value.initLucky()
+  myLuckyRef.value.setSpinSize(getSpinSize.value)
+  // myLuckyRef.value.height = getSpinSize.value
 }
 
 // 抽奖结束会触发end回调

@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { Idata, Ioption } from '@/types/IModel'
+import { Idata, Ioption } from '@/types/IMode'
 
 export interface IState {
 	visible: boolean

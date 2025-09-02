@@ -3,14 +3,15 @@
 		<formItem :input-datas="props.formState.inputDatas" :data="stateData.data" />
 		<el-form-item v-if="props.formState.functions">
 			<template v-for="(btn, index) in props.formState.functions" :key="index">
-				<el-button :type="btn.type" :icon="btn.icon" @click="onBtnFunction(btn.fun_type)">{{ btn.name }}</el-button>
+				<el-button :type="btn.type" :icon="btn.icon" @click="onBtnFunction(btn.fun_type)">{{ btn.name
+				}}</el-button>
 			</template>
 		</el-form-item>
 	</el-form>
 </template>
 <script setup lang="ts">
 import { withDefaults, reactive, defineProps, watch, ref, provide, computed } from 'vue'
-import { IformState } from '@/types/IModel'
+import { IformState } from "@/types/IModel.d"
 import formItem from './formItem.vue'
 import type { FormInstance } from 'element-plus'
 import { useFormEvent, useWatchFun } from './hook'

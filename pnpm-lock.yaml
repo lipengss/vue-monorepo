@@ -228,6 +228,9 @@ importers:
       odometer:
         specifier: ^0.4.8
         version: 0.4.8
+      phaser:
+        specifier: 3.24.0
+        version: 3.24.0(webpack@5.92.1)
       pinia:
         specifier: ^2.0.11
         version: 2.1.7(@vue/composition-api@1.7.2(vue@3.4.21(typescript@4.9.5)))(typescript@4.9.5)(vue@3.4.21(typescript@4.9.5))
@@ -3920,6 +3923,9 @@ packages:
   eventemitter2@6.4.7:
     resolution: {integrity: sha512-tYUSVOGeQPKt/eC1ABfhHy5Xd96N3oIijJvN3O9+TsC28T5V9yX9oEfEK5faP0EFSNVOG97qtAS68GBrQB2hDg==}
 
+  eventemitter3@4.0.7:
+    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
+
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
@@ -3958,6 +3964,12 @@ packages:
   expect-type@1.2.2:
     resolution: {integrity: sha512-JhFGDVJ7tmDJItKhYgJCGLOWjuK9vPxiXoUFLwLDc99NlmklilbiQJwoctZtt13+xMw91MCk/REan6MWHqDjyA==}
     engines: {node: '>=12.0.0'}
+
+  exports-loader@1.1.1:
+    resolution: {integrity: sha512-CmyhIR2sJ3KOfVsHjsR0Yvo+0lhRhRMAevCbB8dhTVLHsZPs0lCQTvRmR9YNvBXDBxUuhmCE2f54KqEjZUaFrg==}
+    engines: {node: '>= 10.13.0'}
+    peerDependencies:
+      webpack: ^4.0.0 || ^5.0.0
 
   express-session@1.18.0:
     resolution: {integrity: sha512-m93QLWr0ju+rOwApSsyso838LQwgfs44QtOP/WBiwtAgPIo/SAh1a5c6nn2BR6mFNZehTpqKDESzP+fRHVbxwQ==}
@@ -4286,7 +4298,7 @@ packages:
     engines: {node: '>=10.13.0'}
 
   glob-to-regexp@0.3.0:
-    resolution: {integrity: sha512-Iozmtbqv0noj0uDDqoL0zNq0VBEfK2YFoMAZoxJe4cwphvLR+JskfF30QhXHOR4m3KrE6NLRYw+U9MRXvifyig==}
+    resolution: {integrity: sha1-jFoUlNIGbFcMw7/kSWF1rMTVAqs=}
 
   glob-to-regexp@0.4.1:
     resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
@@ -4570,6 +4582,12 @@ packages:
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
+
+  imports-loader@1.2.0:
+    resolution: {integrity: sha512-zPvangKEgrrPeqeUqH0Uhc59YqK07JqZBi9a9cQ3v/EKUIqrbJHY4CvUrDus2lgQa5AmPyXuGrWP8JJTqzE5RQ==}
+    engines: {node: '>= 10.13.0'}
+    peerDependencies:
+      webpack: ^4.0.0 || ^5.0.0
 
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
@@ -5837,6 +5855,9 @@ packages:
     deprecated: this package is now deprecated
     hasBin: true
 
+  phaser@3.24.0:
+    resolution: {integrity: sha512-hUedTaSoQfDRc3ZmrlnBZciTK1kfELXrEyMi+Da2KFzAwK4PyZ4jl+0sleoVqb9/KaPeOCQieit9ru1Djh8uOw==}
+
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
 
@@ -6682,7 +6703,7 @@ packages:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
 
   strip-ansi@3.0.1:
-    resolution: {integrity: sha1-ajhfuIU9lS1f8F0Oiq+UJ43GPc8=}
+    resolution: {integrity: sha512-VhumSSbBqDTP8p2ZLKj40UjBCV4+v8bUSEpUb4KjRgWk9pbqGF4REFj6KEagidb2f/M6AzC0EmFyDNGaw9OCzg==}
     engines: {node: '>=0.10.0'}
 
   strip-ansi@6.0.1:
@@ -6696,6 +6717,10 @@ packages:
   strip-bom-string@1.0.0:
     resolution: {integrity: sha1-5SEekiQ2n7uB1jOi8ABE3IztrZI=}
     engines: {node: '>=0.10.0'}
+
+  strip-comments@2.0.1:
+    resolution: {integrity: sha512-ZprKx+bBLXv067WTCALv8SSz5l2+XhpYCsVtSqlMnkAXMWDq+/ekVbl1ghqP9rUHTzv6sm/DwCOiYutU/yp1fw==}
+    engines: {node: '>=10'}
 
   strip-final-newline@2.0.0:
     resolution: {integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==}
@@ -12069,6 +12094,8 @@ snapshots:
 
   eventemitter2@6.4.7: {}
 
+  eventemitter3@4.0.7: {}
+
   events@3.3.0: {}
 
   evtd@0.2.4: {}
@@ -12139,6 +12166,13 @@ snapshots:
     optional: true
 
   expect-type@1.2.2: {}
+
+  exports-loader@1.1.1(webpack@5.92.1):
+    dependencies:
+      loader-utils: 2.0.4
+      schema-utils: 3.3.0
+      source-map: 0.6.1
+      webpack: 5.92.1
 
   express-session@1.18.0:
     dependencies:
@@ -12875,6 +12909,14 @@ snapshots:
     dependencies:
       parent-module: 1.0.1
       resolve-from: 4.0.0
+
+  imports-loader@1.2.0(webpack@5.92.1):
+    dependencies:
+      loader-utils: 2.0.4
+      schema-utils: 3.3.0
+      source-map: 0.6.1
+      strip-comments: 2.0.1
+      webpack: 5.92.1
 
   imurmurhash@0.1.4: {}
 
@@ -14217,6 +14259,15 @@ snapshots:
       - supports-color
     optional: true
 
+  phaser@3.24.0(webpack@5.92.1):
+    dependencies:
+      eventemitter3: 4.0.7
+      exports-loader: 1.1.1(webpack@5.92.1)
+      imports-loader: 1.2.0(webpack@5.92.1)
+      path: 0.12.7
+    transitivePeerDependencies:
+      - webpack
+
   picocolors@1.0.1: {}
 
   picocolors@1.1.1: {}
@@ -15226,6 +15277,8 @@ snapshots:
       ansi-regex: 6.0.1
 
   strip-bom-string@1.0.0: {}
+
+  strip-comments@2.0.1: {}
 
   strip-final-newline@2.0.0: {}
 

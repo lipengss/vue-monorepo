@@ -1,5 +1,5 @@
 import { Ref, ComputedRef } from 'vue'
-import { Idata, Ievent } from '@/types/IModel'
+import { Idata, Ievent } from '@/types/IMode'
 import { cloneDeep } from 'lodash'
 import type { FormInstance } from 'element-plus'
 
