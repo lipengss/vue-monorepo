@@ -1,5 +1,6 @@
-import { defineStore } from 'pinia'
+import { Local } from '@common/utils'
 import { nanoid } from 'nanoid'
+import { defineStore } from 'pinia'
 
 export interface Prize {
   id: string
@@ -23,6 +24,13 @@ export interface SpinRecord {
 
 export const usePrizesStore = defineStore('prizes', {
   state: () => ({
+    // 转盘配置
+    spinSty: {
+      min: 300,
+      max: 1200,
+      step: 10,
+      size: 400,
+    },
     // 奖品配置
     prizes: [
       {
@@ -103,11 +111,11 @@ export const usePrizesStore = defineStore('prizes', {
         value: 0,
       },
     ] as Prize[],
-    size: 300,
     blocks: [
       {
         padding: 13,
         background: '#617df2',
+        size: 500,
         imgs: [
           {
             url: 'https://w.wallhaven.cc/full/xe/wallhaven-xe8g6o.jpg',
@@ -122,18 +130,40 @@ export const usePrizesStore = defineStore('prizes', {
     maxDailySpins: 3, // 每日最大抽奖次数
   }),
   getters: {
-    getSpinSize: (state) => state.size + 'px',
+    getSpinSize: (state) => state.spinSty.size + 'px',
     getBlocks: (state) =>
       state.blocks.map((item) => ({
         background: item.background,
         padding: item.padding + 'px',
         imgs: item.imgs.map((img) => ({
-          ...img,
           url: img.url,
+          width: item.size + 'px',
+          height: item.size + 'px',
+          top: '20px',
         })),
       })),
   },
   actions: {
+    initLocalSet() {
+      if (Local.get('SpinData')) {
+        const data = Local.get('SpinData')
+        this.spinSty = data.spinSty
+        this.prizes = data.prizes
+        this.blocks = data.blocks
+        this.spinHistory = data.spinHistory
+        this.todaySpinCount = data.todaySpinCount
+        this.maxDailySpins = data.maxDailySpins
+      } else {
+        Local.set('SpinData', {
+          spinSty: this.spinSty,
+          prizes: this.prizes,
+          blocks: this.blocks,
+          spinHistory: this.spinHistory,
+          todaySpinCount: this.todaySpinCount,
+          maxDailySpins: this.maxDailySpins,
+        })
+      }
+    },
     // 根据概率和库存选择奖品
     selectPrize(): Prize {
       // 过滤掉库存为0的奖品（除了谢谢参与）

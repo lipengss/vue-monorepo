@@ -1,26 +1,9 @@
 <template>
-  <el-upload action="#" list-type="picture-card" :auto-upload="false" multiple v-model:file-list="fileList">
+  <el-upload action="#" list-type="picture-card" :auto-upload="false" multiple v-model:file-list="fileList"
+    :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
     <el-icon>
       <Plus />
     </el-icon>
-    <template #file="{ file }">
-      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-      <span class="el-upload-list__item-actions">
-        <span class="el-upload-list__item-setting" @click="handleDownload(file)">
-          <el-icon>
-            <Setting />
-          </el-icon>
-        </span>
-        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-          <el-icon><zoom-in /></el-icon>
-        </span>
-        <span class="el-upload-list__item-delete" @click="handleRemove(file)">
-          <el-icon>
-            <Delete />
-          </el-icon>
-        </span>
-      </span>
-    </template>
   </el-upload>
   <el-image-viewer v-if="state.preview.show" :url-list="srcList" teleported show-progress :z-index="3000"
     :initial-index="state.preview.index" @close="state.preview.show = false" />
@@ -28,13 +11,13 @@
 
 <script lang="ts" setup>
 import { computed, ref, defineProps, watchEffect, reactive } from 'vue'
-import { Delete, Setting, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 
 const props = defineProps({
   size: {
     type: Number,
-    default: 120
+    default: 100
   },
   imgs: {
     type: Array,

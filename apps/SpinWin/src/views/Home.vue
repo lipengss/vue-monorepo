@@ -1,25 +1,51 @@
 <template>
   <div class="home">
     <div class="area">
-      <el-card body-class="wheel-card" size="small">
+      <el-card ref="card" body-class="wheel-card" size="small">
         <template #header>
           <div class="header-content">
             <span>剩余抽奖次数</span>
-            <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
-              {{ todaySpinCount }}/{{ maxDailySpins }}
-            </el-tag>
+            <el-space>
+              <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
+                {{ todaySpinCount }}/{{ maxDailySpins }}
+              </el-tag>
+              <el-button size="small" @click="toggle">
+                <svg-icon :name="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" />
+              </el-button>
+            </el-space>
           </div>
         </template>
-        <LuckyWheel ref="myLuckyRef" :key="getSpinSize" :width="getSpinSize" :height="getSpinSize" :prizes="prizesList"
-          :blocks="getBlocks" :buttons="buttons" @start="startCallback" @end="endCallback" />
+        <LuckyWheel
+          ref="myLuckyRef"
+          :key="getSpinSize"
+          :width="getSpinSize"
+          :height="getSpinSize"
+          :prizes="prizesList"
+          :blocks="getBlocks"
+          :buttons="buttons"
+          @start="startCallback"
+          @end="endCallback"
+        />
+        <el-slider
+          class="my-slider"
+          v-model="spinSty.size"
+          size="small"
+          show-input
+          :min="spinSty.min"
+          :max="spinSty.max"
+          :step="spinSty.step"
+        />
       </el-card>
       <el-card header="最近中奖记录" class="record-card">
         <el-empty v-if="spinHistory.length === 0" description="暂无中奖记录" />
         <el-scrollbar v-else view-style="padding:10px">
           <el-timeline>
-            <el-timeline-item v-for="record in spinHistory.slice(0, 8)" :key="record.id"
+            <el-timeline-item
+              v-for="record in spinHistory.slice(0, 8)"
+              :key="record.id"
               :type="record.prizeId === 7 ? 'primary' : 'success'"
-              :timestamp="new Date(record.timestamp).toLocaleTimeString()">
+              :timestamp="new Date(record.timestamp).toLocaleTimeString()"
+            >
               <div class="timeline-content">
                 <el-text tag="b">{{ record.prizeName }}</el-text>
               </div>
@@ -43,16 +69,21 @@
               <div class="prize-content">
                 <div class="prize-header">
                   <span class="prize-name">{{ prize.name }}</span>
-                  <el-tag :type="prize.stock > 10 ? 'success' : prize.stock > 0 ? 'warning' : 'danger'
-                    " size="small">
+                  <el-tag
+                    :type="prize.stock > 10 ? 'success' : prize.stock > 0 ? 'warning' : 'danger'"
+                    size="small"
+                  >
                     {{ prize.stock }} / {{ prize.totalCount }} 件
                   </el-tag>
                 </div>
                 <div class="prize-description">{{ prize.description }}</div>
                 <div class="prize-progress">
-                  <el-progress :percentage="(prize.stock / prize.totalCount) * 100" :show-text="false" :stroke-width="6"
-                    :color="prize.stock > 10 ? '#67c23a' : prize.stock > 0 ? '#e6a23c' : '#f56c6c'
-                      " />
+                  <el-progress
+                    :percentage="(prize.stock / prize.totalCount) * 100"
+                    :show-text="false"
+                    :stroke-width="6"
+                    :color="prize.stock > 10 ? '#67c23a' : prize.stock > 0 ? '#e6a23c' : '#f56c6c'"
+                  />
                 </div>
               </div>
             </div>
@@ -61,39 +92,46 @@
       </el-card>
     </div>
   </div>
-  <SettingSpin v-model:visible="isDrawer" :setSpinSize="setSpinSize" />
+  <SettingSpin v-model:visible="isDrawer" />
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
-import { storeToRefs } from 'pinia';
-import { usePrizesStore } from '@/stores/prizes'
 import SettingSpin from '@/components/SettingSpin.vue'
-const { prizes, spinHistory, todaySpinCount, maxDailySpins, getSpinSize, getBlocks } = storeToRefs(usePrizesStore());
-const { getRemainingSpins } = usePrizesStore()
+import { usePrizesStore } from '@/stores/prizes'
+import { useFullscreen } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
+const { prizes, spinSty, spinHistory, todaySpinCount, maxDailySpins, getSpinSize, getBlocks } =
+  storeToRefs(usePrizesStore())
+const { getRemainingSpins, initLocalSet } = usePrizesStore()
+
+const wheelRef = useTemplateRef('card')
+const { isFullscreen, enter, exit, toggle } = useFullscreen(wheelRef)
 
 const myLuckyRef = ref()
 
 const isDrawer = ref(true)
 
 const prizesList = computed(() => {
-  return prizes.value.map(n => {
+  return prizes.value.map((n) => {
     return {
       fonts: [
         { text: n.name, fontColor: '#fff', fontSize: '14px', top: '10%' },
-        { text: n.icon, fontSize: '20px', top: '35%' }
+        { text: n.icon, fontSize: '20px', top: '35%' },
       ],
-      background: n.color
+      background: n.color,
     }
   })
-});
+})
 
-const buttons = [{
-  radius: '24%',
-  background: '#8a9bf3',
-  pointer: true,
-  fonts: [{ text: '开始', top: '-10px' }]
-}]
+const buttons = [
+  {
+    radius: '24%',
+    background: '#8a9bf3',
+    pointer: true,
+    fonts: [{ text: '开始', top: '-10px' }],
+  },
+]
 
 function startCallback() {
   // 调用抽奖组件的play方法开始游戏
@@ -107,21 +145,14 @@ function startCallback() {
   }, 3000)
 }
 
-function setSpinSize() {
-  myLuckyRef.value.setSpinSize(getSpinSize.value)
-  // myLuckyRef.value.height = getSpinSize.value
-}
-
 // 抽奖结束会触发end回调
 function endCallback(prize) {
   console.log(prize)
 }
 
 onMounted(() => {
-  console.log('myLuckyRef', myLuckyRef.value)
+  initLocalSet()
 })
-
-
 </script>
 
 <style scoped lang="scss">
@@ -153,6 +184,7 @@ onMounted(() => {
         flex: 1;
         padding: 0;
         overflow: hidden;
+        position: relative;
       }
     }
 
@@ -171,6 +203,16 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
     }
+  }
+}
+
+.my-slider {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 300px;
+  :deep .el-input-number {
+    width: 110px;
   }
 }
 

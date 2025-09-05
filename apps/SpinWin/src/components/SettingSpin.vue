@@ -3,10 +3,35 @@
     <template #default>
       <el-tabs v-model="activeTab">
         <el-tab-pane label="转盘设置" name="base">
-          <el-form :model="state.form" :rules="state.rules" ref="formRef" label-width="100px" class="demo-ruleForm">
+          <el-form
+            :model="state.form"
+            :rules="state.rules"
+            ref="formRef"
+            label-width="100px"
+            label-position="top"
+            class="demo-ruleForm"
+          >
             <el-form-item label="转盘大小" prop="time">
-              <el-input-number v-model="size" :min="100" :max="600" :step="10" @blur="props.setSpinSize" />
+              <el-slider
+                style="width: 340px"
+                v-model="spinSty.size"
+                show-input
+                :min="spinSty.min"
+                :max="spinSty.max"
+                :step="spinSty.step"
+              />
             </el-form-item>
+            <!-- <el-form-item label="文字大小" prop="time">
+              <el-slider
+                style="width: 340px"
+                v-model="spinSty.size"
+                show-input
+                :min="spinSty.min"
+                :max="spinSty.max"
+                :step="spinSty.step"
+                @change="(val) => (spinSty.fontSize = val)"
+              />
+            </el-form-item> -->
             <el-card header="转盘块设置" shadow="never" size="small" body-style="padding:6px;">
               <el-table :data="blocks" border>
                 <el-table-column label="内边距" prop="padding" align="center">
@@ -22,7 +47,10 @@
                 <el-table-column label="背景图片" prop="imgs" align="center">
                   <el-table-column label="图片" prop="imgs" align="center">
                     <template #default="{ row }">
-                      <UploadPictureCard :imgs="row.imgs" @set-file-list="(imgs) => row.imgs = imgs" />
+                      <UploadPictureCard
+                        :imgs="row.imgs"
+                        @set-file-list="(imgs) => (row.imgs = imgs)"
+                      />
                     </template>
                   </el-table-column>
                   <el-table-column label="大小" prop="size" align="center">
@@ -47,16 +75,33 @@
             </el-table-column>
             <el-table-column label="奖品名称" prop="description" :min-width="120">
               <template #default="{ row }">
-                <el-input v-if="state.rowEdit === row.id" class="input-name" v-model="row.description"
-                  placeholder="请输入奖品名称">
+                <el-input
+                  v-if="state.rowEdit === row.id"
+                  class="input-name"
+                  v-model="row.description"
+                  placeholder="请输入奖品名称"
+                >
                   <template #prepend>
                     <el-popover placement="bottom" trigger="click" show-arrow :width="200">
                       <template #default>
-                        <el-input v-model="state.iconSearch" style="margin-bottom: 10px;" placeholder="请输入图标描述"
-                          :suffix-icon="Search" />
-                        <el-scrollbar v-if="filterIconList.length" view-class="scroll-view" :max-height="200">
-                          <span class="item" :class="{ 'active': item.icon === row.icon }"
-                            v-for="item in filterIconList" :key="item.id">{{ item.icon }}</span>
+                        <el-input
+                          v-model="state.iconSearch"
+                          style="margin-bottom: 10px"
+                          placeholder="请输入图标描述"
+                          :suffix-icon="Search"
+                        />
+                        <el-scrollbar
+                          v-if="filterIconList.length"
+                          view-class="scroll-view"
+                          :max-height="200"
+                        >
+                          <span
+                            class="item"
+                            :class="{ active: item.icon === row.icon }"
+                            v-for="item in filterIconList"
+                            :key="item.id"
+                            >{{ item.icon }}</span
+                          >
                         </el-scrollbar>
                         <el-empty v-else image-size="100" description="暂无图标"></el-empty>
                       </template>
@@ -72,33 +117,64 @@
             <el-table-column label="奖品颜色" prop="color" align="center">
               <template #default="{ row }">
                 <el-color-picker v-if="state.rowEdit === row.id" v-model="row.color" />
-                <span v-else class="color-block" :style="`--color:${row.color}`">{{ row.color }}</span>
+                <span v-else class="color-block" :style="`--color:${row.color}`">{{
+                  row.color
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column label="剩余/库存" prop="totalCount" align="center">
               <template #default="{ row }">
                 <el-space v-if="state.rowEdit === row.id">
-                  <el-input-number style="width:50px" v-model="row.totalCount" :controls="false" size="small" />
-                  <el-input-number style="width:50px" v-model="row.stock" :controls="false" size="small" />
+                  <el-input-number
+                    style="width: 50px"
+                    v-model="row.totalCount"
+                    :controls="false"
+                    size="small"
+                  />
+                  <el-input-number
+                    style="width: 50px"
+                    v-model="row.stock"
+                    :controls="false"
+                    size="small"
+                  />
                 </el-space>
                 <span v-else> {{ row.stock }} / {{ row.totalCount }}</span>
               </template>
             </el-table-column>
             <el-table-column label="奖品概率" prop="probability" align="center">
               <template #default="{ row }">
-                <el-input-number style="width:60px" v-if="state.rowEdit === row.id" v-model="row.probability"
-                  :controls="false" size="small" />
+                <el-input-number
+                  style="width: 60px"
+                  v-if="state.rowEdit === row.id"
+                  v-model="row.probability"
+                  :controls="false"
+                  size="small"
+                />
                 <span v-else>{{ row.probability }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" prop="operation">
               <template #default="{ row }">
-                <el-button type="primary" size="small" v-if="state.rowEdit !== row.id"
-                  @click="state.rowEdit = row.id">编辑</el-button>
-                <el-button type="primary" size="small" v-else @click="state.rowEdit = null">保存</el-button>
-                <el-button type="info" size="small" v-if="state.rowEdit === row.id"
-                  @click="state.rowEdit = null">取消</el-button>
-                <el-button type="danger" size="small" v-else @click="removePrize(row)">删除</el-button>
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="state.rowEdit !== row.id"
+                  @click="state.rowEdit = row.id"
+                  >编辑</el-button
+                >
+                <el-button type="primary" size="small" v-else @click="state.rowEdit = null"
+                  >保存</el-button
+                >
+                <el-button
+                  type="info"
+                  size="small"
+                  v-if="state.rowEdit === row.id"
+                  @click="state.rowEdit = null"
+                  >取消</el-button
+                >
+                <el-button type="danger" size="small" v-else @click="removePrize(row)"
+                  >删除</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -121,24 +197,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, defineProps } from 'vue'
-import { storeToRefs } from 'pinia'
+import UploadPictureCard from '@/components/UploadPictureCard/index.vue'
 import { usePrizesStore } from '@/stores/prizes'
 import { iconList, prizeLevel } from '@/utils/publicData'
-import { Search, Plus } from '@element-plus/icons-vue'
+import { Plus, Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { nanoid } from 'nanoid'
-import UploadPictureCard from '@/components/UploadPictureCard/index.vue'
-import { Row } from 'element-plus/es/components/table-v2/src/components/index.mjs'
+import { storeToRefs } from 'pinia'
+import { computed, defineProps, reactive, ref } from 'vue'
 
-const { prizes, size, blocks } = storeToRefs(usePrizesStore())
+const { prizes, spinSty, blocks } = storeToRefs(usePrizesStore())
 
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  setSpinSize: Function
 })
 
 const emit = defineEmits(['update:visible'])
@@ -160,7 +234,7 @@ const state = reactive({
 
 const filterIconList = computed(() => {
   if (state.iconSearch) {
-    return iconList.filter(item => item.description.includes(state.iconSearch))
+    return iconList.filter((item) => item.description.includes(state.iconSearch))
   }
   return iconList
 })
@@ -188,7 +262,6 @@ const addPrize = () => {
 const removePrize = (row) => {
   prizes.value = prizes.value.filter((item) => item.id !== row.id)
 }
-
 
 function onClose() {
   emit('update:visible', false)
