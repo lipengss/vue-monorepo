@@ -82,6 +82,26 @@
   }
 }
 
+.w100 {
+  width: 100%;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.el-slider {
+  padding-left: 20px;
+}
+
 .el-drawer {
   .el-drawer__header {
     padding: 20px;

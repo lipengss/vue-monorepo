@@ -12,6 +12,9 @@
               <el-button size="small" @click="toggle">
                 <svg-icon :name="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" />
               </el-button>
+              <el-button size="small" type="warning" @click="settingSpinRef.open('base')"
+                >设置</el-button
+              >
             </el-space>
           </div>
         </template>
@@ -59,7 +62,9 @@
         <template #header>
           <div class="header-content">
             <span>奖品列表</span>
-            <el-button size="small" type="warning" @click="isDrawer = true">设置</el-button>
+            <el-button size="small" type="warning" @click="settingSpinRef.open('prize')"
+              >设置</el-button
+            >
           </div>
         </template>
         <el-scrollbar view-class="prize-list">
@@ -92,32 +97,40 @@
       </el-card>
     </div>
   </div>
-  <SettingSpin v-model:visible="isDrawer" />
+  <SettingSpin ref="settingSpinRef" />
 </template>
 
 <script setup lang="ts">
-import SettingSpin from '@/components/SettingSpin.vue'
+import SettingSpin from '@/components/settingSpin/index.vue'
 import { usePrizesStore } from '@/stores/prizes'
 import { useFullscreen } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, useTemplateRef } from 'vue'
-const { prizes, spinSty, spinHistory, todaySpinCount, maxDailySpins, getSpinSize, getBlocks } =
-  storeToRefs(usePrizesStore())
+const {
+  prizes,
+  spinSty,
+  spinHistory,
+  todaySpinCount,
+  maxDailySpins,
+  getSpinSize,
+  getBlocks,
+  iconSize,
+  fontSize,
+} = storeToRefs(usePrizesStore())
 const { getRemainingSpins, initLocalSet } = usePrizesStore()
 
 const wheelRef = useTemplateRef('card')
 const { isFullscreen, enter, exit, toggle } = useFullscreen(wheelRef)
 
 const myLuckyRef = ref()
-
-const isDrawer = ref(true)
+const settingSpinRef = ref()
 
 const prizesList = computed(() => {
   return prizes.value.map((n) => {
     return {
       fonts: [
-        { text: n.name, fontColor: '#fff', fontSize: '14px', top: '10%' },
-        { text: n.icon, fontSize: '20px', top: '35%' },
+        { text: n.name, fontColor: '#fff', fontSize: fontSize.value + 'px', top: '10%' },
+        { text: n.icon, fontSize: iconSize.value + 'px', top: '35%' },
       ],
       background: n.color,
     }

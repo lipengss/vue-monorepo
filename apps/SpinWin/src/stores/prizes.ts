@@ -31,6 +31,7 @@ export const usePrizesStore = defineStore('prizes', {
       step: 10,
       size: 400,
     },
+    fontSty: {},
     // 奖品配置
     prizes: [
       {
@@ -115,10 +116,11 @@ export const usePrizesStore = defineStore('prizes', {
       {
         padding: 13,
         background: '#617df2',
-        size: 500,
         imgs: [
           {
-            url: 'https://w.wallhaven.cc/full/xe/wallhaven-xe8g6o.jpg',
+            src: 'https://w.wallhaven.cc/full/xe/wallhaven-xe8g6o.jpg',
+            rotate: false,
+            size: 500,
           },
         ],
       },
@@ -128,6 +130,8 @@ export const usePrizesStore = defineStore('prizes', {
     // 用户今日抽奖次数
     todaySpinCount: 0,
     maxDailySpins: 3, // 每日最大抽奖次数
+    iconSize: 30,
+    fontSize: 16,
   }),
   getters: {
     getSpinSize: (state) => state.spinSty.size + 'px',
@@ -136,9 +140,9 @@ export const usePrizesStore = defineStore('prizes', {
         background: item.background,
         padding: item.padding + 'px',
         imgs: item.imgs.map((img) => ({
-          url: img.url,
-          width: item.size + 'px',
-          height: item.size + 'px',
+          src: img.src,
+          width: img.size + 'px',
+          height: img.size + 'px',
           top: '20px',
         })),
       })),
@@ -154,15 +158,18 @@ export const usePrizesStore = defineStore('prizes', {
         this.todaySpinCount = data.todaySpinCount
         this.maxDailySpins = data.maxDailySpins
       } else {
-        Local.set('SpinData', {
-          spinSty: this.spinSty,
-          prizes: this.prizes,
-          blocks: this.blocks,
-          spinHistory: this.spinHistory,
-          todaySpinCount: this.todaySpinCount,
-          maxDailySpins: this.maxDailySpins,
-        })
+        this.setSpinLocaData()
       }
+    },
+    setSpinLocaData() {
+      Local.set('SpinData', {
+        spinSty: this.spinSty,
+        prizes: this.prizes,
+        blocks: this.blocks,
+        spinHistory: this.spinHistory,
+        todaySpinCount: this.todaySpinCount,
+        maxDailySpins: this.maxDailySpins,
+      })
     },
     // 根据概率和库存选择奖品
     selectPrize(): Prize {
@@ -184,7 +191,6 @@ export const usePrizesStore = defineStore('prizes', {
       // 兜底返回谢谢参与
       return this.prizes.find((p) => p.id === 7) || this.prizes[this.prizes.length - 1]
     },
-
     // 执行抽奖
     spin(): { success: boolean; prize?: Prize; message: string } {
       // 检查今日抽奖次数
@@ -227,12 +233,10 @@ export const usePrizesStore = defineStore('prizes', {
           selectedPrize.id === 7 ? '很遗憾，下次再来！' : `恭喜获得：${selectedPrize.name}！`,
       }
     },
-
     // 重置今日抽奖次数（可以用于测试或管理员操作）
     resetDailyCount() {
       this.todaySpinCount = 0
     },
-
     // 补充库存（管理员功能）
     restockPrize(prizeId: number, amount: number) {
       const prize = this.prizes.find((p) => p.id === prizeId)
@@ -241,7 +245,6 @@ export const usePrizesStore = defineStore('prizes', {
         prize.totalCount += amount
       }
     },
-
     // 获取奖品统计信息
     getPrizeStats() {
       return this.prizes.map((prize) => ({
@@ -250,7 +253,6 @@ export const usePrizesStore = defineStore('prizes', {
         stockPercentage: prize.totalCount > 0 ? (prize.stock / prize.totalCount) * 100 : 0,
       }))
     },
-
     // 获取今日剩余抽奖次数
     getRemainingSpins() {
       return Math.max(0, this.maxDailySpins - this.todaySpinCount)
