@@ -28,7 +28,7 @@ import { useDragMove } from './onDrageStart'
 import Prize from './prize.vue'
 
 const activeTab = ref('base')
-const visible = ref(true)
+const visible = ref(false)
 
 const drawerWidth = ref(1200)
 

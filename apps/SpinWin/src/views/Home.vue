@@ -1,51 +1,56 @@
 <template>
-  <!-- <div class="home">
-    <div class="area">
-      <el-card ref="card" body-class="wheel-card" size="small" style="opacity: 0.1">
-        <template #header>
-          <div class="header-content">
-            <span>剩余抽奖次数</span>
-            <el-space>
-              <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
-                {{ todaySpinCount }}/{{ maxDailySpins }}
-              </el-tag>
-              <el-button size="small" @click="toggle">
-                <svg-icon :name="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" />
-              </el-button>
-              <el-button size="small" type="warning" @click="settingSpinRef.open('base')">
-                设置
-              </el-button>
-            </el-space>
-          </div>
-        </template>
-        <LuckyWheel
-          v-show="true"
-          ref="myLuckyRef"
-          :key="getSpinSize"
-          :width="getSpinSize"
-          :height="getSpinSize"
-          :prizes="prizesList"
-          :blocks="getBlocks"
-          :buttons="buttons"
-          @start="startCallback"
-          @end="endCallback"
-        />
-        <el-slider
-          class="my-slider"
-          v-model="spinSty.size"
-          size="small"
-          show-input
-          :min="spinSty.min"
-          :max="spinSty.max"
-          :step="spinSty.step"
-        />
-      </el-card>
-      <SpinHistory />
-    </div>
-    <div class="area">
+  <el-splitter class="home-splitter">
+    <el-splitter-panel>
+      <el-splitter layout="vertical">
+        <el-splitter-panel class="pd6">
+          <el-card ref="cardRef" class="wheel-card" body-class="wheel-card-body" size="small">
+            <template #header>
+              <div class="flex-between">
+                <span>剩余抽奖次数</span>
+                <el-space>
+                  <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
+                    {{ todaySpinCount }}/{{ maxDailySpins }}
+                  </el-tag>
+                  <el-button size="small" @click="toggle">
+                    <svg-icon :name="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" />
+                  </el-button>
+                  <el-button size="small" type="warning" @click="settingSpinRef.open('base')">
+                    设置
+                  </el-button>
+                </el-space>
+              </div>
+            </template>
+            <LuckyWheel
+              ref="myLuckyRef"
+              :key="getSpinSize"
+              :width="getSpinSize"
+              :height="getSpinSize"
+              :prizes="prizesList"
+              :blocks="getBlocks"
+              :buttons="buttons"
+              @start="startCallback"
+              @end="endCallback"
+            />
+            <el-slider
+              class="my-slider"
+              v-model="spinSty.size"
+              size="small"
+              show-input
+              :min="spinSty.min"
+              :max="spinSty.max"
+              :step="spinSty.step"
+            />
+          </el-card>
+        </el-splitter-panel>
+        <el-splitter-panel class="pd6">
+          <SpinHistory />
+        </el-splitter-panel>
+      </el-splitter>
+    </el-splitter-panel>
+    <el-splitter-panel class="pd6">
       <el-card>
         <template #header>
-          <div class="header-content">
+          <div class="flex-between">
             <span>奖品列表</span>
             <el-button size="small" type="warning" @click="settingSpinRef.open('prize')"
               >设置</el-button
@@ -80,27 +85,6 @@
           </div>
         </el-scrollbar>
       </el-card>
-    </div>
-  </div> -->
-  <el-splitter>
-    <el-splitter-panel min="50">
-      <div class="demo-panel">1</div>
-    </el-splitter-panel>
-    <el-splitter-panel>
-      <div class="demo-panel">2</div>
-    </el-splitter-panel>
-    <el-splitter-panel>
-      <div class="demo-panel">3</div>
-    </el-splitter-panel>
-    <el-splitter-panel>
-      <el-splitter layout="vertical">
-        <el-splitter-panel>
-          <div class="demo-panel">4</div>
-        </el-splitter-panel>
-        <el-splitter-panel>
-          <div class="demo-panel">5</div>
-        </el-splitter-panel>
-      </el-splitter>
     </el-splitter-panel>
   </el-splitter>
   <SettingSpin ref="settingSpinRef" />
@@ -114,6 +98,7 @@ import { useFullscreen } from '@vueuse/core'
 import confetti from 'canvas-confetti'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import SpinHistory from '@/components/SpinHistory/index.vue'
 
 const {
   prizes,
@@ -128,8 +113,8 @@ const {
 } = storeToRefs(usePrizesStore())
 const { getRemainingSpins, initLocalSet, setSpinLocaData } = usePrizesStore()
 
-const wheelRef = useTemplateRef('card')
-const { isFullscreen, enter, exit, toggle } = useFullscreen(wheelRef.value)
+const wheelRef = useTemplateRef('cardRef')
+const { isFullscreen, toggle } = useFullscreen(wheelRef.value)
 
 const myLuckyRef = ref()
 const settingSpinRef = ref()
@@ -142,6 +127,7 @@ const prizesList = computed(() => {
       { text: n.name, fontColor: '#fff', fontSize: fontSize.value + 'px', top: '10%' },
       { text: n.icon, fontSize: iconSize.value + 'px', top: '35%' },
     ],
+    background: n.color,
     description: n.description,
   }))
 })
@@ -194,38 +180,23 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.home {
+.home-splitter {
   width: 100vw;
   height: 100vh;
-  padding: 10px;
   display: flex;
-  gap: 10px;
-
-  .area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    :deep .el-card {
-      flex: 1;
+  :deep .el-splitter-panel {
+    .el-card {
       display: flex;
       flex-direction: column;
-
+      height: 100%;
       .el-card__body {
         flex: 1;
-        padding: 0;
         overflow: hidden;
+        padding: 0;
         position: relative;
       }
     }
-
+  }
     :deep .record-card {
       flex: none;
       height: 340px;
@@ -236,12 +207,11 @@ onMounted(() => {
       }
     }
 
-    :deep .wheel-card {
+    :deep .wheel-card-body {
       display: flex;
       justify-content: center;
       align-items: center;
     }
-  }
 }
 
 .my-slider {
