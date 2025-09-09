@@ -12,9 +12,9 @@
               <el-button size="small" @click="toggle">
                 <svg-icon :name="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" />
               </el-button>
-              <el-button size="small" type="warning" @click="settingSpinRef.open('base')"
-                >设置</el-button
-              >
+              <el-button size="small" type="warning" @click="settingSpinRef.open('base')">
+                设置
+              </el-button>
             </el-space>
           </div>
         </template>
@@ -120,7 +120,7 @@ const {
 const { getRemainingSpins, initLocalSet } = usePrizesStore()
 
 const wheelRef = useTemplateRef('card')
-const { isFullscreen, enter, exit, toggle } = useFullscreen(wheelRef)
+const { isFullscreen, enter, exit, toggle } = useFullscreen(wheelRef.value)
 
 const myLuckyRef = ref()
 const settingSpinRef = ref()
@@ -160,7 +160,7 @@ function startCallback() {
 
 // 抽奖结束会触发end回调
 function endCallback(prize) {
-  console.log(prize)
+  console.log('end', prize)
 }
 
 onMounted(() => {

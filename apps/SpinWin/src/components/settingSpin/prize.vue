@@ -40,6 +40,7 @@
                     class="item"
                     :class="{ active: item.icon === row.icon }"
                     v-for="item in filterIconList"
+                    @click="row.icon = item.icon"
                     :key="item.id"
                     >{{ item.icon }}</span
                   >
@@ -117,7 +118,8 @@ import { Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { nanoid } from 'nanoid'
 import { storeToRefs } from 'pinia'
-import { computed, reactive } from 'vue'
+import Sortable from 'sortablejs'
+import { computed, onMounted, reactive } from 'vue'
 
 const { prizes, iconSize, fontSize } = storeToRefs(usePrizesStore())
 const { setSpinLocaData } = usePrizesStore()
@@ -163,13 +165,37 @@ const onSave = () => {
   state.rowEdit = null
   setSpinLocaData()
 }
+
+function rowDrop() {
+  // 确保DOM已经渲染完成
+  setTimeout(() => {
+    const tbody = document.querySelector('.el-table__body-wrapper tbody')
+    if (!tbody) {
+      console.error('找不到表格DOM元素')
+      return
+    }
+
+    Sortable.create(tbody, {
+      onEnd({ newIndex, oldIndex }) {
+        console.log('拖动了行，序号(index)"' + oldIndex + '"拖动到序号(index)"' + newIndex + '"')
+        const currentRow = prizes.value.splice(oldIndex, 1)[0] // 直接使用prizes.value
+        prizes.value.splice(newIndex, 0, currentRow)
+        setSpinLocaData() // 保存更新后的数据
+      },
+    })
+  }, 100) // 短暂延迟确保DOM已渲染
+}
+
+onMounted(() => {
+  rowDrop()
+})
 </script>
 <style lang="scss">
 .add-btn {
   width: 100%;
   margin-top: 10px;
 }
-:deep .scroll-view {
+.scroll-view {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 4px;
