@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
+  <!-- <div class="home">
     <div class="area">
-      <el-card ref="card" body-class="wheel-card" size="small">
+      <el-card ref="card" body-class="wheel-card" size="small" style="opacity: 0.1">
         <template #header>
           <div class="header-content">
             <span>剩余抽奖次数</span>
@@ -19,6 +19,7 @@
           </div>
         </template>
         <LuckyWheel
+          v-show="true"
           ref="myLuckyRef"
           :key="getSpinSize"
           :width="getSpinSize"
@@ -39,23 +40,7 @@
           :step="spinSty.step"
         />
       </el-card>
-      <el-card header="最近中奖记录" class="record-card">
-        <el-empty v-if="spinHistory.length === 0" description="暂无中奖记录" />
-        <el-scrollbar v-else view-style="padding:10px">
-          <el-timeline>
-            <el-timeline-item
-              v-for="record in spinHistory.slice(0, 8)"
-              :key="record.id"
-              :type="record.prizeId === 7 ? 'primary' : 'success'"
-              :timestamp="new Date(record.timestamp).toLocaleTimeString()"
-            >
-              <div class="timeline-content">
-                <el-text tag="b">{{ record.prizeName }}</el-text>
-              </div>
-            </el-timeline-item>
-          </el-timeline>
-        </el-scrollbar>
-      </el-card>
+      <SpinHistory />
     </div>
     <div class="area">
       <el-card>
@@ -96,16 +81,40 @@
         </el-scrollbar>
       </el-card>
     </div>
-  </div>
+  </div> -->
+  <el-splitter>
+    <el-splitter-panel min="50">
+      <div class="demo-panel">1</div>
+    </el-splitter-panel>
+    <el-splitter-panel>
+      <div class="demo-panel">2</div>
+    </el-splitter-panel>
+    <el-splitter-panel>
+      <div class="demo-panel">3</div>
+    </el-splitter-panel>
+    <el-splitter-panel>
+      <el-splitter layout="vertical">
+        <el-splitter-panel>
+          <div class="demo-panel">4</div>
+        </el-splitter-panel>
+        <el-splitter-panel>
+          <div class="demo-panel">5</div>
+        </el-splitter-panel>
+      </el-splitter>
+    </el-splitter-panel>
+  </el-splitter>
   <SettingSpin ref="settingSpinRef" />
 </template>
 
 <script setup lang="ts">
 import SettingSpin from '@/components/settingSpin/index.vue'
 import { usePrizesStore } from '@/stores/prizes'
+import { weightedRandom } from '@/utils/tools'
 import { useFullscreen } from '@vueuse/core'
+import confetti from 'canvas-confetti'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, useTemplateRef } from 'vue'
+
 const {
   prizes,
   spinSty,
@@ -117,7 +126,7 @@ const {
   iconSize,
   fontSize,
 } = storeToRefs(usePrizesStore())
-const { getRemainingSpins, initLocalSet } = usePrizesStore()
+const { getRemainingSpins, initLocalSet, setSpinLocaData } = usePrizesStore()
 
 const wheelRef = useTemplateRef('card')
 const { isFullscreen, enter, exit, toggle } = useFullscreen(wheelRef.value)
@@ -126,15 +135,15 @@ const myLuckyRef = ref()
 const settingSpinRef = ref()
 
 const prizesList = computed(() => {
-  return prizes.value.map((n) => {
-    return {
-      fonts: [
-        { text: n.name, fontColor: '#fff', fontSize: fontSize.value + 'px', top: '10%' },
-        { text: n.icon, fontSize: iconSize.value + 'px', top: '35%' },
-      ],
-      background: n.color,
-    }
-  })
+  return prizes.value.map((n) => ({
+    id: n.id,
+    range: n.range,
+    fonts: [
+      { text: n.name, fontColor: '#fff', fontSize: fontSize.value + 'px', top: '10%' },
+      { text: n.icon, fontSize: iconSize.value + 'px', top: '35%' },
+    ],
+    description: n.description,
+  }))
 })
 
 const buttons = [
@@ -150,9 +159,12 @@ function startCallback() {
   // 调用抽奖组件的play方法开始游戏
   myLuckyRef.value.play()
   // 模拟调用接口异步抽奖
+  const weights = prizes.value.map((n) => n.range)
+  const index = weightedRandom(weights)
   setTimeout(() => {
-    // 假设后端返回的中奖索引是0
-    const index = 0
+    // 减少库存
+    prizes.value[index].stock--
+    setSpinLocaData()
     // 调用stop停止旋转并传递中奖索引
     myLuckyRef.value.stop(index)
   }, 3000)
@@ -160,7 +172,20 @@ function startCallback() {
 
 // 抽奖结束会触发end回调
 function endCallback(prize) {
-  console.log('end', prize)
+  spinHistory.value.push({
+    id: prize.id,
+    prizeId: prize.index,
+    name: prize.fonts[0].text,
+    icon: prize.fonts[1].text,
+    description: prize.description,
+    timestamp: new Date().getTime(),
+  })
+  setSpinLocaData()
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 },
+  })
 }
 
 onMounted(() => {

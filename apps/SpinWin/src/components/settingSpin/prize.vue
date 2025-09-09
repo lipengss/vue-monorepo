@@ -23,7 +23,7 @@
           placeholder="请输入奖品名称"
         >
           <template #prepend>
-            <el-popover placement="bottom" trigger="click" show-arrow :width="200">
+            <el-popover placement="bottom" trigger="hover" show-arrow :width="300">
               <template #default>
                 <el-input
                   v-model="state.iconSearch"
@@ -42,8 +42,10 @@
                     v-for="item in filterIconList"
                     @click="row.icon = item.icon"
                     :key="item.id"
-                    >{{ item.icon }}</span
                   >
+                    {{ item.icon }}
+                    <small>{{ item.description }}</small>
+                  </span>
                 </el-scrollbar>
                 <el-empty v-else image-size="100" description="暂无图标"></el-empty>
               </template>
@@ -56,7 +58,7 @@
         <span v-else>{{ row.icon }} {{ row.description }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="奖品颜色" prop="color" align="center">
+    <el-table-column label="扇形背景色" prop="color" align="center">
       <template #default="{ row }">
         <el-color-picker v-if="state.rowEdit === row.id" v-model="row.color" />
         <span v-else class="color-block" :style="`--color:${row.color}`">{{ row.color }}</span>
@@ -76,19 +78,19 @@
         <span v-else> {{ row.stock }} / {{ row.totalCount }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="奖品概率" prop="probability" align="center">
+    <el-table-column label="中奖概率" prop="range" align="center">
       <template #default="{ row }">
         <el-input-number
           style="width: 60px"
           v-if="state.rowEdit === row.id"
-          v-model="row.probability"
+          v-model="row.range"
           :controls="false"
           size="small"
         />
-        <span v-else>{{ row.probability }}</span>
+        <span v-else>{{ row.range }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="操作" prop="operation">
+    <el-table-column label="操作" prop="operation" align="center">
       <template #default="{ row }">
         <el-button
           type="primary"
@@ -149,7 +151,7 @@ const addPrize = () => {
     description: '',
     color: '#fff',
     totalCount: 0,
-    probability: 0,
+    range: 0,
     stock: 0,
     value: 0,
   })
@@ -201,10 +203,17 @@ onMounted(() => {
   gap: 4px;
 
   .item {
-    padding: 10px;
+    font-size: 20px;
+    padding: 8px;
+    text-align: center;
     background-color: var(--el-color-primary-light-9);
     cursor: pointer;
-
+    display: flex;
+    flex-direction: column;
+    small {
+      font-size: 12px;
+      color: #606266;
+    }
     &:hover:not(.active) {
       background-color: var(--el-color-primary-light-8);
     }

@@ -49,6 +49,26 @@ export const iconList = [
     icon: '🎈',
     description: '气球',
   },
+  {
+    id: 11,
+    icon: '⌨️',
+    description: '键盘',
+  },
+  {
+    id: 12,
+    icon: '🖱️',
+    description: '鼠标',
+  },
+  {
+    id: 13,
+    icon: '💰',
+    description: '现金',
+  },
+  {
+    id: 14,
+    icon: '💳',
+    description: '购物卡',
+  },
 ]
 
 export const prizeLevel = [

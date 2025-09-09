@@ -1,9 +1,7 @@
 import type { App } from 'vue'
 
-import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/SvgIcon/index.vue'
-
-import { vLoading } from 'element-plus/es/components/loading/src/directive'
+import 'virtual:svg-icons-register'
 
 import router from '@/router/index'
 
@@ -17,7 +15,5 @@ export default {
     app.use(createPinia())
     // svg组件
     app.component('svg-icon', SvgIcon)
-    // 指令
-    app.directive('load', vLoading)
   },
 }

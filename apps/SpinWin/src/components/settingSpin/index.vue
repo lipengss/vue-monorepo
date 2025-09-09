@@ -8,16 +8,13 @@
         <el-tab-pane label="🏅 奖品设置" name="prize">
           <Prize />
         </el-tab-pane>
+        <el-tab-pane label="📋 中奖记录" name="history">
+          <History />
+        </el-tab-pane>
       </el-tabs>
       <div class="resize-handle" @mousedown="onDragStart">
         <div class="line" />
         <div class="line" />
-      </div>
-    </template>
-    <template #footer>
-      <div style="flex: auto">
-        <el-button @click="cancelClick">取消</el-button>
-        <el-button type="primary" @click="confirmClick">保存</el-button>
       </div>
     </template>
   </el-drawer>
@@ -26,6 +23,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 import Base from './base.vue'
+import History from './history.vue'
 import { useDragMove } from './onDrageStart'
 import Prize from './prize.vue'
 
@@ -35,14 +33,6 @@ const visible = ref(true)
 const drawerWidth = ref(1200)
 
 const { onDragStart, onDragEnd } = useDragMove(drawerWidth)
-
-const confirmClick = () => {
-  visible.value = false
-}
-
-const cancelClick = () => {
-  visible.value = false
-}
 
 function open(tabName: string) {
   if (tabName) {
