@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="visible" title="参数设置" direction="rtl" :size="drawerWidth">
+  <el-drawer v-model="visible" title="参数设置" direction="rtl" :size="drawerWidth" append-to-body>
     <template #default>
       <el-tabs v-model="activeTab">
         <el-tab-pane label="🕹️ 转盘设置" name="base">
@@ -27,8 +27,8 @@ import History from './history.vue'
 import { useDragMove } from './onDrageStart'
 import Prize from './prize.vue'
 
-const activeTab = ref('base')
-const visible = ref(false)
+const activeTab = ref('history')
+const visible = ref(true)
 
 const drawerWidth = ref(1200)
 

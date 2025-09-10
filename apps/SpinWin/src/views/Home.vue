@@ -1,9 +1,15 @@
 <template>
   <el-splitter class="home-splitter">
-    <el-splitter-panel>
+    <el-splitter-panel style="overflow: hidden">
       <el-splitter layout="vertical">
-        <el-splitter-panel class="pd6">
-          <el-card ref="cardRef" class="wheel-card" body-class="wheel-card-body" size="small">
+        <el-splitter-panel collapsible class="pd0">
+          <el-card
+            ref="cardRef"
+            class="wheel-card"
+            body-class="wheel-card-body"
+            size="small"
+            style="opacity: 0.1"
+          >
             <template #header>
               <div class="flex-between">
                 <span>剩余抽奖次数</span>
@@ -11,9 +17,6 @@
                   <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
                     {{ todaySpinCount }}/{{ maxDailySpins }}
                   </el-tag>
-                  <el-button size="small" @click="toggle">
-                    <svg-icon :name="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" />
-                  </el-button>
                   <el-button size="small" type="warning" @click="settingSpinRef.open('base')">
                     设置
                   </el-button>
@@ -42,19 +45,47 @@
             />
           </el-card>
         </el-splitter-panel>
-        <el-splitter-panel class="pd6">
-          <SpinHistory />
+        <el-splitter-panel collapsible class="pd0">
+          <el-card class="record-card">
+            <template #header>
+              <div class="flex-between">
+                <span>📋 最近中奖记录</span>
+                <el-space>
+                  <el-button size="small" type="danger" @click="clearHistory">清空记录</el-button>
+                  <el-button size="small" type="warning" @click="settingSpinRef.open('history')">
+                    设置
+                  </el-button>
+                </el-space>
+              </div>
+            </template>
+            <el-empty v-if="spinHistory.length === 0" description="暂无中奖记录" />
+            <el-scrollbar v-else view-style="padding:10px 20px 10px 10px">
+              <el-timeline>
+                <el-timeline-item
+                  v-for="record in spinHistory.slice(0, 8)"
+                  :key="record.id"
+                  :type="record.prizeId === 7 ? 'primary' : 'success'"
+                  placement="top"
+                  :timestamp="new Date(record.timestamp).toLocaleTimeString()"
+                >
+                  <el-card body-style="padding: 10px;" :header="record.icon + ' ' + record.name">
+                    <h4>{{ record.description }}</h4>
+                  </el-card>
+                </el-timeline-item>
+              </el-timeline>
+            </el-scrollbar>
+          </el-card>
         </el-splitter-panel>
       </el-splitter>
     </el-splitter-panel>
-    <el-splitter-panel class="pd6">
+    <el-splitter-panel collapsible class="pd0">
       <el-card>
         <template #header>
           <div class="flex-between">
             <span>奖品列表</span>
-            <el-button size="small" type="warning" @click="settingSpinRef.open('prize')"
-              >设置</el-button
-            >
+            <el-button size="small" type="warning" @click="settingSpinRef.open('prize')">
+              设置
+            </el-button>
           </div>
         </template>
         <el-scrollbar view-class="prize-list">
@@ -88,17 +119,18 @@
     </el-splitter-panel>
   </el-splitter>
   <SettingSpin ref="settingSpinRef" />
+  <SpinResult ref="spinResultRef" />
 </template>
 
 <script setup lang="ts">
-import SettingSpin from '@/components/settingSpin/index.vue'
+import SettingSpin from '@/components/SettingSpin/index.vue'
+import SpinResult from '@/components/SpinResult/index.vue'
 import { usePrizesStore } from '@/stores/prizes'
 import { weightedRandom } from '@/utils/tools'
-import { useFullscreen } from '@vueuse/core'
 import confetti from 'canvas-confetti'
+import { ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, useTemplateRef } from 'vue'
-import SpinHistory from '@/components/SpinHistory/index.vue'
+import { computed, onMounted, ref } from 'vue'
 
 const {
   prizes,
@@ -113,11 +145,10 @@ const {
 } = storeToRefs(usePrizesStore())
 const { getRemainingSpins, initLocalSet, setSpinLocaData } = usePrizesStore()
 
-const wheelRef = useTemplateRef('cardRef')
-const { isFullscreen, toggle } = useFullscreen(wheelRef.value)
-
 const myLuckyRef = ref()
 const settingSpinRef = ref()
+const spinResultRef = ref()
+const currentPrizeIndex = ref(0)
 
 const prizesList = computed(() => {
   return prizes.value.map((n) => ({
@@ -141,36 +172,56 @@ const buttons = [
   },
 ]
 
+function getIndex() {
+  const weights = prizes.value.filter((n) => n.stock > 0).map((n) => n.range)
+  const index = weightedRandom(weights)
+  return index
+}
+
 function startCallback() {
   // 调用抽奖组件的play方法开始游戏
   myLuckyRef.value.play()
   // 模拟调用接口异步抽奖
-  const weights = prizes.value.map((n) => n.range)
-  const index = weightedRandom(weights)
   setTimeout(() => {
-    // 减少库存
-    prizes.value[index].stock--
-    setSpinLocaData()
+    currentPrizeIndex.value = getIndex()
     // 调用stop停止旋转并传递中奖索引
-    myLuckyRef.value.stop(index)
-  }, 3000)
+    myLuckyRef.value.stop(currentPrizeIndex.value)
+  }, 1000)
 }
 
 // 抽奖结束会触发end回调
 function endCallback(prize) {
-  spinHistory.value.push({
+  const result = {
     id: prize.id,
     prizeId: prize.index,
     name: prize.fonts[0].text,
     icon: prize.fonts[1].text,
     description: prize.description,
     timestamp: new Date().getTime(),
-  })
+  }
+  spinHistory.value.push(result)
+  // 减少库存
+  console.log('index', currentPrizeIndex.value)
+  console.log('prizes.value[index]', prizes.value[currentPrizeIndex.value])
+  prizes.value[currentPrizeIndex.value].stock--
+  // 设置本地存储
   setSpinLocaData()
   confetti({
     particleCount: 100,
     spread: 70,
     origin: { y: 0.6 },
+  })
+  spinResultRef.value.open(result)
+}
+
+function clearHistory() {
+  ElMessageBox.confirm('确定清空最近中奖记录吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    spinHistory.value = []
+    setSpinLocaData()
   })
 }
 
@@ -189,6 +240,7 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       height: 100%;
+      border: none;
       .el-card__body {
         flex: 1;
         overflow: hidden;
@@ -197,21 +249,21 @@ onMounted(() => {
       }
     }
   }
-    :deep .record-card {
-      flex: none;
-      height: 340px;
+  :deep .record-card {
+    flex: none;
+    height: 340px;
 
-      .timeline-content {
-        display: flex;
-        align-items: center;
-      }
-    }
-
-    :deep .wheel-card-body {
+    .timeline-content {
       display: flex;
-      justify-content: center;
       align-items: center;
     }
+  }
+
+  :deep .wheel-card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .my-slider {

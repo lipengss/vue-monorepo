@@ -20,6 +20,9 @@ importers:
       canvas-confetti:
         specifier: ^1.9.3
         version: 1.9.3
+      echarts:
+        specifier: ^6.0.0
+        version: 6.0.0
       element-plus:
         specifier: ^2.11.1
         version: 2.11.1(@vue/composition-api@1.7.2(vue@3.4.21(typescript@5.8.3)))(vue@3.4.21(typescript@5.8.3))
@@ -59,6 +62,9 @@ importers:
       vue:
         specifier: 3.4.21
         version: 3.4.21(typescript@5.8.3)
+      vue-echarts:
+        specifier: ^6.7.3
+        version: 6.7.3(@vue/composition-api@1.7.2(vue@3.4.21(typescript@5.8.3)))(@vue/runtime-core@3.5.20)(echarts@6.0.0)(vue@3.4.21(typescript@5.8.3))
       vue3-seamless-scroll:
         specifier: ^3.0.2
         version: 3.0.2(@vue/composition-api@1.7.2(vue@3.4.21(typescript@5.8.3)))(vue@3.4.21(typescript@5.8.3))
@@ -339,7 +345,7 @@ importers:
         version: 0.26.1
       echarts-liquidfill:
         specifier: ^3.1.0
-        version: 3.1.0(echarts@5.5.1)
+        version: 3.1.0(echarts@6.0.0)
       html2pdf:
         specifier: ^0.0.11
         version: 0.0.11
@@ -3636,6 +3642,9 @@ packages:
   echarts@5.5.1:
     resolution: {integrity: sha512-Fce8upazaAXUVUVsjgV6mBnGuqgO+JNDlcgF79Dksy4+wgGpQB2lmYoO4TSweFg/mZITdpGHomw/cNBJZj1icA==}
 
+  echarts@6.0.0:
+    resolution: {integrity: sha512-Tte/grDQRiETQP4xz3iZWSvoHrkCQtwqd6hs+mifXcjrCuo2iKWbajFObuLJVBlDIJlOzgQPd1hsaKt/3+OMkQ==}
+
   editorconfig@1.0.4:
     resolution: {integrity: sha512-L9Qe08KWTlqYMVvMcTIvMAdl1cDUubzRNYL+WfA4bLDMHe4nemKkpmYzkznE1FwLKu0EEmy6obgQKzMJrg4x9Q==}
     engines: {node: '>=14'}
@@ -4318,7 +4327,7 @@ packages:
     engines: {node: '>=10.13.0'}
 
   glob-to-regexp@0.3.0:
-    resolution: {integrity: sha512-Iozmtbqv0noj0uDDqoL0zNq0VBEfK2YFoMAZoxJe4cwphvLR+JskfF30QhXHOR4m3KrE6NLRYw+U9MRXvifyig==}
+    resolution: {integrity: sha1-jFoUlNIGbFcMw7/kSWF1rMTVAqs=}
 
   glob-to-regexp@0.4.1:
     resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
@@ -5684,7 +5693,7 @@ packages:
     engines: {node: '>=0.10.0'}
 
   odometer@0.4.8:
-    resolution: {integrity: sha1-L2cDv0xrOEwngjbQTUvIFxq+Q3Q=}
+    resolution: {integrity: sha512-bfKuAhWE/qMCiX9bwX90c5bTpt7MDVeq1e6YsOHQrYokNhv9jhS5JbR9kg6i+FeWmDgalf3VUtwNx1aVaZ8cgg==}
 
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
@@ -6624,7 +6633,7 @@ packages:
     deprecated: See https://github.com/lydell/source-map-url#deprecated
 
   source-map@0.5.7:
-    resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
+    resolution: {integrity: sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=}
     engines: {node: '>=0.10.0'}
 
   source-map@0.6.1:
@@ -7901,6 +7910,9 @@ packages:
   zrender@5.6.0:
     resolution: {integrity: sha512-uzgraf4njmmHAbEUxMJ8Oxg+P3fT04O+9p7gY+wJRVxo8Ge+KmYv0WJev945EH4wFuc4OY2NLXz46FZrWS9xJg==}
 
+  zrender@6.0.0:
+    resolution: {integrity: sha512-41dFXEEXuJpNecuUQq6JlbybmnHaqqpGlbH1yxnA5V9MMP4SbohSVZsJIwz+zdjQXSSlR1Vc34EgH1zxyTDvhg==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -9079,6 +9091,7 @@ snapshots:
   '@types/node@24.3.1':
     dependencies:
       undici-types: 7.10.0
+    optional: true
 
   '@types/numeral@2.0.5': {}
 
@@ -11586,10 +11599,19 @@ snapshots:
     dependencies:
       echarts: 5.5.1
 
+  echarts-liquidfill@3.1.0(echarts@6.0.0):
+    dependencies:
+      echarts: 6.0.0
+
   echarts@5.5.1:
     dependencies:
       tslib: 2.3.0
       zrender: 5.6.0
+
+  echarts@6.0.0:
+    dependencies:
+      tslib: 2.3.0
+      zrender: 6.0.0
 
   editorconfig@1.0.4:
     dependencies:
@@ -13244,7 +13266,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 22.18.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -15654,7 +15676,8 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.10.0: {}
+  undici-types@7.10.0:
+    optional: true
 
   unicorn-magic@0.3.0: {}
 
@@ -16298,6 +16321,12 @@ snapshots:
 
   vue-component-type-helpers@2.0.26: {}
 
+  vue-demi@0.13.11(@vue/composition-api@1.7.2(vue@3.4.21(typescript@5.8.3)))(vue@3.4.21(typescript@5.8.3)):
+    dependencies:
+      vue: 3.4.21(typescript@5.8.3)
+    optionalDependencies:
+      '@vue/composition-api': 1.7.2(vue@3.4.21(typescript@5.8.3))
+
   vue-demi@0.13.11(@vue/composition-api@1.7.2(vue@3.5.20(typescript@5.8.3)))(vue@3.5.20(typescript@5.8.3)):
     dependencies:
       vue: 3.5.20(typescript@5.8.3)
@@ -16351,6 +16380,16 @@ snapshots:
       vue: 3.5.20(typescript@5.8.3)
     optionalDependencies:
       '@vue/composition-api': 1.7.2(vue@3.5.20(typescript@5.8.3))
+
+  vue-echarts@6.7.3(@vue/composition-api@1.7.2(vue@3.4.21(typescript@5.8.3)))(@vue/runtime-core@3.5.20)(echarts@6.0.0)(vue@3.4.21(typescript@5.8.3)):
+    dependencies:
+      echarts: 6.0.0
+      resize-detector: 0.3.0
+      vue: 3.4.21(typescript@5.8.3)
+      vue-demi: 0.13.11(@vue/composition-api@1.7.2(vue@3.4.21(typescript@5.8.3)))(vue@3.4.21(typescript@5.8.3))
+    optionalDependencies:
+      '@vue/composition-api': 1.7.2(vue@3.4.21(typescript@5.8.3))
+      '@vue/runtime-core': 3.5.20
 
   vue-echarts@6.7.3(@vue/composition-api@1.7.2(vue@3.5.20(typescript@5.8.3)))(@vue/runtime-core@3.5.20)(echarts@5.5.1)(vue@3.5.20(typescript@5.8.3)):
     dependencies:
@@ -16718,5 +16757,9 @@ snapshots:
   yoctocolors@2.1.2: {}
 
   zrender@5.6.0:
+    dependencies:
+      tslib: 2.3.0
+
+  zrender@6.0.0:
     dependencies:
       tslib: 2.3.0
