@@ -1,9 +1,9 @@
 <template>
   <el-form-item label="图标大小" prop="iconSize">
-    <el-slider style="width: 340px" v-model="iconSize" show-input />
+    <el-slider style="width: 340px" v-model="iconSize" show-input @change="setSpinLocaData" />
   </el-form-item>
   <el-form-item label="文字大小" prop="time">
-    <el-slider style="width: 340px" v-model="fontSize" show-input />
+    <el-slider style="width: 340px" v-model="fontSize" show-input @change="setSpinLocaData" />
   </el-form-item>
   <el-table :data="prizes" border>
     <el-table-column label="奖品等级" prop="name" align="center">
@@ -56,6 +56,17 @@
           </template>
         </el-input>
         <span v-else>{{ row.icon }} {{ row.description }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="奖品价值" prop="price" align="center">
+      <template #default="{ row }">
+        <el-input-number
+          style="width: 60px"
+          v-if="state.rowEdit === row.id"
+          v-model="row.price"
+          :controls="false"
+        />
+        <span v-else>{{ row.price.toFixed(2) }}</span> 元
       </template>
     </el-table-column>
     <el-table-column label="扇形背景色" prop="color" align="center">
@@ -153,7 +164,7 @@ const addPrize = () => {
     totalCount: 0,
     range: 0,
     stock: 0,
-    value: 0,
+    price: 0,
   })
   setSpinLocaData()
 }

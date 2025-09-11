@@ -11,12 +11,11 @@ export interface Prize {
   icon?: string
   stock: number // 库存数量
   totalCount: number // 总数量
-  value: number // 奖品价值（用于排序）
+  price: number // 奖品价值（用于排序）
 }
 
 export interface SpinRecord {
   id: string
-  prizeId: number
   name: string
   icon: string
   description: string
@@ -44,7 +43,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '📱',
         stock: 2,
         totalCount: 2,
-        value: 8999,
+        price: 8999,
       },
       {
         id: nanoid(),
@@ -55,7 +54,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '📱',
         stock: 5,
         totalCount: 5,
-        value: 4999,
+        price: 4999,
       },
       {
         id: nanoid(),
@@ -66,7 +65,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '🎧',
         stock: 10,
         totalCount: 10,
-        value: 1999,
+        price: 1999,
       },
       {
         id: nanoid(),
@@ -77,7 +76,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '⌚',
         stock: 20,
         totalCount: 20,
-        value: 299,
+        price: 299,
       },
       {
         id: nanoid(),
@@ -88,7 +87,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '🔋',
         stock: 50,
         totalCount: 50,
-        value: 99,
+        price: 99,
       },
       {
         id: nanoid(),
@@ -99,7 +98,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '🔌',
         stock: 100,
         totalCount: 100,
-        value: 29,
+        price: 29,
       },
       {
         id: nanoid(),
@@ -110,7 +109,7 @@ export const usePrizesStore = defineStore('prizes', {
         icon: '🎈',
         stock: 999999,
         totalCount: 999999,
-        value: 0,
+        price: 0,
       },
     ] as Prize[],
     blocks: [
@@ -147,6 +146,9 @@ export const usePrizesStore = defineStore('prizes', {
           top: '20px',
         })),
       })),
+    getLoseId(state) {
+      return state.prizes.find((item) => item.name === '谢谢参与').id
+    },
   },
   actions: {
     initLocalSet() {
@@ -158,6 +160,8 @@ export const usePrizesStore = defineStore('prizes', {
         this.spinHistory = data.spinHistory
         this.todaySpinCount = data.todaySpinCount
         this.maxDailySpins = data.maxDailySpins
+        this.iconSize = data.iconSize
+        this.fontSize = data.fontSize
       } else {
         this.setSpinLocaData()
       }
@@ -170,6 +174,8 @@ export const usePrizesStore = defineStore('prizes', {
         spinHistory: this.spinHistory,
         todaySpinCount: this.todaySpinCount,
         maxDailySpins: this.maxDailySpins,
+        iconSize: this.iconSize,
+        fontSize: this.fontSize,
       })
     },
     // 重置今日抽奖次数（可以用于测试或管理员操作）

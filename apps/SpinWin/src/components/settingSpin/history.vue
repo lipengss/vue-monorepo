@@ -1,5 +1,5 @@
 <template>
-  <BarChart :option="chartOptions" style="width: 100%; height: 300px" />
+  <BarChart :option="chartOptions" style="width: 100%; height: 300px; flex-shrink: 0" />
   <el-table :data="spinHistory" border>
     <el-table-column label="奖品等级" prop="name" align="center" />
     <el-table-column label="奖品名称" prop="description" align="center">
@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import BarChart from '@/components/BarChart/index.vue'
 import { usePrizesStore } from '@/stores/prizes'
-import { dayjs } from 'element-plus'
+import { dayjs } from '@common/utils'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 

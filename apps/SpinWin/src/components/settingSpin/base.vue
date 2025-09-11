@@ -15,6 +15,7 @@
         :min="1"
         :max="500"
         :step="1"
+        @change="setSpinLocaData"
       />
     </el-form-item>
     <el-form-item label="转盘大小" prop="time">
@@ -25,6 +26,7 @@
         :min="spinSty.min"
         :max="spinSty.max"
         :step="spinSty.step"
+        @change="setSpinLocaData"
       />
     </el-form-item>
 

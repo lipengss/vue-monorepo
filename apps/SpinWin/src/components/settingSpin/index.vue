@@ -1,7 +1,7 @@
 <template>
   <el-drawer v-model="visible" title="参数设置" direction="rtl" :size="drawerWidth" append-to-body>
     <template #default>
-      <el-tabs v-model="activeTab">
+      <el-tabs v-model="activeTab" id="setting-tabs">
         <el-tab-pane label="🕹️ 转盘设置" name="base">
           <Base />
         </el-tab-pane>
@@ -28,7 +28,7 @@ import { useDragMove } from './onDrageStart'
 import Prize from './prize.vue'
 
 const activeTab = ref('history')
-const visible = ref(true)
+const visible = ref(false)
 
 const drawerWidth = ref(1200)
 
@@ -70,8 +70,20 @@ onBeforeUnmount(() => {
     height: 60px;
     background: #999;
   }
+  &:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
 }
-.resize-handle:hover {
-  background: rgba(0, 0, 0, 0.2);
+
+#pane-history {
+  display: flex;
+  flex-direction: column;
+}
+
+.el-tabs {
+  height: 100%;
+  .el-tab-pane {
+    height: 100%;
+  }
 }
 </style>

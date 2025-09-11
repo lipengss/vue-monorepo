@@ -17,7 +17,15 @@
                   <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
                     {{ todaySpinCount }}/{{ maxDailySpins }}
                   </el-tag>
-                  <el-button size="small" type="warning" @click="settingSpinRef.open('base')">
+                  <el-button size="small" type="danger" @click="onResetSpinCount"
+                    >重置抽奖次数</el-button
+                  >
+                  <el-button
+                    size="small"
+                    type="warning"
+                    @click="settingSpinRef.open('base')"
+                    id="prize-set"
+                  >
                     设置
                   </el-button>
                 </el-space>
@@ -64,7 +72,7 @@
                 <el-timeline-item
                   v-for="record in spinHistory.slice(0, 8)"
                   :key="record.id"
-                  :type="record.prizeId === 7 ? 'primary' : 'success'"
+                  :type="record.id === getLoseId ? 'primary' : 'success'"
                   placement="top"
                   :timestamp="new Date(record.timestamp).toLocaleTimeString()"
                 >
@@ -120,15 +128,17 @@
   </el-splitter>
   <SettingSpin ref="settingSpinRef" />
   <SpinResult ref="spinResultRef" />
+  <!-- <Tour /> -->
 </template>
 
 <script setup lang="ts">
 import SettingSpin from '@/components/SettingSpin/index.vue'
 import SpinResult from '@/components/SpinResult/index.vue'
+import { useSound } from '@/hooks/useSound'
 import { usePrizesStore } from '@/stores/prizes'
 import { weightedRandom } from '@/utils/tools'
 import confetti from 'canvas-confetti'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
 
@@ -142,6 +152,7 @@ const {
   getBlocks,
   iconSize,
   fontSize,
+  getLoseId,
 } = storeToRefs(usePrizesStore())
 const { getRemainingSpins, initLocalSet, setSpinLocaData } = usePrizesStore()
 
@@ -160,6 +171,7 @@ const prizesList = computed(() => {
     ],
     background: n.color,
     description: n.description,
+    price: n.price,
   }))
 })
 
@@ -179,6 +191,11 @@ function getIndex() {
 }
 
 function startCallback() {
+  useSound().playSound('/click.mp3', false)
+  if (maxDailySpins.value <= todaySpinCount.value) {
+    ElMessage.error('今日已抽完')
+    return
+  }
   // 调用抽奖组件的play方法开始游戏
   myLuckyRef.value.play()
   // 模拟调用接口异步抽奖
@@ -189,29 +206,48 @@ function startCallback() {
   }, 1000)
 }
 
+function onResetSpinCount() {
+  ElMessageBox.confirm('确定重置今日抽奖次数吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    todaySpinCount.value = 0
+    ElMessage.success('重置成功')
+    setSpinLocaData()
+  })
+}
+
 // 抽奖结束会触发end回调
 function endCallback(prize) {
   const result = {
     id: prize.id,
-    prizeId: prize.index,
     name: prize.fonts[0].text,
     icon: prize.fonts[1].text,
     description: prize.description,
     timestamp: new Date().getTime(),
+    price: prize.price,
   }
   spinHistory.value.push(result)
+  console.log('prize', prize)
+  // 增加今日抽奖次数
+  todaySpinCount.value++
   // 减少库存
-  console.log('index', currentPrizeIndex.value)
-  console.log('prizes.value[index]', prizes.value[currentPrizeIndex.value])
   prizes.value[currentPrizeIndex.value].stock--
+
+  spinResultRef.value.open(result)
   // 设置本地存储
   setSpinLocaData()
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 },
-  })
-  spinResultRef.value.open(result)
+  if (result.id !== getLoseId.value) {
+    useSound().playSound('/win.mp3', false)
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    })
+  } else {
+    useSound().playSound('/lose.mp3', false)
+  }
 }
 
 function clearHistory() {
