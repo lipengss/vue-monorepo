@@ -12,7 +12,7 @@
           >
             <template #header>
               <div class="flex-between">
-                <span>剩余抽奖次数</span>
+                <span>🕹️ 剩余抽奖次数</span>
                 <el-space>
                   <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
                     {{ todaySpinCount }}/{{ maxDailySpins }}
@@ -90,7 +90,7 @@
       <el-card>
         <template #header>
           <div class="flex-between">
-            <span>奖品列表</span>
+            <span>🏆 奖品列表</span>
             <el-button size="small" type="warning" @click="settingSpinRef.open('prize')">
               设置
             </el-button>
@@ -277,6 +277,11 @@ onMounted(() => {
       flex-direction: column;
       height: 100%;
       border: none;
+      .el-card__header {
+        font-size: 16px;
+        font-weight: bold;
+        color: #303133;
+      }
       .el-card__body {
         flex: 1;
         overflow: hidden;
