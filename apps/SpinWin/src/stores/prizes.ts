@@ -147,7 +147,7 @@ export const usePrizesStore = defineStore('prizes', {
         })),
       })),
     getLoseId(state) {
-      return state.prizes.find((item) => item.name === '谢谢参与').id
+      return state.prizes.find((item) => item.name === '谢谢参与')?.id
     },
   },
   actions: {

@@ -229,10 +229,11 @@ function endCallback(prize) {
     price: prize.price,
   }
   spinHistory.value.push(result)
-  console.log('prize', prize)
   // 增加今日抽奖次数
   todaySpinCount.value++
   // 减少库存
+  console.log('currentPrizeIndex.value', currentPrizeIndex.value)
+  console.log('prizes.value', prizes.value)
   prizes.value[currentPrizeIndex.value].stock--
 
   spinResultRef.value.open(result)
