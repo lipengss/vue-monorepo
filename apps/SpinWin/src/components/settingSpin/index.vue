@@ -1,5 +1,11 @@
 <template>
-  <el-drawer v-model="visible" title="参数设置" direction="rtl" :size="drawerWidth" append-to-body>
+  <el-drawer
+    v-model="visible"
+    title="参数设置"
+    direction="rtl"
+    :size="isMobile ? '100%' : drawerWidth"
+    append-to-body
+  >
     <template #default>
       <el-tabs v-model="activeTab" id="setting-tabs">
         <el-tab-pane label="🕹️ 转盘设置" name="base">
@@ -21,11 +27,15 @@
 </template>
 
 <script setup lang="ts">
+import { useThemeStore } from '@/stores/theme'
+import { storeToRefs } from 'pinia'
 import { onBeforeUnmount, ref } from 'vue'
 import Base from './base.vue'
 import History from './history.vue'
 import { useDragMove } from './onDrageStart'
 import Prize from './prize.vue'
+
+const { isMobile } = storeToRefs(useThemeStore())
 
 const activeTab = ref('history')
 const visible = ref(false)

@@ -29,7 +29,6 @@
         @change="setSpinLocaData"
       />
     </el-form-item>
-
     <el-card shadow="never" size="small" body-style="padding:6px;">
       <template #header>
         <div class="flex-between">
@@ -39,7 +38,7 @@
       </template>
       <template v-if="blocks.length">
         <div v-for="(block, pIndex) in blocks" class="block-item">
-          <el-descriptions :column="3" :data="blocks" class="mb4" border>
+          <el-descriptions :column="isMobile ? 1 : 3" :data="blocks" class="mb4" border>
             <el-descriptions-item label="内边距">
               <el-input-number v-model="block.padding" @change="setSpinLocaData" />
             </el-descriptions-item>
@@ -97,10 +96,13 @@
 <script setup lang="ts">
 import UploadPictureCard from '@/components/UploadPictureCard/index.vue'
 import { usePrizesStore } from '@/stores/prizes'
+import { useThemeStore } from '@/stores/theme'
 import { iconList } from '@/utils/publicData'
 import { Delete, Warning } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
 import { reactive } from 'vue'
+
+const { isMobile } = storeToRefs(useThemeStore())
 
 const { prizes, spinSty, blocks, maxDailySpins } = storeToRefs(usePrizesStore())
 const { setSpinLocaData } = usePrizesStore()

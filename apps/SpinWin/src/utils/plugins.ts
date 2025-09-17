@@ -1,7 +1,6 @@
 import type { App } from 'vue'
 
 import SvgIcon from '@/components/SvgIcon/index.vue'
-import 'virtual:svg-icons-register'
 
 import router from '@/router/index'
 

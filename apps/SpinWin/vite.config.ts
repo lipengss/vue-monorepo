@@ -1,8 +1,6 @@
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
@@ -12,18 +10,7 @@ export default defineConfig({
     __VUE_PROD_DEVTOOLS__: false,
     __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
   },
-  plugins: [
-    vue(),
-    vueDevTools(),
-    createSvgIconsPlugin({
-      // 指定需要缓存的图标文件夹
-      iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
-      // 指定symbolId格式
-      symbolId: 'icon-[dir]-[name]',
-      inject: 'body-last' || 'body-first',
-      customDomId: '__svg__icons__dom__',
-    }),
-  ],
+  plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

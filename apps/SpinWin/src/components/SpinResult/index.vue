@@ -1,5 +1,10 @@
 <template>
-  <el-dialog v-model="visible" :show-close="false" class="result-el-dialog" width="500px">
+  <el-dialog
+    v-model="visible"
+    :show-close="false"
+    class="result-el-dialog"
+    :width="isMobile ? '95%' : '500px'"
+  >
     <el-card v-if="result" class="result-card" shadow="never" body-style="padding: 0;">
       <template #header>
         <div class="result-header">🎉 抽奖结果</div>
@@ -32,6 +37,7 @@
 
 <script setup lang="ts">
 import { usePrizesStore } from '@/stores/prizes'
+import { useThemeStore } from '@/stores/theme'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
@@ -43,6 +49,7 @@ interface SpinResult {
   id: string
 }
 
+const { isMobile } = storeToRefs(useThemeStore())
 const visible = ref(false)
 const result = ref<SpinResult>({
   name: '谢谢参与',

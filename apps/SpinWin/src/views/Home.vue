@@ -3,13 +3,7 @@
     <el-splitter-panel style="overflow: hidden">
       <el-splitter layout="vertical">
         <el-splitter-panel collapsible class="pd0">
-          <el-card
-            ref="cardRef"
-            class="wheel-card"
-            body-class="wheel-card-body"
-            size="small"
-            style="opacity: 0.1"
-          >
+          <el-card ref="cardRef" class="wheel-card" body-class="wheel-card-body" size="small">
             <template #header>
               <div class="flex-between">
                 <span>🕹️ 剩余抽奖次数</span>
@@ -17,9 +11,9 @@
                   <el-tag :type="getRemainingSpins() > 0 ? 'success' : 'danger'">
                     {{ todaySpinCount }}/{{ maxDailySpins }}
                   </el-tag>
-                  <el-button size="small" type="danger" @click="onResetSpinCount"
-                    >重置抽奖次数</el-button
-                  >
+                  <el-button size="small" type="danger" @click="onResetSpinCount">
+                    重置抽奖次数
+                  </el-button>
                   <el-button
                     size="small"
                     type="warning"
@@ -53,7 +47,7 @@
             />
           </el-card>
         </el-splitter-panel>
-        <el-splitter-panel collapsible class="pd0">
+        <el-splitter-panel :size="isMobile ? 0 : '45%'" collapsible class="pd0">
           <el-card class="record-card">
             <template #header>
               <div class="flex-between">
@@ -86,7 +80,7 @@
         </el-splitter-panel>
       </el-splitter>
     </el-splitter-panel>
-    <el-splitter-panel collapsible class="pd0">
+    <el-splitter-panel :size="isMobile ? 0 : '50%'" collapsible class="pd0">
       <el-card>
         <template #header>
           <div class="flex-between">
@@ -136,11 +130,14 @@ import SettingSpin from '@/components/SettingSpin/index.vue'
 import SpinResult from '@/components/SpinResult/index.vue'
 import { useSound } from '@/hooks/useSound'
 import { usePrizesStore } from '@/stores/prizes'
+import { useThemeStore } from '@/stores/theme'
 import { weightedRandom } from '@/utils/tools'
 import confetti from 'canvas-confetti'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
+
+const { isMobile } = storeToRefs(useThemeStore())
 
 const {
   prizes,
@@ -232,8 +229,6 @@ function endCallback(prize) {
   // 增加今日抽奖次数
   todaySpinCount.value++
   // 减少库存
-  console.log('currentPrizeIndex.value', currentPrizeIndex.value)
-  console.log('prizes.value', prizes.value)
   prizes.value[currentPrizeIndex.value].stock--
 
   spinResultRef.value.open(result)
