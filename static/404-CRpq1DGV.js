@@ -1,0 +1,1 @@
+import{_ as t,c as o,f as n,z as a,a1 as c,o as r,A as s}from"./index-D9Dc_mid.js";const _={};function l(f,p){const e=c("el-button");return r(),o("div",null,[n(e,{type:"primary"},{default:a(()=>[s("返回首页")]),_:1})])}const m=t(_,[["render",l]]);export{m as default};

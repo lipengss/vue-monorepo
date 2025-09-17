@@ -1,0 +1,166 @@
+{
+	"data": {
+		"page_id": "page_line_dev_history_data",
+		"desc": "线路-装置（历史数据）",
+		"assets_model_id": "LINE",
+		"blocks": [
+			{
+				"report_id": "rep_line_info",
+				"report_title": "获取线路信息",
+				"report_type": "list",
+				"query_first": true,
+				"index_list": [
+					{ "index_id": "idx_line_length", "index_name": "线路长度", "data_unit": "KM", "ui": {} },
+					{ "index_id": "idx_line_voltage", "index_name": "电压等级", "data_unit": "KV", "ui": {} },
+					{ "index_id": "idx_operation_date", "index_name": "投运时间", "data_unit": "", "ui": {} },
+					{ "index_id": "idx_operating_state", "index_name": "运行状态", "data_unit": "", "ui": {} }
+				],
+				"response": {
+					"report_id": "rep_line_info",
+					"data_type": "report",
+					"data": {
+						"idx_line_length": { "reserve": false, "type": "text", "value": "" },
+						"idx_line_voltage": { "reserve": false, "type": "text", "value": "" },
+						"idx_operation_date": { "reserve": false, "type": "text", "value": "" },
+						"idx_operating_state": { "reserve": false, "type": "text", "value": "" }
+					}
+				}
+			},
+			{
+				"report_id": "rep_tower_devs",
+				"report_title": "杆塔设备信息",
+				"report_type": "list",
+				"query_first": true,
+				"index_list": [
+					{
+						"index_id": "idx_tower_devs",
+						"index_name": "杆塔信息",
+						"data_unit": "",
+						"ui": {
+							"element_type": "table",
+							"columns": [
+								{
+									"title": "设备ID",
+									"key": "device_id",
+									"type": "checkbox",
+									"events": [
+										{
+											"event": "change",
+											"action": "invokeHttpApi",
+											"parameters": {
+												"action": { "type": "fixed", "value": "queryDevProperties" },
+												"device_id_entries": {
+													"type": "array",
+													"value": {
+														"device_id": { "type": "cell", "value": "rep_tower_devs.device_id" },
+														"model_id": { "type": "cell", "value": "rep_tower_devs.dev_model_id" }
+													}
+												}
+											}
+										},
+										{
+											"event": "change",
+											"action": "invokeHttpApi",
+											"parameters": {
+												"action": { "type": "fixed", "value": "queryDevWorkStatusData" },
+												"field_ids": { "type": "element", "value": "idx_dev_props" },
+												"date_time": { "type": "element", "value": "idx_time_range" },
+												"device_id_entries": {
+													"type": "array",
+													"value": {
+														"device_id": { "type": "cell", "value": "rep_tower_devs.device_id" },
+														"model_id": { "type": "cell", "value": "rep_tower_devs.dev_model_id" }
+													}
+												}
+											}
+										}
+									]
+								},
+								{ "title": "设备名称", "key": "entry_name", "type": "text" },
+								{ "title": "设备模型ID", "key": "dev_model_id", "type": "hidden" },
+								{ "title": "设备模型版本", "key": "dev_model_version", "type": "hidden" }
+							],
+							"pagination": { "disabled": true }
+						}
+					}
+				],
+				"response": {
+					"report_id": "rep_tower_devs",
+					"data_type": "report",
+					"data": { "idx_tower_devs": { "reserve": false, "type": "list", "value": [] } }
+				}
+			},
+			{
+				"report_id": "rep_search_devdata",
+				"report_title": "数据搜索",
+				"report_type": "search_condition",
+				"query_first": true,
+				"index_list": [
+					{
+						"index_id": "idx_dev_props",
+						"index_name": "设备工况属性",
+						"data_unit": "",
+						"ui": {
+							"element_type": "multiple-select",
+							"events": [
+								{
+									"event": "change",
+									"action": "invokeHttpApi",
+									"parameters": {
+										"action": { "type": "fixed", "value": "queryDevWorkStatusData" },
+										"field_ids": { "type": "element", "value": "idx_dev_props" },
+										"date_time": { "type": "element", "value": "idx_time_range" },
+										"device_ids": { "type": "array", "value": { "idx_tower_devs": { "type": "cell", "value": "device_id" } } }
+									}
+								}
+							]
+						}
+					},
+					{
+						"index_id": "idx_time_range",
+						"index_name": "时间范围",
+						"data_unit": "",
+						"ui": {
+							"element_type": "TimeRangePicker",
+							"default": { "text": "2022-10-31 23:59:59", "value": "2022-08-01 00:00:00" },
+							"events": [
+								{
+									"event": "change",
+									"action": "invokeHttpApi",
+									"parameters": {
+										"action": { "type": "fixed", "value": "queryDevWorkStatusData" },
+										"field_ids": { "type": "element", "value": "idx_dev_props" },
+										"date_time": { "type": "element", "value": "idx_time_range" },
+										"device_ids": { "type": "array", "value": { "idx_dev_props": { "type": "cell", "value": "device_id" } } }
+									}
+								}
+							]
+						}
+					}
+				],
+				"response": {
+					"report_id": "rep_search_devdata",
+					"data_type": "report",
+					"data": {
+						"idx_dev_props": { "reserve": false, "type": "list", "value": [] },
+						"idx_time_range": { "reserve": false, "type": "text", "value": "" }
+					}
+				}
+			},
+			{
+				"report_id": "rep_dev_history_data",
+				"report_title": "设备历史数据",
+				"report_type": "table",
+				"query_first": true,
+				"index_list": [{ "index_id": "idx_dev_history_data", "index_name": "设备列表", "data_unit": "", "ui": {} }],
+				"response": {
+					"report_id": "rep_dev_history_data",
+					"data_type": "report",
+					"data": { "idx_dev_history_data": { "reserve": false, "type": "line", "value": [] } }
+				}
+			}
+		]
+	},
+	"code": 0,
+	"message": "获取页面模型数据成功"
+}
